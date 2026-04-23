@@ -55,6 +55,12 @@ variable "kubernetes_version" {
   type        = string
 }
 
+variable "cluster_upgrade_support_type" {
+  description = "EKS cluster support type used for upgrades."
+  type        = string
+  default     = "STANDARD"
+}
+
 variable "node_instance_types" {
   description = "Node group instance types."
   type        = list(string)
@@ -64,6 +70,48 @@ variable "node_capacity_type" {
   description = "Node group capacity type."
   type        = string
   default     = "SPOT"
+}
+
+variable "node_force_update_version" {
+  description = "Force node version updates when drain operations fail."
+  type        = bool
+  default     = true
+}
+
+variable "node_max_unavailable_percentage" {
+  description = "Max percentage of unavailable nodes during node group updates."
+  type        = number
+  default     = 33
+}
+
+variable "addon_resolve_conflicts_on_create" {
+  description = "Add-on conflict resolution on create."
+  type        = string
+  default     = "OVERWRITE"
+}
+
+variable "addon_resolve_conflicts_on_update" {
+  description = "Add-on conflict resolution on update."
+  type        = string
+  default     = "OVERWRITE"
+}
+
+variable "coredns_addon_version" {
+  description = "Optional pinned coredns addon version."
+  type        = string
+  default     = null
+}
+
+variable "kube_proxy_addon_version" {
+  description = "Optional pinned kube-proxy addon version."
+  type        = string
+  default     = null
+}
+
+variable "vpc_cni_addon_version" {
+  description = "Optional pinned vpc-cni addon version."
+  type        = string
+  default     = null
 }
 
 variable "node_desired_size" {
@@ -102,6 +150,18 @@ variable "repository_branch" {
   description = "Branch used by source stage."
   type        = string
   default     = "main"
+}
+
+variable "codebuild_image" {
+  description = "CodeBuild Docker image for CI/CD."
+  type        = string
+  default     = "aws/codebuild/standard:7.0"
+}
+
+variable "codebuild_compute_type" {
+  description = "CodeBuild compute size."
+  type        = string
+  default     = "BUILD_GENERAL1_SMALL"
 }
 
 variable "tags" {

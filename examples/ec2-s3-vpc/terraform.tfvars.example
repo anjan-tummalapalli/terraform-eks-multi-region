@@ -1,0 +1,10 @@
+region      = "ap-south-1"
+name_prefix = "myenv"
+bucket_name = "my-unique-bucket-name-123456"
+
+ingress_cidrs = ["203.0.113.0/24"]
+
+tags = {
+  Environment = "dev"
+  Team        = "platform"
+}

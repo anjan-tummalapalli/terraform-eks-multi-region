@@ -12,12 +12,18 @@ This Terraform project provisions modular AWS infrastructure for:
 ## Architecture Modules
 
 - `modules/vpc`: Region VPC and subnet topology
+- `modules/ec2`: EC2 instance + security group
+- `modules/s3`: S3 bucket module alias
 - `modules/iam-basic`: IAM roles for EKS control plane and nodes
 - `modules/eks`: EKS cluster and managed node group
 - `modules/cicd`: ECR + CodeCommit + CodeBuild + CodePipeline
 - `modules/regional-stack`: Composition module for one region
 - `modules/s3-bucket`: S3 bucket with encryption, versioning, lifecycle
 - `modules/rds-postgres`: PostgreSQL RDS instance with subnet group and security group
+- `modules/rds-mysql`: MySQL RDS instance with subnet group and security group
+- `modules/dynamodb-table`: DynamoDB table (on-demand or provisioned)
+- `modules/elasticache-redis`: Redis ElastiCache cluster with subnet/security groups
+- `modules/sns-topic`: SNS topic with optional subscriptions
 - `modules/lambda-function`: Lambda function + execution role + log group
 - `modules/sqs-queue`: Standard/FIFO SQS queue
 - `modules/alb`: Application Load Balancer + target group + listener
@@ -67,3 +73,13 @@ terraform apply
 - Pipeline source is CodeCommit. Push your app and Kubernetes manifests to the configured repositories.
 - Build/deploy behavior is controlled by module buildspec (`modules/cicd/buildspec.yml.tftpl`).
 - Additional service module usage example is available at `examples/common-services`.
+- Focused EC2 + S3 + VPC example is available at `examples/ec2-s3-vpc`.
+- DB-focused example (`MySQL + DynamoDB + Redis + SNS`) is available at `examples/db-services`.
+
+## Upgrade-Friendly Defaults
+
+- EKS exposes upgrade controls: `cluster_upgrade_support_type`, `node_force_update_version`, `node_max_unavailable_percentage`.
+- EKS add-ons support controlled pinning (`coredns_addon_version`, `kube_proxy_addon_version`, `vpc_cni_addon_version`) and conflict handling policies.
+- RDS modules (`rds-postgres`, `rds-mysql`) support `auto_minor_version_upgrade`, `allow_major_version_upgrade`, `maintenance_window`, and `backup_window`.
+- Redis module supports `auto_minor_version_upgrade`, `maintenance_window`, and snapshot retention settings.
+- CI/CD build image upgrades can be controlled through `codebuild_image` and `codebuild_compute_type`.

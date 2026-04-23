@@ -93,6 +93,17 @@ variable "kubernetes_version" {
   default     = "1.29"
 }
 
+variable "cluster_upgrade_support_type" {
+  description = "EKS cluster support type for control plane upgrades."
+  type        = string
+  default     = "STANDARD"
+
+  validation {
+    condition     = contains(["STANDARD", "EXTENDED"], var.cluster_upgrade_support_type)
+    error_message = "cluster_upgrade_support_type must be STANDARD or EXTENDED."
+  }
+}
+
 variable "node_instance_types" {
   description = "EKS managed node group instance types."
   type        = list(string)
@@ -108,6 +119,63 @@ variable "node_capacity_type" {
     condition     = contains(["SPOT", "ON_DEMAND"], var.node_capacity_type)
     error_message = "node_capacity_type must be SPOT or ON_DEMAND."
   }
+}
+
+variable "node_force_update_version" {
+  description = "Force EKS managed node group version updates when drain operations fail."
+  type        = bool
+  default     = true
+}
+
+variable "node_max_unavailable_percentage" {
+  description = "Maximum percentage of nodes unavailable during upgrades."
+  type        = number
+  default     = 33
+
+  validation {
+    condition     = var.node_max_unavailable_percentage >= 1 && var.node_max_unavailable_percentage <= 100
+    error_message = "node_max_unavailable_percentage must be between 1 and 100."
+  }
+}
+
+variable "addon_resolve_conflicts_on_create" {
+  description = "Conflict handling for EKS addon creation."
+  type        = string
+  default     = "OVERWRITE"
+
+  validation {
+    condition     = contains(["NONE", "OVERWRITE"], var.addon_resolve_conflicts_on_create)
+    error_message = "addon_resolve_conflicts_on_create must be NONE or OVERWRITE."
+  }
+}
+
+variable "addon_resolve_conflicts_on_update" {
+  description = "Conflict handling for EKS addon upgrades."
+  type        = string
+  default     = "OVERWRITE"
+
+  validation {
+    condition     = contains(["NONE", "OVERWRITE", "PRESERVE"], var.addon_resolve_conflicts_on_update)
+    error_message = "addon_resolve_conflicts_on_update must be NONE, OVERWRITE, or PRESERVE."
+  }
+}
+
+variable "coredns_addon_version" {
+  description = "Optional pinned coredns addon version."
+  type        = string
+  default     = null
+}
+
+variable "kube_proxy_addon_version" {
+  description = "Optional pinned kube-proxy addon version."
+  type        = string
+  default     = null
+}
+
+variable "vpc_cni_addon_version" {
+  description = "Optional pinned vpc-cni addon version."
+  type        = string
+  default     = null
 }
 
 variable "primary_node_desired_size" {
@@ -150,6 +218,18 @@ variable "repository_branch" {
   description = "Source branch used by CodePipeline."
   type        = string
   default     = "main"
+}
+
+variable "codebuild_image" {
+  description = "CodeBuild Docker image used by pipelines."
+  type        = string
+  default     = "aws/codebuild/standard:7.0"
+}
+
+variable "codebuild_compute_type" {
+  description = "CodeBuild compute size used by pipelines."
+  type        = string
+  default     = "BUILD_GENERAL1_SMALL"
 }
 
 variable "create_codecommit_repo" {

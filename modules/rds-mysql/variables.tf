@@ -1,5 +1,5 @@
 variable "name" {
-  description = "Name prefix for RDS resources."
+  description = "Name prefix for MySQL RDS resources."
   type        = string
 }
 
@@ -33,9 +33,9 @@ variable "allocated_storage" {
 }
 
 variable "engine_version" {
-  description = "PostgreSQL engine version."
+  description = "MySQL engine version."
   type        = string
-  default     = "16.2"
+  default     = "8.0"
 }
 
 variable "storage_type" {

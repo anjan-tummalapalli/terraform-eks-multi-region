@@ -67,6 +67,10 @@ resource "aws_eks_cluster" "this" {
   role_arn = var.cluster_role_arn
   version  = var.kubernetes_version
 
+  upgrade_policy {
+    support_type = var.cluster_upgrade_support_type
+  }
+
   access_config {
     authentication_mode                         = "API_AND_CONFIG_MAP"
     bootstrap_cluster_creator_admin_permissions = true
@@ -91,6 +95,7 @@ resource "aws_eks_node_group" "default" {
   subnet_ids      = var.private_subnet_ids
   instance_types  = var.node_instance_types
   capacity_type   = var.node_capacity_type
+  force_update_version = var.node_force_update_version
 
   scaling_config {
     desired_size = var.node_desired_size
@@ -99,7 +104,7 @@ resource "aws_eks_node_group" "default" {
   }
 
   update_config {
-    max_unavailable = 1
+    max_unavailable_percentage = var.node_max_unavailable_percentage
   }
 
   tags = merge(var.tags, {
@@ -110,22 +115,31 @@ resource "aws_eks_node_group" "default" {
 }
 
 resource "aws_eks_addon" "coredns" {
-  cluster_name = aws_eks_cluster.this.name
-  addon_name   = "coredns"
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = "coredns"
+  addon_version               = var.coredns_addon_version
+  resolve_conflicts_on_create = var.addon_resolve_conflicts_on_create
+  resolve_conflicts_on_update = var.addon_resolve_conflicts_on_update
 
   depends_on = [aws_eks_node_group.default]
 }
 
 resource "aws_eks_addon" "kube_proxy" {
-  cluster_name = aws_eks_cluster.this.name
-  addon_name   = "kube-proxy"
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = "kube-proxy"
+  addon_version               = var.kube_proxy_addon_version
+  resolve_conflicts_on_create = var.addon_resolve_conflicts_on_create
+  resolve_conflicts_on_update = var.addon_resolve_conflicts_on_update
 
   depends_on = [aws_eks_node_group.default]
 }
 
 resource "aws_eks_addon" "vpc_cni" {
-  cluster_name = aws_eks_cluster.this.name
-  addon_name   = "vpc-cni"
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = "vpc-cni"
+  addon_version               = var.vpc_cni_addon_version
+  resolve_conflicts_on_create = var.addon_resolve_conflicts_on_create
+  resolve_conflicts_on_update = var.addon_resolve_conflicts_on_update
 
   depends_on = [aws_eks_node_group.default]
 }

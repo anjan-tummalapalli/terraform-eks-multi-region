@@ -35,6 +35,18 @@ variable "repository_branch" {
   default     = "main"
 }
 
+variable "codebuild_image" {
+  description = "CodeBuild Docker image used for pipeline builds."
+  type        = string
+  default     = "aws/codebuild/standard:7.0"
+}
+
+variable "codebuild_compute_type" {
+  description = "CodeBuild compute size."
+  type        = string
+  default     = "BUILD_GENERAL1_SMALL"
+}
+
 variable "tags" {
   description = "Common tags."
   type        = map(string)

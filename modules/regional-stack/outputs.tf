@@ -13,6 +13,11 @@ output "cluster_endpoint" {
   value       = module.eks.cluster_endpoint
 }
 
+output "cluster_version" {
+  description = "EKS control plane version."
+  value       = module.eks.cluster_version
+}
+
 output "ecr_repository_url" {
   description = "ECR URL for app image."
   value       = var.create_pipeline ? module.cicd[0].ecr_repository_url : null

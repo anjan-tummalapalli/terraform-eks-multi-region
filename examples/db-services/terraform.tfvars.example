@@ -1,0 +1,14 @@
+region      = "ap-south-1"
+name_prefix = "mydbstack"
+
+# Use a strong password in real environments.
+db_username = "admin"
+db_password = "ChangeMe123!"
+
+# Optional: receive SNS email alerts.
+alert_email = ""
+
+tags = {
+  Environment = "dev"
+  Team        = "platform"
+}

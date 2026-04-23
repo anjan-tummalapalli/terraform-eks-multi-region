@@ -17,8 +17,17 @@ enable_nat_gateway = true
 nat_gateway_per_az = false
 
 kubernetes_version  = "1.29"
+cluster_upgrade_support_type = "STANDARD"
 node_instance_types = ["t3.medium"]
 node_capacity_type      = "SPOT"
+node_force_update_version = true
+node_max_unavailable_percentage = 33
+addon_resolve_conflicts_on_create = "OVERWRITE"
+addon_resolve_conflicts_on_update = "OVERWRITE"
+# Optional addon version pinning for controlled upgrades:
+# coredns_addon_version    = "v1.11.4-eksbuild.2"
+# kube_proxy_addon_version = "v1.29.3-eksbuild.5"
+# vpc_cni_addon_version    = "v1.19.0-eksbuild.1"
 primary_node_desired_size = 2
 primary_node_min_size     = 1
 primary_node_max_size     = 3
@@ -30,6 +39,8 @@ create_codecommit_repo     = true
 primary_codecommit_repo_name = "myapp-primary"
 dr_codecommit_repo_name      = "myapp-dr"
 repository_branch            = "main"
+codebuild_image              = "aws/codebuild/standard:7.0"
+codebuild_compute_type       = "BUILD_GENERAL1_SMALL"
 enable_dr_pipeline           = false
 
 tags = {

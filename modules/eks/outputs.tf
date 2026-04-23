@@ -13,6 +13,11 @@ output "cluster_endpoint" {
   value       = aws_eks_cluster.this.endpoint
 }
 
+output "cluster_version" {
+  description = "EKS control plane version."
+  value       = aws_eks_cluster.this.version
+}
+
 output "cluster_security_group_id" {
   description = "Control plane security group ID."
   value       = aws_security_group.cluster.id

@@ -29,18 +29,26 @@ module "iam" {
 module "eks" {
   source = "../eks"
 
-  cluster_name        = var.cluster_name
-  kubernetes_version  = var.kubernetes_version
-  vpc_id              = module.vpc.vpc_id
-  private_subnet_ids  = module.vpc.private_subnet_ids
-  cluster_role_arn    = module.iam.eks_cluster_role_arn
-  node_role_arn       = module.iam.eks_node_role_arn
-  node_instance_types = var.node_instance_types
-  node_capacity_type  = var.node_capacity_type
-  node_desired_size   = var.node_desired_size
-  node_min_size       = var.node_min_size
-  node_max_size       = var.node_max_size
-  tags                = var.tags
+  cluster_name                     = var.cluster_name
+  kubernetes_version               = var.kubernetes_version
+  cluster_upgrade_support_type     = var.cluster_upgrade_support_type
+  vpc_id                           = module.vpc.vpc_id
+  private_subnet_ids               = module.vpc.private_subnet_ids
+  cluster_role_arn                 = module.iam.eks_cluster_role_arn
+  node_role_arn                    = module.iam.eks_node_role_arn
+  node_instance_types              = var.node_instance_types
+  node_capacity_type               = var.node_capacity_type
+  node_force_update_version        = var.node_force_update_version
+  node_max_unavailable_percentage  = var.node_max_unavailable_percentage
+  coredns_addon_version            = var.coredns_addon_version
+  kube_proxy_addon_version         = var.kube_proxy_addon_version
+  vpc_cni_addon_version            = var.vpc_cni_addon_version
+  addon_resolve_conflicts_on_create = var.addon_resolve_conflicts_on_create
+  addon_resolve_conflicts_on_update = var.addon_resolve_conflicts_on_update
+  node_desired_size                = var.node_desired_size
+  node_min_size                    = var.node_min_size
+  node_max_size                    = var.node_max_size
+  tags                             = var.tags
 }
 
 module "cicd" {
@@ -54,6 +62,8 @@ module "cicd" {
   codecommit_repo_name   = var.codecommit_repo_name
   create_codecommit_repo = var.create_codecommit_repo
   repository_branch      = var.repository_branch
+  codebuild_image        = var.codebuild_image
+  codebuild_compute_type = var.codebuild_compute_type
   tags                   = var.tags
 }
 

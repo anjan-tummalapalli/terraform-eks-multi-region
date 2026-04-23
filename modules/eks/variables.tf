@@ -8,6 +8,17 @@ variable "kubernetes_version" {
   type        = string
 }
 
+variable "cluster_upgrade_support_type" {
+  description = "EKS upgrade support type for the control plane."
+  type        = string
+  default     = "STANDARD"
+
+  validation {
+    condition     = contains(["STANDARD", "EXTENDED"], var.cluster_upgrade_support_type)
+    error_message = "cluster_upgrade_support_type must be STANDARD or EXTENDED."
+  }
+}
+
 variable "vpc_id" {
   description = "VPC ID for cluster networking."
   type        = string
@@ -62,4 +73,66 @@ variable "node_capacity_type" {
   description = "Capacity type for worker nodes (e.g., ON_DEMAND, SPOT)."
   type        = string
   default     = "SPOT"
+
+  validation {
+    condition     = contains(["ON_DEMAND", "SPOT"], var.node_capacity_type)
+    error_message = "node_capacity_type must be ON_DEMAND or SPOT."
+  }
+}
+
+variable "node_force_update_version" {
+  description = "Force node group version updates when pods cannot be drained gracefully."
+  type        = bool
+  default     = true
+}
+
+variable "node_max_unavailable_percentage" {
+  description = "Maximum percentage of nodes unavailable during managed node group upgrades."
+  type        = number
+  default     = 33
+
+  validation {
+    condition     = var.node_max_unavailable_percentage >= 1 && var.node_max_unavailable_percentage <= 100
+    error_message = "node_max_unavailable_percentage must be between 1 and 100."
+  }
+}
+
+variable "addon_resolve_conflicts_on_create" {
+  description = "Conflict resolution strategy for add-on creation."
+  type        = string
+  default     = "OVERWRITE"
+
+  validation {
+    condition     = contains(["NONE", "OVERWRITE"], var.addon_resolve_conflicts_on_create)
+    error_message = "addon_resolve_conflicts_on_create must be NONE or OVERWRITE."
+  }
+}
+
+variable "addon_resolve_conflicts_on_update" {
+  description = "Conflict resolution strategy for add-on updates."
+  type        = string
+  default     = "OVERWRITE"
+
+  validation {
+    condition     = contains(["NONE", "OVERWRITE", "PRESERVE"], var.addon_resolve_conflicts_on_update)
+    error_message = "addon_resolve_conflicts_on_update must be NONE, OVERWRITE, or PRESERVE."
+  }
+}
+
+variable "coredns_addon_version" {
+  description = "Optional pinned version for the coredns addon."
+  type        = string
+  default     = null
+}
+
+variable "kube_proxy_addon_version" {
+  description = "Optional pinned version for the kube-proxy addon."
+  type        = string
+  default     = null
+}
+
+variable "vpc_cni_addon_version" {
+  description = "Optional pinned version for the vpc-cni addon."
+  type        = string
+  default     = null
 }
