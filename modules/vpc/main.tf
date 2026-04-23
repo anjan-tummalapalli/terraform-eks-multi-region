@@ -3,7 +3,7 @@ data "aws_availability_zones" "available" {
 }
 
 locals {
-  azs              = slice(data.aws_availability_zones.available.names, 0, var.az_count)
+  azs               = slice(data.aws_availability_zones.available.names, 0, min(var.az_count, length(data.aws_availability_zones.available.names)))
   nat_gateway_count = var.enable_nat_gateway ? (var.nat_gateway_per_az ? length(var.public_subnet_cidrs) : 1) : 0
 }
 
@@ -86,7 +86,7 @@ resource "aws_nat_gateway" "this" {
   count = local.nat_gateway_count
 
   allocation_id = aws_eip.nat[count.index].id
-  subnet_id = var.nat_gateway_per_az ? aws_subnet.public[count.index].id : aws_subnet.public[0].id
+  subnet_id     = var.nat_gateway_per_az ? aws_subnet.public[count.index].id : aws_subnet.public[0].id
 
   tags = merge(var.tags, {
     Name = "${var.name}-nat-${count.index + 1}"
@@ -110,7 +110,7 @@ resource "aws_route" "private_default" {
 
   route_table_id         = aws_route_table.private[count.index].id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.this[var.nat_gateway_per_az ? count.index : 0].id
+  nat_gateway_id         = aws_nat_gateway.this[var.nat_gateway_per_az ? count.index % length(aws_nat_gateway.this) : 0].id
 }
 
 resource "aws_route_table_association" "private" {

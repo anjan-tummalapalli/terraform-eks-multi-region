@@ -68,6 +68,11 @@ variable "az_count" {
   description = "Number of Availability Zones used per region."
   type        = number
   default     = 2
+
+  validation {
+    condition     = var.az_count >= 2
+    error_message = "Use at least 2 AZs for high availability."
+  }
 }
 
 variable "enable_nat_gateway" {
@@ -98,6 +103,11 @@ variable "node_capacity_type" {
   description = "Node group capacity type: SPOT (cost optimized) or ON_DEMAND."
   type        = string
   default     = "SPOT"
+
+  validation {
+    condition     = contains(["SPOT", "ON_DEMAND"], var.node_capacity_type)
+    error_message = "node_capacity_type must be SPOT or ON_DEMAND."
+  }
 }
 
 variable "primary_node_desired_size" {

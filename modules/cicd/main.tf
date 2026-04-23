@@ -1,5 +1,5 @@
 locals {
-  name_prefix = "${var.project_name}-${var.environment}-${replace(var.region, "-", "")}" 
+  name_prefix = "${var.project_name}-${var.environment}-${replace(var.region, "-", "")}"
 }
 
 data "aws_caller_identity" "current" {}
@@ -211,7 +211,7 @@ resource "aws_codebuild_project" "this" {
   }
 
   environment {
-    compute_type                = "BUILD_GENERAL1_MEDIUM"
+    compute_type                = "BUILD_GENERAL1_SMALL"
     image                       = "aws/codebuild/standard:7.0"
     type                        = "LINUX_CONTAINER"
     privileged_mode             = true

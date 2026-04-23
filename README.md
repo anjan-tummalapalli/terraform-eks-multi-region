@@ -16,6 +16,11 @@ This Terraform project provisions modular AWS infrastructure for:
 - `modules/eks`: EKS cluster and managed node group
 - `modules/cicd`: ECR + CodeCommit + CodeBuild + CodePipeline
 - `modules/regional-stack`: Composition module for one region
+- `modules/s3-bucket`: S3 bucket with encryption, versioning, lifecycle
+- `modules/rds-postgres`: PostgreSQL RDS instance with subnet group and security group
+- `modules/lambda-function`: Lambda function + execution role + log group
+- `modules/sqs-queue`: Standard/FIFO SQS queue
+- `modules/alb`: Application Load Balancer + target group + listener
 
 Root module deploys two regional stacks with provider aliases:
 
@@ -56,7 +61,9 @@ terraform apply
 ## Notes
 
 - This template creates one EKS cluster per region for high availability and disaster recovery readiness.
-- DR CI/CD can be toggled using `enable_dr_pipeline`.
+- DR CI/CD can be toggled using `enable_dr_pipeline` (default is `false` for cost optimization).
+- Cost-optimized defaults are included: `SPOT` nodes, single NAT gateway per region, smaller DR node group.
 - NAT gateway per AZ provides better availability but increases cost.
 - Pipeline source is CodeCommit. Push your app and Kubernetes manifests to the configured repositories.
 - Build/deploy behavior is controlled by module buildspec (`modules/cicd/buildspec.yml.tftpl`).
+- Additional service module usage example is available at `examples/common-services`.

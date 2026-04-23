@@ -14,19 +14,23 @@ dr_private_subnet_cidrs = ["10.20.10.0/24", "10.20.11.0/24"]
 
 az_count           = 2
 enable_nat_gateway = true
-nat_gateway_per_az = true
+nat_gateway_per_az = false
 
 kubernetes_version  = "1.29"
 node_instance_types = ["t3.medium"]
-node_desired_size   = 2
-node_min_size       = 1
-node_max_size       = 4
+node_capacity_type      = "SPOT"
+primary_node_desired_size = 2
+primary_node_min_size     = 1
+primary_node_max_size     = 3
+dr_node_desired_size      = 1
+dr_node_min_size          = 1
+dr_node_max_size          = 2
 
 create_codecommit_repo     = true
 primary_codecommit_repo_name = "myapp-primary"
 dr_codecommit_repo_name      = "myapp-dr"
 repository_branch            = "main"
-enable_dr_pipeline           = true
+enable_dr_pipeline           = false
 
 tags = {
   Owner       = "platform-team"
