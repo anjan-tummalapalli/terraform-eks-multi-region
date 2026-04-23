@@ -1,0 +1,80 @@
+module "vpc" {
+  source = "../vpc"
+
+  name                 = "${var.project_name}-${var.environment}-${replace(var.region, "-", "")}"
+  cidr                  = var.vpc_cidr
+  az_count              = var.az_count
+  public_subnet_cidrs   = var.public_subnet_cidrs
+  private_subnet_cidrs  = var.private_subnet_cidrs
+  enable_nat_gateway    = var.enable_nat_gateway
+  nat_gateway_per_az    = var.nat_gateway_per_az
+  public_subnet_tags = {
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/role/elb"                    = "1"
+  }
+  private_subnet_tags = {
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/role/internal-elb"           = "1"
+  }
+  tags = var.tags
+}
+
+module "iam" {
+  source = "../iam-basic"
+
+  name_prefix = "${var.project_name}-${var.environment}-${replace(var.region, "-", "")}"
+  tags        = var.tags
+}
+
+module "eks" {
+  source = "../eks"
+
+  cluster_name        = var.cluster_name
+  kubernetes_version  = var.kubernetes_version
+  vpc_id              = module.vpc.vpc_id
+  private_subnet_ids  = module.vpc.private_subnet_ids
+  cluster_role_arn    = module.iam.eks_cluster_role_arn
+  node_role_arn       = module.iam.eks_node_role_arn
+  node_instance_types = var.node_instance_types
+  node_capacity_type  = var.node_capacity_type
+  node_desired_size   = var.node_desired_size
+  node_min_size       = var.node_min_size
+  node_max_size       = var.node_max_size
+  tags                = var.tags
+}
+
+module "cicd" {
+  count  = var.create_pipeline ? 1 : 0
+  source = "../cicd"
+
+  project_name           = var.project_name
+  environment            = var.environment
+  region                 = var.region
+  cluster_name           = module.eks.cluster_name
+  codecommit_repo_name   = var.codecommit_repo_name
+  create_codecommit_repo = var.create_codecommit_repo
+  repository_branch      = var.repository_branch
+  tags                   = var.tags
+}
+
+resource "aws_eks_access_entry" "codebuild" {
+  count = var.create_pipeline ? 1 : 0
+
+  cluster_name  = module.eks.cluster_name
+  principal_arn = module.cicd[0].codebuild_role_arn
+  type          = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "codebuild_admin" {
+  count = var.create_pipeline ? 1 : 0
+
+  cluster_name  = module.eks.cluster_name
+  principal_arn = module.cicd[0].codebuild_role_arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
+
+  depends_on = [aws_eks_access_entry.codebuild]
+}

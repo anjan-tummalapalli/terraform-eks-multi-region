@@ -1,0 +1,35 @@
+project_name = "my-platform"
+environment  = "prod"
+
+primary_region = "ap-south-1"
+dr_region      = "ap-southeast-1"
+
+primary_vpc_cidr             = "10.10.0.0/16"
+primary_public_subnet_cidrs  = ["10.10.0.0/24", "10.10.1.0/24"]
+primary_private_subnet_cidrs = ["10.10.10.0/24", "10.10.11.0/24"]
+
+dr_vpc_cidr             = "10.20.0.0/16"
+dr_public_subnet_cidrs  = ["10.20.0.0/24", "10.20.1.0/24"]
+dr_private_subnet_cidrs = ["10.20.10.0/24", "10.20.11.0/24"]
+
+az_count           = 2
+enable_nat_gateway = true
+nat_gateway_per_az = true
+
+kubernetes_version  = "1.29"
+node_instance_types = ["t3.medium"]
+node_desired_size   = 2
+node_min_size       = 1
+node_max_size       = 4
+
+create_codecommit_repo     = true
+primary_codecommit_repo_name = "myapp-primary"
+dr_codecommit_repo_name      = "myapp-dr"
+repository_branch            = "main"
+enable_dr_pipeline           = true
+
+tags = {
+  Owner       = "platform-team"
+  CostCenter  = "engineering"
+  Application = "eks-shared"
+}

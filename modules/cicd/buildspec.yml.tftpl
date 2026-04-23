@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.${region}.amazonaws.com
+      - aws eks update-kubeconfig --name "$EKS_CLUSTER_NAME" --region "$AWS_DEFAULT_REGION"
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -t "$ECR_REPOSITORY_URI:$IMAGE_TAG" .
+      - docker push "$ECR_REPOSITORY_URI:$IMAGE_TAG"
+  post_build:
+    commands:
+      - echo Build complete and image pushed.
+      - |
+        if [ -d "k8s" ]; then
+          echo "Applying Kubernetes manifests from ./k8s"
+          for file in k8s/*.yaml; do
+            [ -f "$file" ] || continue
+            sed "s|IMAGE_PLACEHOLDER|$ECR_REPOSITORY_URI:$IMAGE_TAG|g" "$file" | kubectl apply -f -
+          done
+        else
+          echo "No k8s directory found. Skipping kubectl apply."
+        fi
+
+artifacts:
+  files:
+    - '**/*'
