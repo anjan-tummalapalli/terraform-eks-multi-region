@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_security_group" "cluster" {
   name        = "${var.cluster_name}-cluster-sg"
   description = "Security group for EKS control plane"
@@ -76,16 +78,81 @@ resource "aws_eks_cluster" "this" {
     bootstrap_cluster_creator_admin_permissions = true
   }
 
+  dynamic "encryption_config" {
+    for_each = var.cluster_secrets_encryption_enabled ? [1] : []
+    content {
+      provider {
+        key_arn = local.cluster_kms_key_arn
+      }
+      resources = ["secrets"]
+    }
+  }
+
   vpc_config {
     subnet_ids              = var.private_subnet_ids
-    endpoint_private_access = true
-    endpoint_public_access  = true
+    endpoint_private_access = var.cluster_endpoint_private_access
+    endpoint_public_access  = var.cluster_endpoint_public_access
+    public_access_cidrs     = var.cluster_endpoint_public_access_cidrs
     security_group_ids      = [aws_security_group.cluster.id]
   }
 
   tags = merge(var.tags, {
     Name = var.cluster_name
   })
+}
+
+locals {
+  cluster_kms_key_arn = var.cluster_secrets_encryption_enabled ? (var.cluster_kms_key_arn != null ? var.cluster_kms_key_arn : aws_kms_key.eks_secrets[0].arn) : null
+}
+
+resource "aws_kms_key" "eks_secrets" {
+  count = var.cluster_secrets_encryption_enabled && var.cluster_kms_key_arn == null ? 1 : 0
+
+  description             = "KMS key for EKS secrets encryption for ${var.cluster_name}"
+  deletion_window_in_days = var.cluster_kms_key_deletion_window_in_days
+  enable_key_rotation     = var.cluster_kms_key_enable_rotation
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowRootAccountAdmin"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        }
+        Action   = "kms:*"
+        Resource = "*"
+      },
+      {
+        Sid    = "AllowEKSClusterRoleUseOfKey"
+        Effect = "Allow"
+        Principal = {
+          AWS = var.cluster_role_arn
+        }
+        Action = [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey",
+          "kms:CreateGrant"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+
+  tags = merge(var.tags, {
+    Name = "${var.cluster_name}-eks-secrets-kms"
+  })
+}
+
+resource "aws_kms_alias" "eks_secrets" {
+  count = var.cluster_secrets_encryption_enabled && var.cluster_kms_key_arn == null ? 1 : 0
+
+  name          = "alias/${var.cluster_name}-eks-secrets"
+  target_key_id = aws_kms_key.eks_secrets[0].key_id
 }
 
 resource "aws_eks_node_group" "default" {

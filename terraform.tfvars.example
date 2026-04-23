@@ -16,11 +16,20 @@ az_count           = 2
 enable_nat_gateway = true
 nat_gateway_per_az = false
 
-kubernetes_version  = "1.29"
+kubernetes_version           = "1.29"
 cluster_upgrade_support_type = "STANDARD"
-node_instance_types = ["t3.medium"]
-node_capacity_type      = "SPOT"
-node_force_update_version = true
+cluster_endpoint_private_access       = true
+cluster_endpoint_public_access        = true
+# Restrict this to trusted CIDRs in production.
+cluster_endpoint_public_access_cidrs  = ["0.0.0.0/0"]
+cluster_secrets_encryption_enabled    = true
+# Optional: provide your own KMS key ARN for EKS secrets encryption.
+# cluster_kms_key_arn = "arn:aws:kms:ap-south-1:123456789012:key/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+cluster_kms_key_enable_rotation       = true
+cluster_kms_key_deletion_window_in_days = 30
+node_instance_types                   = ["t3.small"]
+node_capacity_type                    = "SPOT"
+node_force_update_version             = true
 node_max_unavailable_percentage = 33
 addon_resolve_conflicts_on_create = "OVERWRITE"
 addon_resolve_conflicts_on_update = "OVERWRITE"

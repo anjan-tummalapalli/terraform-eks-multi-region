@@ -29,26 +29,33 @@ module "iam" {
 module "eks" {
   source = "../eks"
 
-  cluster_name                      = var.cluster_name
-  kubernetes_version                = var.kubernetes_version
-  cluster_upgrade_support_type      = var.cluster_upgrade_support_type
-  vpc_id                            = module.vpc.vpc_id
-  private_subnet_ids                = module.vpc.private_subnet_ids
-  cluster_role_arn                  = module.iam.eks_cluster_role_arn
-  node_role_arn                     = module.iam.eks_node_role_arn
-  node_instance_types               = var.node_instance_types
-  node_capacity_type                = var.node_capacity_type
-  node_force_update_version         = var.node_force_update_version
-  node_max_unavailable_percentage   = var.node_max_unavailable_percentage
-  coredns_addon_version             = var.coredns_addon_version
-  kube_proxy_addon_version          = var.kube_proxy_addon_version
-  vpc_cni_addon_version             = var.vpc_cni_addon_version
-  addon_resolve_conflicts_on_create = var.addon_resolve_conflicts_on_create
-  addon_resolve_conflicts_on_update = var.addon_resolve_conflicts_on_update
-  node_desired_size                 = var.node_desired_size
-  node_min_size                     = var.node_min_size
-  node_max_size                     = var.node_max_size
-  tags                              = var.tags
+  cluster_name                            = var.cluster_name
+  kubernetes_version                      = var.kubernetes_version
+  cluster_upgrade_support_type            = var.cluster_upgrade_support_type
+  cluster_endpoint_private_access         = var.cluster_endpoint_private_access
+  cluster_endpoint_public_access          = var.cluster_endpoint_public_access
+  cluster_endpoint_public_access_cidrs    = var.cluster_endpoint_public_access_cidrs
+  cluster_secrets_encryption_enabled      = var.cluster_secrets_encryption_enabled
+  cluster_kms_key_arn                     = var.cluster_kms_key_arn
+  cluster_kms_key_enable_rotation         = var.cluster_kms_key_enable_rotation
+  cluster_kms_key_deletion_window_in_days = var.cluster_kms_key_deletion_window_in_days
+  vpc_id                                  = module.vpc.vpc_id
+  private_subnet_ids                      = module.vpc.private_subnet_ids
+  cluster_role_arn                        = module.iam.eks_cluster_role_arn
+  node_role_arn                           = module.iam.eks_node_role_arn
+  node_instance_types                     = var.node_instance_types
+  node_capacity_type                      = var.node_capacity_type
+  node_force_update_version               = var.node_force_update_version
+  node_max_unavailable_percentage         = var.node_max_unavailable_percentage
+  coredns_addon_version                   = var.coredns_addon_version
+  kube_proxy_addon_version                = var.kube_proxy_addon_version
+  vpc_cni_addon_version                   = var.vpc_cni_addon_version
+  addon_resolve_conflicts_on_create       = var.addon_resolve_conflicts_on_create
+  addon_resolve_conflicts_on_update       = var.addon_resolve_conflicts_on_update
+  node_desired_size                       = var.node_desired_size
+  node_min_size                           = var.node_min_size
+  node_max_size                           = var.node_max_size
+  tags                                    = var.tags
 }
 
 module "cicd" {

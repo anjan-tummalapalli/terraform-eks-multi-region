@@ -44,6 +44,18 @@ variable "storage_type" {
   default     = "gp3"
 }
 
+variable "storage_encrypted" {
+  description = "Enable encryption at rest for the DB volume."
+  type        = bool
+  default     = true
+}
+
+variable "kms_key_id" {
+  description = "Optional KMS key ID/ARN for storage encryption."
+  type        = string
+  default     = null
+}
+
 variable "vpc_id" {
   description = "VPC ID for DB security group."
   type        = string
@@ -69,7 +81,7 @@ variable "multi_az" {
 variable "backup_retention_period" {
   description = "Backup retention in days."
   type        = number
-  default     = 7
+  default     = 3
 }
 
 variable "apply_immediately" {
@@ -104,6 +116,12 @@ variable "backup_window" {
 
 variable "publicly_accessible" {
   description = "Whether DB is publicly accessible."
+  type        = bool
+  default     = false
+}
+
+variable "deletion_protection" {
+  description = "Whether to enable deletion protection."
   type        = bool
   default     = false
 }

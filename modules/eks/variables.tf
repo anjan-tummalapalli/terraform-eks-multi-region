@@ -19,6 +19,53 @@ variable "cluster_upgrade_support_type" {
   }
 }
 
+variable "cluster_endpoint_private_access" {
+  description = "Enable private access to the Kubernetes API server endpoint."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_endpoint_public_access" {
+  description = "Enable public access to the Kubernetes API server endpoint."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_endpoint_public_access_cidrs" {
+  description = "CIDR blocks that can access the public EKS endpoint."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "cluster_secrets_encryption_enabled" {
+  description = "Enable envelope encryption for Kubernetes secrets using KMS."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_kms_key_arn" {
+  description = "Optional existing KMS key ARN for EKS secrets encryption."
+  type        = string
+  default     = null
+}
+
+variable "cluster_kms_key_enable_rotation" {
+  description = "Enable automatic key rotation for module-managed EKS KMS key."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_kms_key_deletion_window_in_days" {
+  description = "Deletion window in days for module-managed EKS KMS key."
+  type        = number
+  default     = 30
+
+  validation {
+    condition     = var.cluster_kms_key_deletion_window_in_days >= 7 && var.cluster_kms_key_deletion_window_in_days <= 30
+    error_message = "cluster_kms_key_deletion_window_in_days must be between 7 and 30."
+  }
+}
+
 variable "vpc_id" {
   description = "VPC ID for cluster networking."
   type        = string
@@ -42,7 +89,7 @@ variable "node_role_arn" {
 variable "node_instance_types" {
   description = "Instance types for worker nodes."
   type        = list(string)
-  default     = ["t3.medium"]
+  default     = ["t3.small"]
 }
 
 variable "node_desired_size" {

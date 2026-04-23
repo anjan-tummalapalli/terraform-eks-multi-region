@@ -22,3 +22,8 @@ output "cluster_security_group_id" {
   description = "Control plane security group ID."
   value       = aws_security_group.cluster.id
 }
+
+output "cluster_kms_key_arn" {
+  description = "KMS key ARN used for EKS secrets encryption, null when disabled."
+  value       = var.cluster_secrets_encryption_enabled ? local.cluster_kms_key_arn : null
+}

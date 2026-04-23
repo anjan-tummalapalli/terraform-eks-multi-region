@@ -42,7 +42,7 @@ variable "enable_nat_gateway" {
 variable "nat_gateway_per_az" {
   description = "Whether to provision one NAT gateway per AZ."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "cluster_name" {
@@ -59,6 +59,48 @@ variable "cluster_upgrade_support_type" {
   description = "EKS cluster support type used for upgrades."
   type        = string
   default     = "STANDARD"
+}
+
+variable "cluster_endpoint_private_access" {
+  description = "Enable private access to EKS API endpoint."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_endpoint_public_access" {
+  description = "Enable public access to EKS API endpoint."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_endpoint_public_access_cidrs" {
+  description = "CIDR blocks allowed to access public EKS endpoint."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "cluster_secrets_encryption_enabled" {
+  description = "Enable envelope encryption for Kubernetes secrets using KMS."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_kms_key_arn" {
+  description = "Optional existing KMS key ARN for EKS secrets encryption."
+  type        = string
+  default     = null
+}
+
+variable "cluster_kms_key_enable_rotation" {
+  description = "Enable automatic key rotation for module-managed EKS KMS key."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_kms_key_deletion_window_in_days" {
+  description = "Deletion window in days for module-managed EKS KMS key."
+  type        = number
+  default     = 30
 }
 
 variable "node_instance_types" {

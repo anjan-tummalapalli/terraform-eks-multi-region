@@ -20,9 +20,9 @@ variable "internal" {
 }
 
 variable "cross_zone_load_balancing" {
-  description = "Enable cross-zone load balancing."
+  description = "Enable cross-zone load balancing (set true for HA, false for lower cross-AZ data cost)."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "idle_timeout" {

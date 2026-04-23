@@ -28,7 +28,7 @@ variable "timeout" {
 variable "memory_size" {
   description = "Function memory in MB."
   type        = number
-  default     = 256
+  default     = 128
 }
 
 variable "environment_variables" {
@@ -40,7 +40,7 @@ variable "environment_variables" {
 variable "log_retention_days" {
   description = "CloudWatch log retention in days."
   type        = number
-  default     = 14
+  default     = 7
 }
 
 variable "tags" {

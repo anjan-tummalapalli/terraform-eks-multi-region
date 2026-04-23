@@ -104,10 +104,57 @@ variable "cluster_upgrade_support_type" {
   }
 }
 
-variable "node_instance_types" {
-  description = "EKS managed node group instance types."
+variable "cluster_endpoint_private_access" {
+  description = "Enable private access to EKS API endpoint."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_endpoint_public_access" {
+  description = "Enable public access to EKS API endpoint."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_endpoint_public_access_cidrs" {
+  description = "CIDR blocks allowed to access the public EKS API endpoint."
   type        = list(string)
-  default     = ["t3.medium"]
+  default     = ["0.0.0.0/0"]
+}
+
+variable "cluster_secrets_encryption_enabled" {
+  description = "Enable envelope encryption for Kubernetes secrets using KMS."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_kms_key_arn" {
+  description = "Optional existing KMS key ARN for EKS secrets encryption."
+  type        = string
+  default     = null
+}
+
+variable "cluster_kms_key_enable_rotation" {
+  description = "Enable automatic key rotation for module-managed EKS KMS key."
+  type        = bool
+  default     = true
+}
+
+variable "cluster_kms_key_deletion_window_in_days" {
+  description = "Deletion window in days for module-managed EKS KMS key."
+  type        = number
+  default     = 30
+
+  validation {
+    condition     = var.cluster_kms_key_deletion_window_in_days >= 7 && var.cluster_kms_key_deletion_window_in_days <= 30
+    error_message = "cluster_kms_key_deletion_window_in_days must be between 7 and 30."
+  }
+}
+
+variable "node_instance_types" {
+  description = "EKS managed node group instance types (cost-optimized baseline)."
+  type        = list(string)
+  default     = ["t3.small"]
 }
 
 variable "node_capacity_type" {

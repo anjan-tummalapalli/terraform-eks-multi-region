@@ -57,7 +57,7 @@ variable "enable_detailed_monitoring" {
 variable "root_volume_size" {
   description = "Size of root EBS volume in GiB."
   type        = number
-  default     = 20
+  default     = 8
 }
 
 variable "root_volume_type" {
@@ -81,15 +81,7 @@ variable "ingress_rules" {
     cidr_blocks = list(string)
     description = optional(string)
   }))
-  default = [
-    {
-      from_port   = 22
-      to_port     = 22
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-      description = "Allow SSH access"
-    }
-  ]
+  default = []
 
   validation {
     condition     = alltrue([for rule in var.ingress_rules : length(rule.cidr_blocks) > 0])

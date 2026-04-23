@@ -2,7 +2,7 @@ variable "log_groups" {
   description = "CloudWatch log groups to create."
   type = list(object({
     name              = string
-    retention_in_days = optional(number, 14)
+    retention_in_days = optional(number, 7)
     kms_key_id        = optional(string)
   }))
   default = []

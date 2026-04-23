@@ -1,0 +1,13 @@
+region      = "ap-south-1"
+name_prefix = "my-kms-stack"
+
+# Must be globally unique.
+s3_bucket_name = "my-kms-secure-bucket-123456"
+
+admin_principal_arns = []
+usage_principal_arns = []
+
+tags = {
+  Environment = "dev"
+  Team        = "platform"
+}

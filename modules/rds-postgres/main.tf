@@ -42,6 +42,8 @@ resource "aws_db_instance" "this" {
   instance_class               = var.instance_class
   allocated_storage            = var.allocated_storage
   storage_type                 = var.storage_type
+  storage_encrypted            = var.storage_encrypted
+  kms_key_id                   = var.kms_key_id
   db_name                      = var.db_name
   username                     = var.username
   password                     = var.password
@@ -57,7 +59,7 @@ resource "aws_db_instance" "this" {
   copy_tags_to_snapshot        = true
   publicly_accessible          = var.publicly_accessible
   skip_final_snapshot          = true
-  deletion_protection          = false
+  deletion_protection          = var.deletion_protection
   performance_insights_enabled = false
 
   tags = merge(var.tags, {

@@ -18,6 +18,11 @@ output "cluster_version" {
   value       = module.eks.cluster_version
 }
 
+output "cluster_kms_key_arn" {
+  description = "KMS key ARN used for EKS secrets encryption."
+  value       = module.eks.cluster_kms_key_arn
+}
+
 output "ecr_repository_url" {
   description = "ECR URL for app image."
   value       = var.create_pipeline ? module.cicd[0].ecr_repository_url : null

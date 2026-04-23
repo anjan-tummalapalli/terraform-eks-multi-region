@@ -42,7 +42,7 @@ variable "enable_nat_gateway" {
 variable "nat_gateway_per_az" {
   description = "Whether to create one NAT gateway per AZ."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "public_subnet_tags" {
