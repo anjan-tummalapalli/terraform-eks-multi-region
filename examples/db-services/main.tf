@@ -41,14 +41,14 @@ module "mysql" {
 module "dynamodb" {
   source = "../../modules/dynamodb-table"
 
-  table_name                       = "${var.name_prefix}-kv"
-  hash_key                         = "pk"
-  hash_key_type                    = "S"
-  billing_mode                     = "PAY_PER_REQUEST"
-  ttl_enabled                      = true
-  ttl_attribute_name               = "expires_at"
-  point_in_time_recovery_enabled   = true
-  tags                             = var.tags
+  table_name                     = "${var.name_prefix}-kv"
+  hash_key                       = "pk"
+  hash_key_type                  = "S"
+  billing_mode                   = "PAY_PER_REQUEST"
+  ttl_enabled                    = true
+  ttl_attribute_name             = "expires_at"
+  point_in_time_recovery_enabled = true
+  tags                           = var.tags
 }
 
 module "redis" {

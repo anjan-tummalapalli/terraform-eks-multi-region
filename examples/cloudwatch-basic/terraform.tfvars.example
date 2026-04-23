@@ -1,0 +1,10 @@
+region      = "ap-south-1"
+name_prefix = "my-cloudwatch"
+
+# Optional: set an email to receive alarm notifications.
+alert_email = ""
+
+tags = {
+  Environment = "dev"
+  Team        = "platform"
+}

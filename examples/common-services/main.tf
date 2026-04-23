@@ -27,7 +27,7 @@ module "app_queue" {
 }
 
 module "app_lambda" {
-  source = "../../modules/lambda-function"
+  source = "../../modules/lambda"
 
   function_name = "example-app-worker"
   filename      = "./lambda.zip"

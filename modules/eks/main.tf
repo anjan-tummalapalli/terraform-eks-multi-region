@@ -89,12 +89,12 @@ resource "aws_eks_cluster" "this" {
 }
 
 resource "aws_eks_node_group" "default" {
-  cluster_name    = aws_eks_cluster.this.name
-  node_group_name = "${var.cluster_name}-ng"
-  node_role_arn   = var.node_role_arn
-  subnet_ids      = var.private_subnet_ids
-  instance_types  = var.node_instance_types
-  capacity_type   = var.node_capacity_type
+  cluster_name         = aws_eks_cluster.this.name
+  node_group_name      = "${var.cluster_name}-ng"
+  node_role_arn        = var.node_role_arn
+  subnet_ids           = var.private_subnet_ids
+  instance_types       = var.node_instance_types
+  capacity_type        = var.node_capacity_type
   force_update_version = var.node_force_update_version
 
   scaling_config {

@@ -234,7 +234,7 @@ resource "aws_codebuild_project" "this" {
   }
 
   source {
-    type      = "CODEPIPELINE"
+    type = "CODEPIPELINE"
     buildspec = templatefile("${path.module}/buildspec.yml.tftpl", {
       region = var.region
     })

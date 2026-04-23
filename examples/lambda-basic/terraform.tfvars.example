@@ -1,0 +1,15 @@
+region        = "ap-south-1"
+function_name = "my-hello-lambda"
+runtime       = "python3.12"
+handler       = "handler.lambda_handler"
+memory_size   = 256
+timeout       = 10
+
+environment_variables = {
+  STAGE = "dev"
+}
+
+tags = {
+  Environment = "dev"
+  Team        = "platform"
+}

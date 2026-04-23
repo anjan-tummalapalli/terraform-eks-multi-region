@@ -14,6 +14,9 @@ This Terraform project provisions modular AWS infrastructure for:
 - `modules/vpc`: Region VPC and subnet topology
 - `modules/ec2`: EC2 instance + security group
 - `modules/s3`: S3 bucket module alias
+- `modules/lambda`: AWS Lambda module alias
+- `modules/cloudwatch`: CloudWatch log groups and metric alarms
+- `modules/elb`: Classic ELB (Elastic Load Balancer) module
 - `modules/iam-basic`: IAM roles for EKS control plane and nodes
 - `modules/eks`: EKS cluster and managed node group
 - `modules/cicd`: ECR + CodeCommit + CodeBuild + CodePipeline
@@ -75,6 +78,9 @@ terraform apply
 - Additional service module usage example is available at `examples/common-services`.
 - Focused EC2 + S3 + VPC example is available at `examples/ec2-s3-vpc`.
 - DB-focused example (`MySQL + DynamoDB + Redis + SNS`) is available at `examples/db-services`.
+- Lambda-focused example is available at `examples/lambda-basic`.
+- CloudWatch-focused example is available at `examples/cloudwatch-basic`.
+- Classic ELB-focused example is available at `examples/elb-basic`.
 
 ## Upgrade-Friendly Defaults
 
