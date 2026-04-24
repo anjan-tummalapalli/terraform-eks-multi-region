@@ -3,14 +3,20 @@
 # Purpose:
 #   Implements resource orchestration for module 'rds-mysql'.
 # Why this file exists:
-#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+#   Keeps all service wiring in one place so the module contract in
+# variables/outputs remains stable and predictable.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
-# Resource Purpose: Defines a Database (DB) subnet group that constrains where Relational Database Service (RDS) instances can run (aws_db_subnet_group.this).
+# Resource Purpose: Defines a Database (DB) subnet group that constrains where
+# Relational Database Service (RDS) instances can run
+# (aws_db_subnet_group.this).
 resource "aws_db_subnet_group" "this" {
   name       = "${var.name}-mysql-subnet-group"
   subnet_ids = var.subnet_ids
@@ -20,7 +26,8 @@ resource "aws_db_subnet_group" "this" {
   })
 }
 
-# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.this).
+# Resource Purpose: Creates a security group that controls network traffic
+# boundaries (aws_security_group.this).
 resource "aws_security_group" "this" {
   name        = "${var.name}-mysql-sg"
   description = "Security group for MySQL instance"
@@ -38,9 +45,11 @@ resource "aws_security_group" "this" {
   })
 }
 
-# Resource Purpose: Defines an ingress or egress rule on a security group (aws_security_group_rule.ingress_mysql).
+# Resource Purpose: Defines an ingress or egress rule on a security group
+# (aws_security_group_rule.ingress_mysql).
 resource "aws_security_group_rule" "ingress_mysql" {
-  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and
+  # choosing true/false branches explicitly.
   count = length(var.allowed_cidr_blocks) > 0 ? 1 : 0
 
   type              = "ingress"
@@ -51,7 +60,8 @@ resource "aws_security_group_rule" "ingress_mysql" {
   security_group_id = aws_security_group.this.id
 }
 
-# Resource Purpose: Creates a managed Relational Database Service (RDS) database instance (aws_db_instance.this).
+# Resource Purpose: Creates a managed Relational Database Service (RDS)
+# database instance (aws_db_instance.this).
 resource "aws_db_instance" "this" {
   identifier                   = "${var.name}-mysql"
   engine                       = "mysql"

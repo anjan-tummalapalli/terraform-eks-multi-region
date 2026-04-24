@@ -1,13 +1,18 @@
 # -----------------------------------------------------------------------------
 # File: modules/regional-stack/variables.tf
 # Purpose:
-#   Declares input interface for module 'regional-stack' (types, defaults, validation).
+#   Declares input interface for module 'regional-stack' (types, defaults,
+# validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Project identifier.
@@ -28,7 +33,8 @@ variable "region" {
   type        = string
 }
 
-# Variable Purpose: Classless Inter-Domain Routing (CIDR) for Virtual Private Cloud (VPC).
+# Variable Purpose: Classless Inter-Domain Routing (CIDR) for Virtual Private
+# Cloud (VPC).
 variable "vpc_cidr" {
   description = "CIDR for VPC."
   type        = string
@@ -40,26 +46,30 @@ variable "public_subnet_cidrs" {
   type        = list(string)
 }
 
-# Variable Purpose: Private subnet Classless Inter-Domain Routing blocks (CIDRs).
+# Variable Purpose: Private subnet Classless Inter-Domain Routing blocks
+# (CIDRs).
 variable "private_subnet_cidrs" {
   description = "Private subnet CIDRs."
   type        = list(string)
 }
 
-# Variable Purpose: Availability Zone (AZ) count used by Virtual Private Cloud (VPC) module.
+# Variable Purpose: Availability Zone (AZ) count used by Virtual Private Cloud
+# (VPC) module.
 variable "az_count" {
   description = "AZ count used by VPC module."
   type        = number
 }
 
-# Variable Purpose: Whether to provision Network Address Translation (NAT) gateways.
+# Variable Purpose: Whether to provision Network Address Translation (NAT)
+# gateways.
 variable "enable_nat_gateway" {
   description = "Whether to provision NAT gateways."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Whether to provision one Network Address Translation (NAT) gateway per Availability Zone (AZ).
+# Variable Purpose: Whether to provision one Network Address Translation (NAT)
+# gateway per Availability Zone (AZ).
 variable "nat_gateway_per_az" {
   description = "Whether to provision one NAT gateway per AZ."
   type        = bool
@@ -72,62 +82,71 @@ variable "cluster_name" {
   type        = string
 }
 
-# Variable Purpose: Kubernetes version for Elastic Kubernetes Service (EKS) control plane.
+# Variable Purpose: Kubernetes version for Elastic Kubernetes Service (EKS)
+# control plane.
 variable "kubernetes_version" {
   description = "Kubernetes version for EKS control plane."
   type        = string
 }
 
-# Variable Purpose: Elastic Kubernetes Service (EKS) cluster support type used for upgrades.
+# Variable Purpose: Elastic Kubernetes Service (EKS) cluster support type used
+# for upgrades.
 variable "cluster_upgrade_support_type" {
   description = "EKS cluster support type used for upgrades."
   type        = string
   default     = "STANDARD"
 }
 
-# Variable Purpose: Enable private access to Elastic Kubernetes Service (EKS) Application Programming Interface (API) endpoint.
+# Variable Purpose: Enable private access to Elastic Kubernetes Service (EKS)
+# Application Programming Interface (API) endpoint.
 variable "cluster_endpoint_private_access" {
   description = "Enable private access to EKS API endpoint."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Enable public access to Elastic Kubernetes Service (EKS) Application Programming Interface (API) endpoint.
+# Variable Purpose: Enable public access to Elastic Kubernetes Service (EKS)
+# Application Programming Interface (API) endpoint.
 variable "cluster_endpoint_public_access" {
   description = "Enable public access to EKS API endpoint."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Classless Inter-Domain Routing (CIDR) blocks allowed to access public Elastic Kubernetes Service (EKS) endpoint.
+# Variable Purpose: Classless Inter-Domain Routing (CIDR) blocks allowed to
+# access public Elastic Kubernetes Service (EKS) endpoint.
 variable "cluster_endpoint_public_access_cidrs" {
   description = "CIDR blocks allowed to access public EKS endpoint."
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
-# Variable Purpose: Enable envelope encryption for Kubernetes secrets using Key Management Service (KMS).
+# Variable Purpose: Enable envelope encryption for Kubernetes secrets using Key
+# Management Service (KMS).
 variable "cluster_secrets_encryption_enabled" {
   description = "Enable envelope encryption for Kubernetes secrets using KMS."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Optional existing Key Management Service (KMS) key Amazon Resource Name (ARN) for Elastic Kubernetes Service (EKS) secrets encryption.
+# Variable Purpose: Optional existing Key Management Service (KMS) key Amazon
+# Resource Name (ARN) for Elastic Kubernetes Service (EKS) secrets encryption.
 variable "cluster_kms_key_arn" {
   description = "Optional existing KMS key ARN for EKS secrets encryption."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Enable automatic key rotation for module-managed Elastic Kubernetes Service (EKS) Key Management Service (KMS) key.
+# Variable Purpose: Enable automatic key rotation for module-managed Elastic
+# Kubernetes Service (EKS) Key Management Service (KMS) key.
 variable "cluster_kms_key_enable_rotation" {
   description = "Enable automatic key rotation for module-managed EKS KMS key."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Deletion window in days for module-managed Elastic Kubernetes Service (EKS) Key Management Service (KMS) key.
+# Variable Purpose: Deletion window in days for module-managed Elastic
+# Kubernetes Service (EKS) Key Management Service (KMS) key.
 variable "cluster_kms_key_deletion_window_in_days" {
   description = "Deletion window in days for module-managed EKS KMS key."
   type        = number
@@ -154,7 +173,8 @@ variable "node_force_update_version" {
   default     = true
 }
 
-# Variable Purpose: Max percentage of unavailable nodes during node group updates.
+# Variable Purpose: Max percentage of unavailable nodes during node group
+# updates.
 variable "node_max_unavailable_percentage" {
   description = "Max percentage of unavailable nodes during node group updates."
   type        = number
@@ -214,7 +234,8 @@ variable "node_max_size" {
   type        = number
 }
 
-# Variable Purpose: Whether to create Continuous Integration and Continuous Delivery (CI/CD) resources.
+# Variable Purpose: Whether to create Continuous Integration and Continuous
+# Delivery (CI/CD) resources.
 variable "create_pipeline" {
   description = "Whether to create CI/CD resources."
   type        = bool
@@ -241,7 +262,8 @@ variable "repository_branch" {
   default     = "main"
 }
 
-# Variable Purpose: CodeBuild Docker image for Continuous Integration and Continuous Delivery (CI/CD).
+# Variable Purpose: CodeBuild Docker image for Continuous Integration and
+# Continuous Delivery (CI/CD).
 variable "codebuild_image" {
   description = "CodeBuild Docker image for CI/CD."
   type        = string

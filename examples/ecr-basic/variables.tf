@@ -3,14 +3,19 @@
 # Purpose:
 #   Defines configurable inputs for example 'ecr-basic'.
 # Why this file exists:
-#   Separates environment-specific values from example logic so users can copy and adapt safely.
+#   Separates environment-specific values from example logic so users can copy
+# and adapt safely.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
-# Variable Purpose: Amazon Web Services (AWS) region for Elastic Container Registry (ECR) resources.
+# Variable Purpose: Amazon Web Services (AWS) region for Elastic Container
+# Registry (ECR) resources.
 variable "region" {
   description = "AWS region for Elastic Container Registry (ECR) resources."
   type        = string
@@ -55,9 +60,13 @@ variable "encryption_type" {
   }
 }
 
-# Variable Purpose: Optional Key Management Service (KMS) key Amazon Resource Name (ARN) when encryption_type is KMS.
+# Variable Purpose: Optional Key Management Service (KMS) key Amazon Resource
+# Name (ARN) when encryption_type is KMS.
 variable "kms_key_arn" {
-  description = "Optional Key Management Service (KMS) key Amazon Resource Name (ARN) when encryption_type is KMS."
+  description = <<-EOT
+    Optional Key Management Service (KMS) key Amazon Resource Name (ARN) when
+    encryption_type is KMS.
+  EOT
   type        = string
   default     = null
 
@@ -67,13 +76,19 @@ variable "kms_key_arn" {
       ) || (
       var.encryption_type == "KMS" && var.kms_key_arn != null
     )
-    error_message = "kms_key_arn must be set when encryption_type is KMS, and null when encryption_type is AES256."
+    error_message = <<-EOT
+      kms_key_arn must be set when encryption_type is KMS, and null when
+      encryption_type is AES256.
+    EOT
   }
 }
 
-# Variable Purpose: Whether to allow deleting the repository even when it contains images.
+# Variable Purpose: Whether to allow deleting the repository even when it
+# contains images.
 variable "force_delete" {
-  description = "Whether to allow deleting the repository even when it contains images."
+  description = <<-EOT
+    Whether to allow deleting the repository even when it contains images.
+  EOT
   type        = bool
   default     = false
 }
@@ -97,7 +112,9 @@ variable "lifecycle_tag_status" {
   default     = "any"
 
   validation {
-    condition     = contains(["tagged", "untagged", "any"], var.lifecycle_tag_status)
+    condition = (
+      contains(["tagged", "untagged", "any"], var.lifecycle_tag_status)
+    )
     error_message = "lifecycle_tag_status must be tagged, untagged, or any."
   }
 }
@@ -110,17 +127,28 @@ variable "lifecycle_tag_prefix_list" {
 
   validation {
     condition = (
-      var.lifecycle_tag_status == "tagged" && length(var.lifecycle_tag_prefix_list) > 0
-      ) || (
-      var.lifecycle_tag_status != "tagged" && length(var.lifecycle_tag_prefix_list) == 0
+      (
+        var.lifecycle_tag_status == "tagged" &&
+        length(var.lifecycle_tag_prefix_list) > 0
+        ) || (
+        var.lifecycle_tag_status != "tagged" &&
+        length(var.lifecycle_tag_prefix_list) == 0
+      )
     )
-    error_message = "lifecycle_tag_prefix_list must be non-empty when lifecycle_tag_status is tagged, and empty otherwise."
+    error_message = <<-EOT
+      lifecycle_tag_prefix_list must be non-empty when lifecycle_tag_status is
+      tagged, and empty otherwise.
+    EOT
   }
 }
 
-# Variable Purpose: Optional Amazon Resource Names (ARNs) allowed to pull images from this repository.
+# Variable Purpose: Optional Amazon Resource Names (ARNs) allowed to pull
+# images from this repository.
 variable "repository_pull_principal_arns" {
-  description = "Optional Amazon Resource Names (ARNs) allowed to pull images from this repository."
+  description = <<-EOT
+    Optional Amazon Resource Names (ARNs) allowed to pull images from this
+    repository.
+  EOT
   type        = list(string)
   default     = []
 }

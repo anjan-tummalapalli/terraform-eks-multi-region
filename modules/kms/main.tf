@@ -3,24 +3,32 @@
 # Purpose:
 #   Implements resource orchestration for module 'kms'.
 # Why this file exists:
-#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+#   Keeps all service wiring in one place so the module contract in
+# variables/outputs remains stable and predictable.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
-# Data Purpose: Reads data source aws_caller_identity.current to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_caller_identity.current to fetch existing
+# Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_caller_identity" "current" {}
 
-# Data Purpose: Reads data source aws_partition.current to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_partition.current to fetch existing
+# Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_partition" "current" {}
 
 locals {
-  # Local Purpose: Defines derived value "effective_alias_name" once for reuse and consistent logic across this file.
+  # Local Purpose: Defines derived value "effective_alias_name" once for reuse
+  # and consistent logic across this file.
   effective_alias_name = coalesce(var.alias_name, var.name)
 
-  # Local Purpose: Defines derived value "key_usage_actions" once for reuse and consistent logic across this file.
+  # Local Purpose: Defines derived value "key_usage_actions" once for reuse and
+  # consistent logic across this file.
   key_usage_actions = [
     "kms:Encrypt",
     "kms:Decrypt",
@@ -30,24 +38,35 @@ locals {
   ]
 }
 
-# Data Purpose: Reads data source aws_iam_policy_document.key_policy to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_iam_policy_document.key_policy to fetch
+# existing Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_iam_policy_document" "key_policy" {
   statement {
     sid    = "EnableRootPermissions"
     effect = "Allow"
 
     principals {
-      type        = "AWS"
-      identifiers = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root"]
+      type = "AWS"
+      identifiers = (
+        [
+          format(
+            "arn:%s:iam::%s:root",
+            data.aws_partition.current.partition,
+            data.aws_caller_identity.current.account_id
+          )
+        ]
+      )
     }
 
     actions   = ["kms:*"]
     resources = ["*"]
   }
 
-  # Dynamic Purpose: Adds key-administration policy statements only when admin principal Amazon Resource Names (ARNs) are supplied.
+  # Dynamic Purpose: Adds key-administration policy statements only when admin
+  # principal Amazon Resource Names (ARNs) are supplied.
   dynamic "statement" {
-    # Ternary Purpose: Selects the "for_each" value by evaluating a condition and choosing true/false branches explicitly.
+    # Ternary Purpose: Selects the "for_each" value by evaluating a condition
+    # and choosing true/false branches explicitly.
     for_each = length(var.admin_principal_arns) > 0 ? [1] : []
     content {
       sid    = "AllowKeyAdministration"
@@ -78,9 +97,11 @@ data "aws_iam_policy_document" "key_policy" {
     }
   }
 
-  # Dynamic Purpose: Adds key-usage policy statements only when usage principal Amazon Resource Names (ARNs) are supplied.
+  # Dynamic Purpose: Adds key-usage policy statements only when usage principal
+  # Amazon Resource Names (ARNs) are supplied.
   dynamic "statement" {
-    # Ternary Purpose: Selects the "for_each" value by evaluating a condition and choosing true/false branches explicitly.
+    # Ternary Purpose: Selects the "for_each" value by evaluating a condition
+    # and choosing true/false branches explicitly.
     for_each = length(var.usage_principal_arns) > 0 ? [1] : []
     content {
       sid    = "AllowKeyUsageByPrincipals"
@@ -96,9 +117,11 @@ data "aws_iam_policy_document" "key_policy" {
     }
   }
 
-  # Dynamic Purpose: Adds service-principal key-usage statements only when service principals are supplied.
+  # Dynamic Purpose: Adds service-principal key-usage statements only when
+  # service principals are supplied.
   dynamic "statement" {
-    # Ternary Purpose: Selects the "for_each" value by evaluating a condition and choosing true/false branches explicitly.
+    # Ternary Purpose: Selects the "for_each" value by evaluating a condition
+    # and choosing true/false branches explicitly.
     for_each = length(var.service_principals) > 0 ? [1] : []
     content {
       sid    = "AllowKeyUsageByServices"
@@ -121,7 +144,8 @@ data "aws_iam_policy_document" "key_policy" {
   }
 }
 
-# Resource Purpose: Creates a customer-managed Key Management Service (KMS) key for encryption operations (aws_kms_key.this).
+# Resource Purpose: Creates a customer-managed Key Management Service (KMS) key
+# for encryption operations (aws_kms_key.this).
 resource "aws_kms_key" "this" {
   description              = var.description
   key_usage                = var.key_usage
@@ -137,16 +161,19 @@ resource "aws_kms_key" "this" {
   })
 }
 
-# Resource Purpose: Creates a friendly alias that points to a Key Management Service (KMS) key (aws_kms_alias.primary).
+# Resource Purpose: Creates a friendly alias that points to a Key Management
+# Service (KMS) key (aws_kms_alias.primary).
 resource "aws_kms_alias" "primary" {
-  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and
+  # choosing true/false branches explicitly.
   count = var.create_alias ? 1 : 0
 
   name          = "alias/${local.effective_alias_name}"
   target_key_id = aws_kms_key.this.key_id
 }
 
-# Resource Purpose: Creates a friendly alias that points to a Key Management Service (KMS) key (aws_kms_alias.additional).
+# Resource Purpose: Creates a friendly alias that points to a Key Management
+# Service (KMS) key (aws_kms_alias.additional).
 resource "aws_kms_alias" "additional" {
   for_each = toset(var.additional_aliases)
 

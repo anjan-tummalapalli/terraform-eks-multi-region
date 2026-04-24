@@ -3,11 +3,15 @@
 # Purpose:
 #   Defines configurable inputs for example 'db-services'.
 # Why this file exists:
-#   Separates environment-specific values from example logic so users can copy and adapt safely.
+#   Separates environment-specific values from example logic so users can copy
+# and adapt safely.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Amazon Web Services (AWS) region.
@@ -24,7 +28,8 @@ variable "name_prefix" {
   default     = "dbdemo"
 }
 
-# Variable Purpose: Virtual Private Cloud (VPC) Classless Inter-Domain Routing (CIDR) block.
+# Variable Purpose: Virtual Private Cloud (VPC) Classless Inter-Domain Routing
+# (CIDR) block.
 variable "vpc_cidr" {
   description = "VPC CIDR block."
   type        = string
@@ -38,7 +43,8 @@ variable "public_subnet_cidrs" {
   default     = ["10.40.1.0/24", "10.40.2.0/24"]
 }
 
-# Variable Purpose: Private subnet Classless Inter-Domain Routing blocks (CIDRs).
+# Variable Purpose: Private subnet Classless Inter-Domain Routing blocks
+# (CIDRs).
 variable "private_subnet_cidrs" {
   description = "Private subnet CIDRs."
   type        = list(string)
@@ -59,7 +65,8 @@ variable "db_password" {
   sensitive   = true
 }
 
-# Variable Purpose: Optional email subscription for Simple Notification Service (SNS) alerts.
+# Variable Purpose: Optional email subscription for Simple Notification Service
+# (SNS) alerts.
 variable "alert_email" {
   description = "Optional email subscription for SNS alerts."
   type        = string

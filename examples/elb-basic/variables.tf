@@ -3,11 +3,15 @@
 # Purpose:
 #   Defines configurable inputs for example 'elb-basic'.
 # Why this file exists:
-#   Separates environment-specific values from example logic so users can copy and adapt safely.
+#   Separates environment-specific values from example logic so users can copy
+# and adapt safely.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Amazon Web Services (AWS) region.
@@ -24,7 +28,8 @@ variable "name_prefix" {
   default     = "elb-demo"
 }
 
-# Variable Purpose: Virtual Private Cloud (VPC) Classless Inter-Domain Routing (CIDR) block.
+# Variable Purpose: Virtual Private Cloud (VPC) Classless Inter-Domain Routing
+# (CIDR) block.
 variable "vpc_cidr" {
   description = "VPC CIDR block."
   type        = string
@@ -52,14 +57,16 @@ variable "instance_type" {
   default     = "t3.micro"
 }
 
-# Variable Purpose: Classless Inter-Domain Routing blocks (CIDRs) allowed for SSH access.
+# Variable Purpose: Classless Inter-Domain Routing blocks (CIDRs) allowed for
+# SSH access.
 variable "ssh_ingress_cidrs" {
   description = "CIDRs allowed for SSH access."
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
-# Variable Purpose: Classless Inter-Domain Routing blocks (CIDRs) allowed to access the Elastic Load Balancer (ELB) listener.
+# Variable Purpose: Classless Inter-Domain Routing blocks (CIDRs) allowed to
+# access the Elastic Load Balancer (ELB) listener.
 variable "elb_ingress_cidrs" {
   description = "CIDRs allowed to access the ELB listener."
   type        = list(string)

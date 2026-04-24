@@ -3,11 +3,15 @@
 # Purpose:
 #   Demonstrates end-to-end usage for example 'sagemaker-basic'.
 # Why this file exists:
-#   Provides a runnable reference for adoption, testing, and onboarding without changing module internals.
+#   Provides a runnable reference for adoption, testing, and onboarding without
+# changing module internals.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 provider "aws" {
@@ -27,7 +31,8 @@ module "vpc" {
   tags                 = var.tags
 }
 
-# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.notebook).
+# Resource Purpose: Creates a security group that controls network traffic
+# boundaries (aws_security_group.notebook).
 resource "aws_security_group" "notebook" {
   name        = "${var.name_prefix}-sagemaker-sg"
   description = "Restrictive security group for SageMaker notebook"
@@ -82,7 +87,9 @@ module "sagemaker" {
   lifecycle_on_start                        = <<-EOT
     #!/bin/bash
     set -eux
-    echo "Notebook start hook executed on $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> /var/log/sagemaker-lifecycle.log
+    timestamp="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    echo "Notebook start hook executed on ${timestamp}" \
+      >> /var/log/sagemaker-lifecycle.log
   EOT
   tags                                      = var.tags
 }

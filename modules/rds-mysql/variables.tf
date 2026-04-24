@@ -1,16 +1,22 @@
 # -----------------------------------------------------------------------------
 # File: modules/rds-mysql/variables.tf
 # Purpose:
-#   Declares input interface for module 'rds-mysql' (types, defaults, validation).
+#   Declares input interface for module 'rds-mysql' (types, defaults,
+# validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
-# Variable Purpose: Name prefix for MySQL Relational Database Service (RDS) resources.
+# Variable Purpose: Name prefix for MySQL Relational Database Service (RDS)
+# resources.
 variable "name" {
   description = "Name prefix for MySQL RDS resources."
   type        = string
@@ -71,14 +77,16 @@ variable "storage_encrypted" {
   default     = true
 }
 
-# Variable Purpose: Optional Key Management Service (KMS) key ID/Amazon Resource Name (ARN) for storage encryption.
+# Variable Purpose: Optional Key Management Service (KMS) key ID/Amazon
+# Resource Name (ARN) for storage encryption.
 variable "kms_key_id" {
   description = "Optional KMS key ID/ARN for storage encryption."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Virtual Private Cloud (VPC) ID for Database (DB) security group.
+# Variable Purpose: Virtual Private Cloud (VPC) ID for Database (DB) security
+# group.
 variable "vpc_id" {
   description = "VPC ID for DB security group."
   type        = string
@@ -90,7 +98,8 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
-# Variable Purpose: Classless Inter-Domain Routing (CIDR) blocks allowed to connect to Database (DB).
+# Variable Purpose: Classless Inter-Domain Routing (CIDR) blocks allowed to
+# connect to Database (DB).
 variable "allowed_cidr_blocks" {
   description = "CIDR blocks allowed to connect to DB."
   type        = list(string)
@@ -111,7 +120,8 @@ variable "backup_retention_period" {
   default     = 3
 }
 
-# Variable Purpose: Apply Database (DB) changes immediately or during the maintenance window.
+# Variable Purpose: Apply Database (DB) changes immediately or during the
+# maintenance window.
 variable "apply_immediately" {
   description = "Apply DB changes immediately or during the maintenance window."
   type        = bool
@@ -125,16 +135,22 @@ variable "auto_minor_version_upgrade" {
   default     = true
 }
 
-# Variable Purpose: Allow major engine version upgrades when changing engine_version.
+# Variable Purpose: Allow major engine version upgrades when changing
+# engine_version.
 variable "allow_major_version_upgrade" {
-  description = "Allow major engine version upgrades when changing engine_version."
+  description = <<-EOT
+    Allow major engine version upgrades when changing engine_version.
+  EOT
   type        = bool
   default     = false
 }
 
-# Variable Purpose: Preferred maintenance window (UTC), for example Mon:00:00-Mon:03:00.
+# Variable Purpose: Preferred maintenance window (UTC), for example
+# Mon:00:00-Mon:03:00.
 variable "maintenance_window" {
-  description = "Preferred maintenance window (UTC), for example Mon:00:00-Mon:03:00."
+  description = <<-EOT
+    Preferred maintenance window (UTC), for example Mon:00:00-Mon:03:00.
+  EOT
   type        = string
   default     = null
 }

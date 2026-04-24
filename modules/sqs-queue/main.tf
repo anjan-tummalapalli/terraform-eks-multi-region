@@ -3,14 +3,19 @@
 # Purpose:
 #   Implements resource orchestration for module 'sqs-queue'.
 # Why this file exists:
-#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+#   Keeps all service wiring in one place so the module contract in
+# variables/outputs remains stable and predictable.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
-# Resource Purpose: Creates a Simple Queue Service (SQS) queue for asynchronous message processing (aws_sqs_queue.this).
+# Resource Purpose: Creates a Simple Queue Service (SQS) queue for asynchronous
+# message processing (aws_sqs_queue.this).
 resource "aws_sqs_queue" "this" {
   name                        = var.name
   fifo_queue                  = var.fifo_queue

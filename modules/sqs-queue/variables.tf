@@ -1,13 +1,18 @@
 # -----------------------------------------------------------------------------
 # File: modules/sqs-queue/variables.tf
 # Purpose:
-#   Declares input interface for module 'sqs-queue' (types, defaults, validation).
+#   Declares input interface for module 'sqs-queue' (types, defaults,
+# validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Simple Queue Service (SQS) queue name.
@@ -23,7 +28,8 @@ variable "fifo_queue" {
   default     = false
 }
 
-# Variable Purpose: Enable content-based deduplication for First In, First Out (FIFO) queues.
+# Variable Purpose: Enable content-based deduplication for First In, First Out
+# (FIFO) queues.
 variable "content_based_deduplication" {
   description = "Enable content-based deduplication for FIFO queues."
   type        = bool

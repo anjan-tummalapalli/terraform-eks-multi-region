@@ -24,7 +24,9 @@ cluster_endpoint_public_access        = true
 cluster_endpoint_public_access_cidrs  = ["0.0.0.0/0"]
 cluster_secrets_encryption_enabled    = true
 # Optional: provide your own KMS key ARN for EKS secrets encryption.
-# cluster_kms_key_arn = "arn:aws:kms:ap-south-1:123456789012:key/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+# cluster_kms_key_arn =
+# "arn:aws:kms:ap-south-1:123456789012:key/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+# "
 cluster_kms_key_enable_rotation       = true
 cluster_kms_key_deletion_window_in_days = 30
 node_instance_types                   = ["t3.small"]

@@ -3,14 +3,19 @@
 # Purpose:
 #   Implements resource orchestration for module 'alb'.
 # Why this file exists:
-#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+#   Keeps all service wiring in one place so the module contract in
+# variables/outputs remains stable and predictable.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
-# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.alb).
+# Resource Purpose: Creates a security group that controls network traffic
+# boundaries (aws_security_group.alb).
 resource "aws_security_group" "alb" {
   name        = "${var.name}-alb-sg"
   description = "Security group for ALB"
@@ -35,7 +40,8 @@ resource "aws_security_group" "alb" {
   })
 }
 
-# Resource Purpose: Creates an Application Load Balancer for Layer 7 traffic distribution (aws_lb.this).
+# Resource Purpose: Creates an Application Load Balancer for Layer 7 traffic
+# distribution (aws_lb.this).
 resource "aws_lb" "this" {
   name               = "${var.name}-alb"
   internal           = var.internal
@@ -46,7 +52,8 @@ resource "aws_lb" "this" {
   tags = var.tags
 }
 
-# Resource Purpose: Defines an Application Load Balancer (ALB) target group and health check behavior for backends (aws_lb_target_group.this).
+# Resource Purpose: Defines an Application Load Balancer (ALB) target group and
+# health check behavior for backends (aws_lb_target_group.this).
 resource "aws_lb_target_group" "this" {
   name        = "${var.name}-tg"
   port        = var.target_port
@@ -67,7 +74,8 @@ resource "aws_lb_target_group" "this" {
   tags = var.tags
 }
 
-# Resource Purpose: Configures an Application Load Balancer (ALB) listener for inbound protocol and port handling (aws_lb_listener.http).
+# Resource Purpose: Configures an Application Load Balancer (ALB) listener for
+# inbound protocol and port handling (aws_lb_listener.http).
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.this.arn
   port              = var.listener_port

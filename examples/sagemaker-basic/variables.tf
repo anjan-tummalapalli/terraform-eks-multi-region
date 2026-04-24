@@ -3,11 +3,15 @@
 # Purpose:
 #   Defines configurable inputs for example 'sagemaker-basic'.
 # Why this file exists:
-#   Separates environment-specific values from example logic so users can copy and adapt safely.
+#   Separates environment-specific values from example logic so users can copy
+# and adapt safely.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Amazon Web Services (AWS) region for SageMaker resources.
@@ -24,7 +28,8 @@ variable "name_prefix" {
   default     = "sagemaker-demo"
 }
 
-# Variable Purpose: Virtual Private Cloud (VPC) Classless Inter-Domain Routing (CIDR) block.
+# Variable Purpose: Virtual Private Cloud (VPC) Classless Inter-Domain Routing
+# (CIDR) block.
 variable "vpc_cidr" {
   description = "VPC CIDR block."
   type        = string
@@ -45,21 +50,26 @@ variable "private_subnet_cidrs" {
   default     = ["10.60.11.0/24", "10.60.12.0/24"]
 }
 
-# Variable Purpose: Classless Inter-Domain Routing blocks (CIDRs) allowed to access notebook HTTPS endpoint.
+# Variable Purpose: Classless Inter-Domain Routing blocks (CIDRs) allowed to
+# access notebook HTTPS endpoint.
 variable "notebook_ingress_cidrs" {
   description = "CIDRs allowed to access notebook HTTPS endpoint."
   type        = list(string)
   default     = ["10.60.0.0/16"]
 }
 
-# Variable Purpose: SageMaker notebook instance type (cost baseline uses ml.t3.medium).
+# Variable Purpose: SageMaker notebook instance type (cost baseline uses
+# ml.t3.medium).
 variable "instance_type" {
-  description = "SageMaker notebook instance type (cost baseline uses ml.t3.medium)."
+  description = <<-EOT
+    SageMaker notebook instance type (cost baseline uses ml.t3.medium).
+  EOT
   type        = string
   default     = "ml.t3.medium"
 }
 
-# Variable Purpose: Globally unique Simple Storage Service (S3) bucket name for notebook data.
+# Variable Purpose: Globally unique Simple Storage Service (S3) bucket name for
+# notebook data.
 variable "notebook_data_bucket_name" {
   description = "Globally unique S3 bucket name for notebook data."
   type        = string

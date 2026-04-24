@@ -1,13 +1,18 @@
 # -----------------------------------------------------------------------------
 # File: modules/elasticache-redis/variables.tf
 # Purpose:
-#   Declares input interface for module 'elasticache-redis' (types, defaults, validation).
+#   Declares input interface for module 'elasticache-redis' (types, defaults,
+# validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Name prefix for Redis resources.
@@ -28,7 +33,8 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
-# Variable Purpose: Classless Inter-Domain Routing (CIDR) blocks allowed to access Redis.
+# Variable Purpose: Classless Inter-Domain Routing (CIDR) blocks allowed to
+# access Redis.
 variable "allowed_cidr_blocks" {
   description = "CIDR blocks allowed to access Redis."
   type        = list(string)
@@ -84,9 +90,12 @@ variable "auto_minor_version_upgrade" {
   default     = true
 }
 
-# Variable Purpose: Preferred maintenance window (UTC), for example sun:03:00-sun:04:00.
+# Variable Purpose: Preferred maintenance window (UTC), for example
+# sun:03:00-sun:04:00.
 variable "maintenance_window" {
-  description = "Preferred maintenance window (UTC), for example sun:03:00-sun:04:00."
+  description = <<-EOT
+    Preferred maintenance window (UTC), for example sun:03:00-sun:04:00.
+  EOT
   type        = string
   default     = null
 }

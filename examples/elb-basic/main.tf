@@ -3,18 +3,23 @@
 # Purpose:
 #   Demonstrates end-to-end usage for example 'elb-basic'.
 # Why this file exists:
-#   Provides a runnable reference for adoption, testing, and onboarding without changing module internals.
+#   Provides a runnable reference for adoption, testing, and onboarding without
+# changing module internals.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 provider "aws" {
   region = var.region
 }
 
-# Data Purpose: Reads data source aws_ssm_parameter.al2023 to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_ssm_parameter.al2023 to fetch existing
+# Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_ssm_parameter" "al2023" {
   name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }
@@ -32,7 +37,8 @@ module "vpc" {
   tags                 = var.tags
 }
 
-# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.elb).
+# Resource Purpose: Creates a security group that controls network traffic
+# boundaries (aws_security_group.elb).
 resource "aws_security_group" "elb" {
   name        = "${var.name_prefix}-elb-sg"
   description = "Security group for classic ELB"
@@ -57,7 +63,8 @@ resource "aws_security_group" "elb" {
   })
 }
 
-# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.instance_from_elb).
+# Resource Purpose: Creates a security group that controls network traffic
+# boundaries (aws_security_group.instance_from_elb).
 resource "aws_security_group" "instance_from_elb" {
   name        = "${var.name_prefix}-instance-from-elb-sg"
   description = "Allow HTTP from ELB to EC2"
@@ -108,7 +115,8 @@ module "ec2" {
     cat > /home/ec2-user/index.html <<'HTML'
     <html><body><h1>Classic ELB Backend Healthy</h1></body></html>
     HTML
-    nohup python3 -m http.server 80 --directory /home/ec2-user >/var/log/http-server.log 2>&1 &
+    nohup python3 -m http.server 80 --directory /home/ec2-user \
+      >/var/log/http-server.log 2>&1 &
   EOT
   tags                          = var.tags
 }

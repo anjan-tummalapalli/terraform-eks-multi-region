@@ -3,11 +3,15 @@
 # Purpose:
 #   Declares input interface for module 'vpc' (types, defaults, validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Name prefix for networking resources.
@@ -16,7 +20,8 @@ variable "name" {
   type        = string
 }
 
-# Variable Purpose: Classless Inter-Domain Routing (CIDR) block for Virtual Private Cloud (VPC).
+# Variable Purpose: Classless Inter-Domain Routing (CIDR) block for Virtual
+# Private Cloud (VPC).
 variable "cidr" {
   description = "CIDR block for VPC."
   type        = string
@@ -28,7 +33,8 @@ variable "az_count" {
   type        = number
 }
 
-# Variable Purpose: Classless Inter-Domain Routing blocks (CIDRs) for public subnets.
+# Variable Purpose: Classless Inter-Domain Routing blocks (CIDRs) for public
+# subnets.
 variable "public_subnet_cidrs" {
   description = "CIDRs for public subnets."
   type        = list(string)
@@ -39,7 +45,8 @@ variable "public_subnet_cidrs" {
   }
 }
 
-# Variable Purpose: Classless Inter-Domain Routing blocks (CIDRs) for private subnets.
+# Variable Purpose: Classless Inter-Domain Routing blocks (CIDRs) for private
+# subnets.
 variable "private_subnet_cidrs" {
   description = "CIDRs for private subnets."
   type        = list(string)
@@ -50,14 +57,16 @@ variable "private_subnet_cidrs" {
   }
 }
 
-# Variable Purpose: Whether to create Network Address Translation (NAT) gateways.
+# Variable Purpose: Whether to create Network Address Translation (NAT)
+# gateways.
 variable "enable_nat_gateway" {
   description = "Whether to create NAT gateways."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Whether to create one Network Address Translation (NAT) gateway per Availability Zone (AZ).
+# Variable Purpose: Whether to create one Network Address Translation (NAT)
+# gateway per Availability Zone (AZ).
 variable "nat_gateway_per_az" {
   description = "Whether to create one NAT gateway per AZ."
   type        = bool

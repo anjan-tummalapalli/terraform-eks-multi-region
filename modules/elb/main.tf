@@ -3,19 +3,25 @@
 # Purpose:
 #   Implements resource orchestration for module 'elb'.
 # Why this file exists:
-#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+#   Keeps all service wiring in one place so the module contract in
+# variables/outputs remains stable and predictable.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 locals {
-  # Local Purpose: Defines derived value "elb_name" once for reuse and consistent logic across this file.
+  # Local Purpose: Defines derived value "elb_name" once for reuse and
+  # consistent logic across this file.
   elb_name = substr(lower(replace("${var.name}-elb", "_", "-")), 0, 32)
 }
 
-# Resource Purpose: Creates a Classic Load Balancer to distribute traffic to instances (aws_elb.this).
+# Resource Purpose: Creates a Classic Load Balancer to distribute traffic to
+# instances (aws_elb.this).
 resource "aws_elb" "this" {
   name                        = local.elb_name
   subnets                     = var.subnet_ids
@@ -27,7 +33,8 @@ resource "aws_elb" "this" {
   connection_draining         = var.connection_draining
   connection_draining_timeout = var.connection_draining_timeout
 
-  # Dynamic Purpose: Expands Elastic Load Balancer (ELB) listener blocks from var.listeners so each listener definition is rendered declaratively.
+  # Dynamic Purpose: Expands Elastic Load Balancer (ELB) listener blocks from
+  # var.listeners so each listener definition is rendered declaratively.
   dynamic "listener" {
     for_each = var.listeners
     content {

@@ -3,22 +3,31 @@
 # Purpose:
 #   Implements resource orchestration for module 'cicd'.
 # Why this file exists:
-#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+#   Keeps all service wiring in one place so the module contract in
+# variables/outputs remains stable and predictable.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 locals {
-  # Local Purpose: Defines derived value "name_prefix" once for reuse and consistent logic across this file.
-  name_prefix = "${var.project_name}-${var.environment}-${replace(var.region, "-", "")}"
+  # Local Purpose: Defines derived value "name_prefix" once for reuse and
+  # consistent logic across this file.
+  name_prefix = (
+    "${var.project_name}-${var.environment}-${replace(var.region, "-", "")}"
+  )
 }
 
-# Data Purpose: Reads data source aws_caller_identity.current to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_caller_identity.current to fetch existing
+# Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_caller_identity" "current" {}
 
-# Resource Purpose: Generates a random string used for unique resource naming (random_string.suffix).
+# Resource Purpose: Generates a random string used for unique resource naming
+# (random_string.suffix).
 resource "random_string" "suffix" {
   length  = 6
   upper   = false
@@ -26,9 +35,12 @@ resource "random_string" "suffix" {
   numeric = true
 }
 
-# Resource Purpose: Creates an Elastic Container Registry (ECR) repository to store and version container images (aws_ecr_repository.app).
+# Resource Purpose: Creates an Elastic Container Registry (ECR) repository to
+# store and version container images (aws_ecr_repository.app).
 resource "aws_ecr_repository" "app" {
-  name                 = "${var.project_name}-${var.environment}-${replace(var.region, "-", "")}-app"
+  name = (
+    "${var.project_name}-${var.environment}-${replace(var.region, "-", "")}-app"
+  )
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -38,14 +50,24 @@ resource "aws_ecr_repository" "app" {
   tags = var.tags
 }
 
-# Resource Purpose: Creates a Simple Storage Service (S3) bucket for object storage (aws_s3_bucket.artifacts).
+# Resource Purpose: Creates a Simple Storage Service (S3) bucket for object
+# storage (aws_s3_bucket.artifacts).
 resource "aws_s3_bucket" "artifacts" {
-  bucket = lower(substr("${local.name_prefix}-artifacts-${random_string.suffix.result}", 0, 63))
+  bucket = (
+    lower(
+      substr(
+        "${local.name_prefix}-artifacts-${random_string.suffix.result}",
+        0,
+        63
+      )
+    )
+  )
 
   tags = var.tags
 }
 
-# Resource Purpose: Enables or configures object versioning on a Simple Storage Service (S3) bucket (aws_s3_bucket_versioning.artifacts).
+# Resource Purpose: Enables or configures object versioning on a Simple Storage
+# Service (S3) bucket (aws_s3_bucket_versioning.artifacts).
 resource "aws_s3_bucket_versioning" "artifacts" {
   bucket = aws_s3_bucket.artifacts.id
 
@@ -54,7 +76,9 @@ resource "aws_s3_bucket_versioning" "artifacts" {
   }
 }
 
-# Resource Purpose: Applies Simple Storage Service (S3) public access block controls to prevent unintended exposure (aws_s3_bucket_public_access_block.artifacts).
+# Resource Purpose: Applies Simple Storage Service (S3) public access block
+# controls to prevent unintended exposure
+# (aws_s3_bucket_public_access_block.artifacts).
 resource "aws_s3_bucket_public_access_block" "artifacts" {
   bucket = aws_s3_bucket.artifacts.id
 
@@ -64,7 +88,9 @@ resource "aws_s3_bucket_public_access_block" "artifacts" {
   restrict_public_buckets = true
 }
 
-# Resource Purpose: Configures default server-side encryption for a Simple Storage Service (S3) bucket (aws_s3_bucket_server_side_encryption_configuration.artifacts).
+# Resource Purpose: Configures default server-side encryption for a Simple
+# Storage Service (S3) bucket
+# (aws_s3_bucket_server_side_encryption_configuration.artifacts).
 resource "aws_s3_bucket_server_side_encryption_configuration" "artifacts" {
   bucket = aws_s3_bucket.artifacts.id
 
@@ -75,7 +101,9 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "artifacts" {
   }
 }
 
-# Data Purpose: Reads data source aws_iam_policy_document.artifacts_tls_only to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_iam_policy_document.artifacts_tls_only to
+# fetch existing Amazon Web Services (AWS) context required by dependent
+# expressions.
 data "aws_iam_policy_document" "artifacts_tls_only" {
   statement {
     sid    = "DenyInsecureTransport"
@@ -100,15 +128,18 @@ data "aws_iam_policy_document" "artifacts_tls_only" {
   }
 }
 
-# Resource Purpose: Applies a bucket policy to enforce access and security constraints (aws_s3_bucket_policy.artifacts_tls_only).
+# Resource Purpose: Applies a bucket policy to enforce access and security
+# constraints (aws_s3_bucket_policy.artifacts_tls_only).
 resource "aws_s3_bucket_policy" "artifacts_tls_only" {
   bucket = aws_s3_bucket.artifacts.id
   policy = data.aws_iam_policy_document.artifacts_tls_only.json
 }
 
-# Resource Purpose: Creates a CodeCommit repository for source version control (aws_codecommit_repository.this).
+# Resource Purpose: Creates a CodeCommit repository for source version control
+# (aws_codecommit_repository.this).
 resource "aws_codecommit_repository" "this" {
-  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and
+  # choosing true/false branches explicitly.
   count           = var.create_codecommit_repo ? 1 : 0
   repository_name = var.codecommit_repo_name
 
@@ -116,12 +147,20 @@ resource "aws_codecommit_repository" "this" {
 }
 
 locals {
-  # Local Purpose: Defines derived value "source_repo_name" once for reuse and consistent logic across this file.
-  # Ternary Purpose: Selects the "source_repo_name" value by evaluating a condition and choosing true/false branches explicitly.
-  source_repo_name = var.create_codecommit_repo ? aws_codecommit_repository.this[0].repository_name : var.codecommit_repo_name
+  # Local Purpose: Defines derived value "source_repo_name" once for reuse and
+  # consistent logic across this file.
+  # Ternary Purpose: Selects the "source_repo_name" value by evaluating a
+  # condition and choosing true/false branches explicitly.
+  source_repo_name = (
+    var.create_codecommit_repo
+    ? aws_codecommit_repository.this[0].repository_name
+    : var.codecommit_repo_name
+  )
 }
 
-# Data Purpose: Reads data source aws_iam_policy_document.codebuild_assume to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_iam_policy_document.codebuild_assume to
+# fetch existing Amazon Web Services (AWS) context required by dependent
+# expressions.
 data "aws_iam_policy_document" "codebuild_assume" {
   statement {
     effect = "Allow"
@@ -135,7 +174,9 @@ data "aws_iam_policy_document" "codebuild_assume" {
   }
 }
 
-# Resource Purpose: Creates an Identity and Access Management (IAM) role assumed by Amazon Web Services (AWS) services or workloads (aws_iam_role.codebuild).
+# Resource Purpose: Creates an Identity and Access Management (IAM) role
+# assumed by Amazon Web Services (AWS) services or workloads
+# (aws_iam_role.codebuild).
 resource "aws_iam_role" "codebuild" {
   name               = "${local.name_prefix}-codebuild-role"
   assume_role_policy = data.aws_iam_policy_document.codebuild_assume.json
@@ -143,7 +184,8 @@ resource "aws_iam_role" "codebuild" {
   tags = var.tags
 }
 
-# Resource Purpose: Attaches an inline Identity and Access Management (IAM) policy document directly to a role (aws_iam_role_policy.codebuild).
+# Resource Purpose: Attaches an inline Identity and Access Management (IAM)
+# policy document directly to a role (aws_iam_role_policy.codebuild).
 resource "aws_iam_role_policy" "codebuild" {
   name = "${local.name_prefix}-codebuild-policy"
   role = aws_iam_role.codebuild.id
@@ -206,7 +248,9 @@ resource "aws_iam_role_policy" "codebuild" {
   })
 }
 
-# Data Purpose: Reads data source aws_iam_policy_document.codepipeline_assume to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_iam_policy_document.codepipeline_assume
+# to fetch existing Amazon Web Services (AWS) context required by dependent
+# expressions.
 data "aws_iam_policy_document" "codepipeline_assume" {
   statement {
     effect = "Allow"
@@ -220,7 +264,9 @@ data "aws_iam_policy_document" "codepipeline_assume" {
   }
 }
 
-# Resource Purpose: Creates an Identity and Access Management (IAM) role assumed by Amazon Web Services (AWS) services or workloads (aws_iam_role.codepipeline).
+# Resource Purpose: Creates an Identity and Access Management (IAM) role
+# assumed by Amazon Web Services (AWS) services or workloads
+# (aws_iam_role.codepipeline).
 resource "aws_iam_role" "codepipeline" {
   name               = "${local.name_prefix}-codepipeline-role"
   assume_role_policy = data.aws_iam_policy_document.codepipeline_assume.json
@@ -228,7 +274,8 @@ resource "aws_iam_role" "codepipeline" {
   tags = var.tags
 }
 
-# Resource Purpose: Attaches an inline Identity and Access Management (IAM) policy document directly to a role (aws_iam_role_policy.codepipeline).
+# Resource Purpose: Attaches an inline Identity and Access Management (IAM)
+# policy document directly to a role (aws_iam_role_policy.codepipeline).
 resource "aws_iam_role_policy" "codepipeline" {
   name = "${local.name_prefix}-codepipeline-policy"
   role = aws_iam_role.codepipeline.id
@@ -272,7 +319,8 @@ resource "aws_iam_role_policy" "codepipeline" {
   })
 }
 
-# Resource Purpose: Defines a CodeBuild project that runs build and deployment steps (aws_codebuild_project.this).
+# Resource Purpose: Defines a CodeBuild project that runs build and deployment
+# steps (aws_codebuild_project.this).
 resource "aws_codebuild_project" "this" {
   name         = "${local.name_prefix}-build"
   description  = "Build and deploy container workload to EKS"
@@ -315,7 +363,8 @@ resource "aws_codebuild_project" "this" {
   tags = var.tags
 }
 
-# Resource Purpose: Defines a CodePipeline workflow to orchestrate Continuous Integration and Continuous Delivery (CI/CD) stages (aws_codepipeline.this).
+# Resource Purpose: Defines a CodePipeline workflow to orchestrate Continuous
+# Integration and Continuous Delivery (CI/CD) stages (aws_codepipeline.this).
 resource "aws_codepipeline" "this" {
   name     = "${local.name_prefix}-pipeline"
   role_arn = aws_iam_role.codepipeline.arn

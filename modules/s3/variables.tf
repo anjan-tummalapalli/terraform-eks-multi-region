@@ -3,11 +3,15 @@
 # Purpose:
 #   Declares input interface for module 's3' (types, defaults, validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Unique Simple Storage Service (S3) bucket name.
@@ -30,7 +34,8 @@ variable "sse_algorithm" {
   default     = "AES256"
 }
 
-# Variable Purpose: Optional Key Management Service (KMS) key ID/Amazon Resource Name (ARN) when sse_algorithm is aws:kms.
+# Variable Purpose: Optional Key Management Service (KMS) key ID/Amazon
+# Resource Name (ARN) when sse_algorithm is aws:kms.
 variable "kms_key_id" {
   description = "Optional KMS key ID/ARN when sse_algorithm is aws:kms."
   type        = string
@@ -51,7 +56,8 @@ variable "enable_lifecycle_rule" {
   default     = false
 }
 
-# Variable Purpose: Deny non-Transport Layer Security (TLS) requests to this Simple Storage Service (S3) bucket.
+# Variable Purpose: Deny non-Transport Layer Security (TLS) requests to this
+# Simple Storage Service (S3) bucket.
 variable "enforce_ssl_requests" {
   description = "Deny non-TLS requests to this S3 bucket."
   type        = bool

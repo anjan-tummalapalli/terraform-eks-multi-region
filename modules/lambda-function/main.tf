@@ -3,14 +3,19 @@
 # Purpose:
 #   Implements resource orchestration for module 'lambda-function'.
 # Why this file exists:
-#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+#   Keeps all service wiring in one place so the module contract in
+# variables/outputs remains stable and predictable.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
-# Data Purpose: Reads data source aws_iam_policy_document.assume to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_iam_policy_document.assume to fetch
+# existing Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_iam_policy_document" "assume" {
   statement {
     effect = "Allow"
@@ -24,7 +29,9 @@ data "aws_iam_policy_document" "assume" {
   }
 }
 
-# Resource Purpose: Creates an Identity and Access Management (IAM) role assumed by Amazon Web Services (AWS) services or workloads (aws_iam_role.this).
+# Resource Purpose: Creates an Identity and Access Management (IAM) role
+# assumed by Amazon Web Services (AWS) services or workloads
+# (aws_iam_role.this).
 resource "aws_iam_role" "this" {
   name               = "${var.function_name}-role"
   assume_role_policy = data.aws_iam_policy_document.assume.json
@@ -32,13 +39,17 @@ resource "aws_iam_role" "this" {
   tags = var.tags
 }
 
-# Resource Purpose: Attaches a managed Identity and Access Management (IAM) policy to a role (aws_iam_role_policy_attachment.basic_execution).
+# Resource Purpose: Attaches a managed Identity and Access Management (IAM)
+# policy to a role (aws_iam_role_policy_attachment.basic_execution).
 resource "aws_iam_role_policy_attachment" "basic_execution" {
-  role       = aws_iam_role.this.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  role = aws_iam_role.this.name
+  policy_arn = (
+    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  )
 }
 
-# Resource Purpose: Creates a CloudWatch Logs group with retention and optional encryption settings (aws_cloudwatch_log_group.this).
+# Resource Purpose: Creates a CloudWatch Logs group with retention and optional
+# encryption settings (aws_cloudwatch_log_group.this).
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/lambda/${var.function_name}"
   retention_in_days = var.log_retention_days
@@ -46,7 +57,8 @@ resource "aws_cloudwatch_log_group" "this" {
   tags = var.tags
 }
 
-# Resource Purpose: Deploys a Lambda function package and runtime configuration (aws_lambda_function.this).
+# Resource Purpose: Deploys a Lambda function package and runtime configuration
+# (aws_lambda_function.this).
 resource "aws_lambda_function" "this" {
   function_name = var.function_name
   filename      = var.filename
@@ -64,5 +76,10 @@ resource "aws_lambda_function" "this" {
 
   tags = var.tags
 
-  depends_on = [aws_iam_role_policy_attachment.basic_execution, aws_cloudwatch_log_group.this]
+  depends_on = (
+    [
+      aws_iam_role_policy_attachment.basic_execution,
+      aws_cloudwatch_log_group.this
+    ]
+  )
 }

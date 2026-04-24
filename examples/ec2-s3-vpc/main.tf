@@ -3,18 +3,23 @@
 # Purpose:
 #   Demonstrates end-to-end usage for example 'ec2-s3-vpc'.
 # Why this file exists:
-#   Provides a runnable reference for adoption, testing, and onboarding without changing module internals.
+#   Provides a runnable reference for adoption, testing, and onboarding without
+# changing module internals.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 provider "aws" {
   region = var.region
 }
 
-# Data Purpose: Reads data source aws_ssm_parameter.al2023 to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_ssm_parameter.al2023 to fetch existing
+# Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_ssm_parameter" "al2023" {
   name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }

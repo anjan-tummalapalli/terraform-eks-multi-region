@@ -3,11 +3,15 @@
 # Purpose:
 #   Demonstrates end-to-end usage for example 'ecr-basic'.
 # Why this file exists:
-#   Provides a runnable reference for adoption, testing, and onboarding without changing module internals.
+#   Provides a runnable reference for adoption, testing, and onboarding without
+# changing module internals.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 provider "aws" {
@@ -15,17 +19,27 @@ provider "aws" {
 }
 
 locals {
-  # Local Purpose: Defines derived value "create_repository_policy" once for reuse and consistent logic across this file.
+  # Local Purpose: Defines derived value "create_repository_policy" once for
+  # reuse and consistent logic across this file.
   create_repository_policy = length(var.repository_pull_principal_arns) > 0
 
-  # Local Purpose: Defines derived value "repository_policy_json" once for reuse and consistent logic across this file.
-  # Ternary Purpose: Selects the "repository_policy_json" value by evaluating a condition and choosing true/false branches explicitly.
-  repository_policy_json = local.create_repository_policy ? data.aws_iam_policy_document.repository_pull[0].json : null
+  # Local Purpose: Defines derived value "repository_policy_json" once for
+  # reuse and consistent logic across this file.
+  # Ternary Purpose: Selects the "repository_policy_json" value by evaluating a
+  # condition and choosing true/false branches explicitly.
+  repository_policy_json = (
+    local.create_repository_policy
+    ? data.aws_iam_policy_document.repository_pull[0].json
+    : null
+  )
 }
 
-# Data Purpose: Reads data source aws_iam_policy_document.repository_pull to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_iam_policy_document.repository_pull to
+# fetch existing Amazon Web Services (AWS) context required by dependent
+# expressions.
 data "aws_iam_policy_document" "repository_pull" {
-  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and
+  # choosing true/false branches explicitly.
   count = local.create_repository_policy ? 1 : 0
 
   statement {

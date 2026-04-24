@@ -3,11 +3,15 @@
 # Purpose:
 #   Declares input interface for module 'eks' (types, defaults, validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Elastic Kubernetes Service (EKS) cluster name.
@@ -16,75 +20,91 @@ variable "cluster_name" {
   type        = string
 }
 
-# Variable Purpose: Kubernetes version for Elastic Kubernetes Service (EKS) control plane.
+# Variable Purpose: Kubernetes version for Elastic Kubernetes Service (EKS)
+# control plane.
 variable "kubernetes_version" {
   description = "Kubernetes version for EKS control plane."
   type        = string
 }
 
-# Variable Purpose: Elastic Kubernetes Service (EKS) upgrade support type for the control plane.
+# Variable Purpose: Elastic Kubernetes Service (EKS) upgrade support type for
+# the control plane.
 variable "cluster_upgrade_support_type" {
   description = "EKS upgrade support type for the control plane."
   type        = string
   default     = "STANDARD"
 
   validation {
-    condition     = contains(["STANDARD", "EXTENDED"], var.cluster_upgrade_support_type)
+    condition = (
+      contains(["STANDARD", "EXTENDED"], var.cluster_upgrade_support_type)
+    )
     error_message = "cluster_upgrade_support_type must be STANDARD or EXTENDED."
   }
 }
 
-# Variable Purpose: Enable private access to the Kubernetes Application Programming Interface (API) server endpoint.
+# Variable Purpose: Enable private access to the Kubernetes Application
+# Programming Interface (API) server endpoint.
 variable "cluster_endpoint_private_access" {
   description = "Enable private access to the Kubernetes API server endpoint."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Enable public access to the Kubernetes Application Programming Interface (API) server endpoint.
+# Variable Purpose: Enable public access to the Kubernetes Application
+# Programming Interface (API) server endpoint.
 variable "cluster_endpoint_public_access" {
   description = "Enable public access to the Kubernetes API server endpoint."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Classless Inter-Domain Routing (CIDR) blocks that can access the public Elastic Kubernetes Service (EKS) endpoint.
+# Variable Purpose: Classless Inter-Domain Routing (CIDR) blocks that can
+# access the public Elastic Kubernetes Service (EKS) endpoint.
 variable "cluster_endpoint_public_access_cidrs" {
   description = "CIDR blocks that can access the public EKS endpoint."
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
-# Variable Purpose: Enable envelope encryption for Kubernetes secrets using Key Management Service (KMS).
+# Variable Purpose: Enable envelope encryption for Kubernetes secrets using Key
+# Management Service (KMS).
 variable "cluster_secrets_encryption_enabled" {
   description = "Enable envelope encryption for Kubernetes secrets using KMS."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Optional existing Key Management Service (KMS) key Amazon Resource Name (ARN) for Elastic Kubernetes Service (EKS) secrets encryption.
+# Variable Purpose: Optional existing Key Management Service (KMS) key Amazon
+# Resource Name (ARN) for Elastic Kubernetes Service (EKS) secrets encryption.
 variable "cluster_kms_key_arn" {
   description = "Optional existing KMS key ARN for EKS secrets encryption."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Enable automatic key rotation for module-managed Elastic Kubernetes Service (EKS) Key Management Service (KMS) key.
+# Variable Purpose: Enable automatic key rotation for module-managed Elastic
+# Kubernetes Service (EKS) Key Management Service (KMS) key.
 variable "cluster_kms_key_enable_rotation" {
   description = "Enable automatic key rotation for module-managed EKS KMS key."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Deletion window in days for module-managed Elastic Kubernetes Service (EKS) Key Management Service (KMS) key.
+# Variable Purpose: Deletion window in days for module-managed Elastic
+# Kubernetes Service (EKS) Key Management Service (KMS) key.
 variable "cluster_kms_key_deletion_window_in_days" {
   description = "Deletion window in days for module-managed EKS KMS key."
   type        = number
   default     = 30
 
   validation {
-    condition     = var.cluster_kms_key_deletion_window_in_days >= 7 && var.cluster_kms_key_deletion_window_in_days <= 30
-    error_message = "cluster_kms_key_deletion_window_in_days must be between 7 and 30."
+    condition = (
+      var.cluster_kms_key_deletion_window_in_days >= 7 &&
+      var.cluster_kms_key_deletion_window_in_days <= 30
+    )
+    error_message = <<-EOT
+      cluster_kms_key_deletion_window_in_days must be between 7 and 30.
+    EOT
   }
 }
 
@@ -100,13 +120,15 @@ variable "private_subnet_ids" {
   type        = list(string)
 }
 
-# Variable Purpose: Identity and Access Management (IAM) role Amazon Resource Name (ARN) for Elastic Kubernetes Service (EKS) control plane.
+# Variable Purpose: Identity and Access Management (IAM) role Amazon Resource
+# Name (ARN) for Elastic Kubernetes Service (EKS) control plane.
 variable "cluster_role_arn" {
   description = "IAM role ARN for EKS control plane."
   type        = string
 }
 
-# Variable Purpose: Identity and Access Management (IAM) role Amazon Resource Name (ARN) for Elastic Kubernetes Service (EKS) managed node group.
+# Variable Purpose: Identity and Access Management (IAM) role Amazon Resource
+# Name (ARN) for Elastic Kubernetes Service (EKS) managed node group.
 variable "node_role_arn" {
   description = "IAM role ARN for EKS managed node group."
   type        = string
@@ -159,21 +181,30 @@ variable "node_capacity_type" {
   }
 }
 
-# Variable Purpose: Force node group version updates when pods cannot be drained gracefully.
+# Variable Purpose: Force node group version updates when pods cannot be
+# drained gracefully.
 variable "node_force_update_version" {
-  description = "Force node group version updates when pods cannot be drained gracefully."
+  description = <<-EOT
+    Force node group version updates when pods cannot be drained gracefully.
+  EOT
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Maximum percentage of nodes unavailable during managed node group upgrades.
+# Variable Purpose: Maximum percentage of nodes unavailable during managed node
+# group upgrades.
 variable "node_max_unavailable_percentage" {
-  description = "Maximum percentage of nodes unavailable during managed node group upgrades."
+  description = <<-EOT
+    Maximum percentage of nodes unavailable during managed node group upgrades.
+  EOT
   type        = number
   default     = 33
 
   validation {
-    condition     = var.node_max_unavailable_percentage >= 1 && var.node_max_unavailable_percentage <= 100
+    condition = (
+      var.node_max_unavailable_percentage >= 1 &&
+      var.node_max_unavailable_percentage <= 100
+    )
     error_message = "node_max_unavailable_percentage must be between 1 and 100."
   }
 }
@@ -185,8 +216,12 @@ variable "addon_resolve_conflicts_on_create" {
   default     = "OVERWRITE"
 
   validation {
-    condition     = contains(["NONE", "OVERWRITE"], var.addon_resolve_conflicts_on_create)
-    error_message = "addon_resolve_conflicts_on_create must be NONE or OVERWRITE."
+    condition = (
+      contains(["NONE", "OVERWRITE"], var.addon_resolve_conflicts_on_create)
+    )
+    error_message = <<-EOT
+      addon_resolve_conflicts_on_create must be NONE or OVERWRITE.
+    EOT
   }
 }
 
@@ -197,8 +232,15 @@ variable "addon_resolve_conflicts_on_update" {
   default     = "OVERWRITE"
 
   validation {
-    condition     = contains(["NONE", "OVERWRITE", "PRESERVE"], var.addon_resolve_conflicts_on_update)
-    error_message = "addon_resolve_conflicts_on_update must be NONE, OVERWRITE, or PRESERVE."
+    condition = (
+      contains(
+        ["NONE", "OVERWRITE", "PRESERVE"],
+        var.addon_resolve_conflicts_on_update
+      )
+    )
+    error_message = <<-EOT
+      addon_resolve_conflicts_on_update must be NONE, OVERWRITE, or PRESERVE.
+    EOT
   }
 }
 

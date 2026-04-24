@@ -3,14 +3,19 @@
 # Purpose:
 #   Implements resource orchestration for module 'elasticache-redis'.
 # Why this file exists:
-#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+#   Keeps all service wiring in one place so the module contract in
+# variables/outputs remains stable and predictable.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
-# Resource Purpose: Defines subnets where ElastiCache nodes are allowed to run (aws_elasticache_subnet_group.this).
+# Resource Purpose: Defines subnets where ElastiCache nodes are allowed to run
+# (aws_elasticache_subnet_group.this).
 resource "aws_elasticache_subnet_group" "this" {
   name       = "${var.name}-redis-subnet-group"
   subnet_ids = var.subnet_ids
@@ -20,7 +25,8 @@ resource "aws_elasticache_subnet_group" "this" {
   })
 }
 
-# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.this).
+# Resource Purpose: Creates a security group that controls network traffic
+# boundaries (aws_security_group.this).
 resource "aws_security_group" "this" {
   name        = "${var.name}-redis-sg"
   description = "Security group for Redis cluster"
@@ -38,9 +44,11 @@ resource "aws_security_group" "this" {
   })
 }
 
-# Resource Purpose: Defines an ingress or egress rule on a security group (aws_security_group_rule.redis_ingress).
+# Resource Purpose: Defines an ingress or egress rule on a security group
+# (aws_security_group_rule.redis_ingress).
 resource "aws_security_group_rule" "redis_ingress" {
-  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and
+  # choosing true/false branches explicitly.
   count = length(var.allowed_cidr_blocks) > 0 ? 1 : 0
 
   type              = "ingress"
@@ -51,7 +59,8 @@ resource "aws_security_group_rule" "redis_ingress" {
   security_group_id = aws_security_group.this.id
 }
 
-# Resource Purpose: Creates an ElastiCache cluster for in-memory caching (aws_elasticache_cluster.this).
+# Resource Purpose: Creates an ElastiCache cluster for in-memory caching
+# (aws_elasticache_cluster.this).
 resource "aws_elasticache_cluster" "this" {
   cluster_id                 = lower(replace("${var.name}-redis", "_", "-"))
   engine                     = "redis"

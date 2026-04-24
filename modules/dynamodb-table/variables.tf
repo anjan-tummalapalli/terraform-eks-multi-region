@@ -1,13 +1,18 @@
 # -----------------------------------------------------------------------------
 # File: modules/dynamodb-table/variables.tf
 # Purpose:
-#   Declares input interface for module 'dynamodb-table' (types, defaults, validation).
+#   Declares input interface for module 'dynamodb-table' (types, defaults,
+# validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Name of the DynamoDB table.
@@ -22,15 +27,21 @@ variable "hash_key" {
   type        = string
 }
 
-# Variable Purpose: Hash key scalar type using DynamoDB notation: S (String), N (Number), or B (Binary).
+# Variable Purpose: Hash key scalar type using DynamoDB notation: S (String), N
+# (Number), or B (Binary).
 variable "hash_key_type" {
-  description = "Hash key scalar type using DynamoDB notation: S (String), N (Number), or B (Binary)."
+  description = <<-EOT
+    Hash key scalar type using DynamoDB notation: S (String), N (Number), or B
+    (Binary).
+  EOT
   type        = string
   default     = "S"
 
   validation {
     condition     = contains(["S", "N", "B"], var.hash_key_type)
-    error_message = "hash_key_type must be one of S (String), N (Number), or B (Binary)."
+    error_message = <<-EOT
+      hash_key_type must be one of S (String), N (Number), or B (Binary).
+    EOT
   }
 }
 
@@ -41,15 +52,21 @@ variable "range_key" {
   default     = null
 }
 
-# Variable Purpose: Range key scalar type using DynamoDB notation: S (String), N (Number), or B (Binary).
+# Variable Purpose: Range key scalar type using DynamoDB notation: S (String),
+# N (Number), or B (Binary).
 variable "range_key_type" {
-  description = "Range key scalar type using DynamoDB notation: S (String), N (Number), or B (Binary)."
+  description = <<-EOT
+    Range key scalar type using DynamoDB notation: S (String), N (Number), or B
+    (Binary).
+  EOT
   type        = string
   default     = "S"
 
   validation {
     condition     = contains(["S", "N", "B"], var.range_key_type)
-    error_message = "range_key_type must be one of S (String), N (Number), or B (Binary)."
+    error_message = <<-EOT
+      range_key_type must be one of S (String), N (Number), or B (Binary).
+    EOT
   }
 }
 
@@ -60,7 +77,9 @@ variable "billing_mode" {
   default     = "PAY_PER_REQUEST"
 
   validation {
-    condition     = contains(["PAY_PER_REQUEST", "PROVISIONED"], var.billing_mode)
+    condition = (
+      contains(["PAY_PER_REQUEST", "PROVISIONED"], var.billing_mode)
+    )
     error_message = "billing_mode must be PAY_PER_REQUEST or PROVISIONED."
   }
 }
@@ -86,7 +105,8 @@ variable "ttl_enabled" {
   default     = false
 }
 
-# Variable Purpose: Time To Live (TTL) attribute name used when ttl_enabled is true.
+# Variable Purpose: Time To Live (TTL) attribute name used when ttl_enabled is
+# true.
 variable "ttl_attribute_name" {
   description = "TTL attribute name used when ttl_enabled is true."
   type        = string

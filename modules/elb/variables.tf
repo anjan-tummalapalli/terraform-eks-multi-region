@@ -3,11 +3,15 @@
 # Purpose:
 #   Declares input interface for module 'elb' (types, defaults, validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Name prefix for Elastic Load Balancer (ELB) resources.
@@ -35,9 +39,13 @@ variable "internal" {
   default     = false
 }
 
-# Variable Purpose: Enable cross-zone load balancing (set true for High Availability (HA), false for lower cross-Availability Zone (AZ) data cost).
+# Variable Purpose: Enable cross-zone load balancing (set true for High
+# Availability (HA), false for lower cross-Availability Zone (AZ) data cost).
 variable "cross_zone_load_balancing" {
-  description = "Enable cross-zone load balancing (set true for HA, false for lower cross-AZ data cost)."
+  description = <<-EOT
+    Enable cross-zone load balancing (set true for HA, false for lower cross-AZ
+    data cost).
+  EOT
   type        = bool
   default     = false
 }

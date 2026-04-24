@@ -3,11 +3,15 @@
 # Purpose:
 #   Demonstrates end-to-end usage for example 'db-services'.
 # Why this file exists:
-#   Provides a runnable reference for adoption, testing, and onboarding without changing module internals.
+#   Provides a runnable reference for adoption, testing, and onboarding without
+# changing module internals.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 provider "aws" {
@@ -15,7 +19,8 @@ provider "aws" {
 }
 
 locals {
-  # Local Purpose: Defines derived value "subscriptions" once for reuse and consistent logic across this file.
+  # Local Purpose: Defines derived value "subscriptions" once for reuse and
+  # consistent logic across this file.
   subscriptions = var.alert_email != "" ? [
     {
       protocol = "email"

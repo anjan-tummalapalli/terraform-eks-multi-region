@@ -3,11 +3,15 @@
 # Purpose:
 #   Declares input interface for module 'ec2' (types, defaults, validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Name prefix for Elastic Compute Cloud (EC2) resources.
@@ -16,19 +20,22 @@ variable "name" {
   type        = string
 }
 
-# Variable Purpose: Virtual Private Cloud (VPC) ID where the instance security group is created.
+# Variable Purpose: Virtual Private Cloud (VPC) ID where the instance security
+# group is created.
 variable "vpc_id" {
   description = "VPC ID where the instance security group is created."
   type        = string
 }
 
-# Variable Purpose: Subnet ID where the Elastic Compute Cloud (EC2) instance is launched.
+# Variable Purpose: Subnet ID where the Elastic Compute Cloud (EC2) instance is
+# launched.
 variable "subnet_id" {
   description = "Subnet ID where the EC2 instance is launched."
   type        = string
 }
 
-# Variable Purpose: Amazon Machine Image (AMI) ID used for the Elastic Compute Cloud (EC2) instance.
+# Variable Purpose: Amazon Machine Image (AMI) ID used for the Elastic Compute
+# Cloud (EC2) instance.
 variable "ami_id" {
   description = "AMI ID used for the EC2 instance."
   type        = string
@@ -55,7 +62,8 @@ variable "key_name" {
   default     = null
 }
 
-# Variable Purpose: Optional Identity and Access Management (IAM) instance profile name.
+# Variable Purpose: Optional Identity and Access Management (IAM) instance
+# profile name.
 variable "iam_instance_profile" {
   description = "Optional IAM instance profile name."
   type        = string
@@ -110,7 +118,9 @@ variable "ingress_rules" {
   default = []
 
   validation {
-    condition     = alltrue([for rule in var.ingress_rules : length(rule.cidr_blocks) > 0])
+    condition = (
+      alltrue([for rule in var.ingress_rules : length(rule.cidr_blocks) > 0])
+    )
     error_message = "Each ingress rule must include at least one CIDR block."
   }
 }

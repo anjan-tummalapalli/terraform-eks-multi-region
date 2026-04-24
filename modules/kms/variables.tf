@@ -3,14 +3,19 @@
 # Purpose:
 #   Declares input interface for module 'kms' (types, defaults, validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
-# Variable Purpose: Base name used for Key Management Service (KMS) key alias and tags.
+# Variable Purpose: Base name used for Key Management Service (KMS) key alias
+# and tags.
 variable "name" {
   description = "Base name used for KMS key alias and tags."
   type        = string
@@ -30,8 +35,15 @@ variable "key_usage" {
   default     = "ENCRYPT_DECRYPT"
 
   validation {
-    condition     = contains(["ENCRYPT_DECRYPT", "SIGN_VERIFY", "GENERATE_VERIFY_MAC"], var.key_usage)
-    error_message = "key_usage must be ENCRYPT_DECRYPT, SIGN_VERIFY, or GENERATE_VERIFY_MAC."
+    condition = (
+      contains(
+        ["ENCRYPT_DECRYPT", "SIGN_VERIFY", "GENERATE_VERIFY_MAC"],
+        var.key_usage
+      )
+    )
+    error_message = <<-EOT
+      key_usage must be ENCRYPT_DECRYPT, SIGN_VERIFY, or GENERATE_VERIFY_MAC.
+    EOT
   }
 }
 
@@ -60,15 +72,22 @@ variable "key_spec" {
   }
 }
 
-# Variable Purpose: Enable annual key rotation for symmetric customer managed keys.
+# Variable Purpose: Enable annual key rotation for symmetric customer managed
+# keys.
 variable "enable_key_rotation" {
-  description = "Enable annual key rotation for symmetric customer managed keys."
+  description = <<-EOT
+    Enable annual key rotation for symmetric customer managed keys.
+  EOT
   type        = bool
   default     = true
 
   validation {
-    condition     = var.key_spec == "SYMMETRIC_DEFAULT" || var.enable_key_rotation == false
-    error_message = "enable_key_rotation can be true only when key_spec is SYMMETRIC_DEFAULT."
+    condition = (
+      var.key_spec == "SYMMETRIC_DEFAULT" || var.enable_key_rotation == false
+    )
+    error_message = <<-EOT
+      enable_key_rotation can be true only when key_spec is SYMMETRIC_DEFAULT.
+    EOT
   }
 }
 
@@ -79,7 +98,8 @@ variable "is_enabled" {
   default     = true
 }
 
-# Variable Purpose: Whether to create a multi-Region Key Management Service (KMS) key.
+# Variable Purpose: Whether to create a multi-Region Key Management Service
+# (KMS) key.
 variable "multi_region" {
   description = "Whether to create a multi-Region KMS key."
   type        = bool
@@ -93,7 +113,9 @@ variable "deletion_window_in_days" {
   default     = 30
 
   validation {
-    condition     = var.deletion_window_in_days >= 7 && var.deletion_window_in_days <= 30
+    condition = (
+      var.deletion_window_in_days >= 7 && var.deletion_window_in_days <= 30
+    )
     error_message = "deletion_window_in_days must be between 7 and 30."
   }
 }
@@ -119,23 +141,30 @@ variable "additional_aliases" {
   default     = []
 }
 
-# Variable Purpose: Identity and Access Management (IAM) principal Amazon Resource Names (ARNs) allowed full administrative control of this key.
+# Variable Purpose: Identity and Access Management (IAM) principal Amazon
+# Resource Names (ARNs) allowed full administrative control of this key.
 variable "admin_principal_arns" {
-  description = "IAM principal ARNs allowed full administrative control of this key."
+  description = <<-EOT
+    IAM principal ARNs allowed full administrative control of this key.
+  EOT
   type        = list(string)
   default     = []
 }
 
-# Variable Purpose: Identity and Access Management (IAM) principal Amazon Resource Names (ARNs) allowed key usage operations.
+# Variable Purpose: Identity and Access Management (IAM) principal Amazon
+# Resource Names (ARNs) allowed key usage operations.
 variable "usage_principal_arns" {
   description = "IAM principal ARNs allowed key usage operations."
   type        = list(string)
   default     = []
 }
 
-# Variable Purpose: Service principal names allowed key usage (for example s3.amazonaws.com).
+# Variable Purpose: Service principal names allowed key usage (for example
+# s3.amazonaws.com).
 variable "service_principals" {
-  description = "Service principal names allowed key usage (for example s3.amazonaws.com)."
+  description = <<-EOT
+    Service principal names allowed key usage (for example s3.amazonaws.com).
+  EOT
   type        = list(string)
   default     = []
 }

@@ -3,28 +3,35 @@
 # Purpose:
 #   Implements resource orchestration for module 'cloudwatch'.
 # Why this file exists:
-#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+#   Keeps all service wiring in one place so the module contract in
+# variables/outputs remains stable and predictable.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 locals {
-  # Local Purpose: Defines derived value "log_groups_map" once for reuse and consistent logic across this file.
+  # Local Purpose: Defines derived value "log_groups_map" once for reuse and
+  # consistent logic across this file.
   log_groups_map = {
     for lg in var.log_groups :
     lg.name => lg
   }
 
-  # Local Purpose: Defines derived value "metric_alarms_map" once for reuse and consistent logic across this file.
+  # Local Purpose: Defines derived value "metric_alarms_map" once for reuse and
+  # consistent logic across this file.
   metric_alarms_map = {
     for alarm in var.metric_alarms :
     alarm.alarm_name => alarm
   }
 }
 
-# Resource Purpose: Creates a CloudWatch Logs group with retention and optional encryption settings (aws_cloudwatch_log_group.this).
+# Resource Purpose: Creates a CloudWatch Logs group with retention and optional
+# encryption settings (aws_cloudwatch_log_group.this).
 resource "aws_cloudwatch_log_group" "this" {
   for_each = local.log_groups_map
 
@@ -35,7 +42,8 @@ resource "aws_cloudwatch_log_group" "this" {
   tags = var.tags
 }
 
-# Resource Purpose: Creates a CloudWatch metric alarm for threshold-based monitoring and alerting (aws_cloudwatch_metric_alarm.this).
+# Resource Purpose: Creates a CloudWatch metric alarm for threshold-based
+# monitoring and alerting (aws_cloudwatch_metric_alarm.this).
 resource "aws_cloudwatch_metric_alarm" "this" {
   for_each = local.metric_alarms_map
 

@@ -3,11 +3,15 @@
 # Purpose:
 #   Declares input interface for module 'bedrock' (types, defaults, validation).
 # Why this file exists:
-#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so
+# callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 # Variable Purpose: Prefix used for Bedrock logging resources.
@@ -31,14 +35,20 @@ variable "create_cloudwatch_log_group" {
   default     = true
 }
 
-# Variable Purpose: Optional existing CloudWatch log group name for Bedrock logging.
+# Variable Purpose: Optional existing CloudWatch log group name for Bedrock
+# logging.
 variable "cloudwatch_log_group_name" {
-  description = "Optional existing CloudWatch log group name for Bedrock logging."
+  description = <<-EOT
+    Optional existing CloudWatch log group name for Bedrock logging.
+  EOT
   type        = string
   default     = null
 
   validation {
-    condition     = var.cloudwatch_log_group_name == null || trim(var.cloudwatch_log_group_name) != ""
+    condition = (
+      var.cloudwatch_log_group_name == null ||
+      trim(var.cloudwatch_log_group_name) != ""
+    )
     error_message = "cloudwatch_log_group_name cannot be an empty string."
   }
 }
@@ -55,14 +65,16 @@ variable "cloudwatch_log_retention_in_days" {
   }
 }
 
-# Variable Purpose: Optional Key Management Service (KMS) key ID/Amazon Resource Name (ARN) for CloudWatch log encryption.
+# Variable Purpose: Optional Key Management Service (KMS) key ID/Amazon
+# Resource Name (ARN) for CloudWatch log encryption.
 variable "cloudwatch_kms_key_id" {
   description = "Optional KMS key ID/ARN for CloudWatch log encryption."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Whether to create Identity and Access Management (IAM) role used by Bedrock for log delivery.
+# Variable Purpose: Whether to create Identity and Access Management (IAM) role
+# used by Bedrock for log delivery.
 variable "create_logging_role" {
   description = "Whether to create IAM role used by Bedrock for log delivery."
   type        = bool
@@ -76,19 +88,27 @@ variable "logging_role_name" {
   default     = null
 }
 
-# Variable Purpose: Existing Identity and Access Management (IAM) role Amazon Resource Name (ARN) for Bedrock log delivery when create_logging_role is false.
+# Variable Purpose: Existing Identity and Access Management (IAM) role Amazon
+# Resource Name (ARN) for Bedrock log delivery when create_logging_role is
+# false.
 variable "logging_role_arn" {
-  description = "Existing IAM role ARN for Bedrock log delivery when create_logging_role is false."
+  description = <<-EOT
+    Existing IAM role ARN for Bedrock log delivery when create_logging_role is
+    false.
+  EOT
   type        = string
   default     = null
 
   validation {
-    condition     = var.logging_role_arn == null || trim(var.logging_role_arn) != ""
+    condition = (
+      var.logging_role_arn == null || trim(var.logging_role_arn) != ""
+    )
     error_message = "logging_role_arn cannot be an empty string."
   }
 }
 
-# Variable Purpose: Optional Simple Storage Service (S3) bucket name for Bedrock invocation log delivery.
+# Variable Purpose: Optional Simple Storage Service (S3) bucket name for
+# Bedrock invocation log delivery.
 variable "s3_bucket_name" {
   description = "Optional S3 bucket name for Bedrock invocation log delivery."
   type        = string
@@ -100,7 +120,8 @@ variable "s3_bucket_name" {
   }
 }
 
-# Variable Purpose: Optional key prefix for Bedrock invocation logs in Simple Storage Service (S3).
+# Variable Purpose: Optional key prefix for Bedrock invocation logs in Simple
+# Storage Service (S3).
 variable "s3_key_prefix" {
   description = "Optional key prefix for Bedrock invocation logs in S3."
   type        = string

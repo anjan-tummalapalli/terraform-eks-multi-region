@@ -3,17 +3,23 @@
 # Purpose:
 #   Implements resource orchestration for module 'eks'.
 # Why this file exists:
-#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+#   Keeps all service wiring in one place so the module contract in
+# variables/outputs remains stable and predictable.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
-# Data Purpose: Reads data source aws_caller_identity.current to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
+# Data Purpose: Reads data source aws_caller_identity.current to fetch existing
+# Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_caller_identity" "current" {}
 
-# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.cluster).
+# Resource Purpose: Creates a security group that controls network traffic
+# boundaries (aws_security_group.cluster).
 resource "aws_security_group" "cluster" {
   name        = "${var.cluster_name}-cluster-sg"
   description = "Security group for EKS control plane"
@@ -31,7 +37,8 @@ resource "aws_security_group" "cluster" {
   })
 }
 
-# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.nodes).
+# Resource Purpose: Creates a security group that controls network traffic
+# boundaries (aws_security_group.nodes).
 resource "aws_security_group" "nodes" {
   name        = "${var.cluster_name}-node-sg"
   description = "Security group for EKS worker nodes"
@@ -49,7 +56,8 @@ resource "aws_security_group" "nodes" {
   })
 }
 
-# Resource Purpose: Defines an ingress or egress rule on a security group (aws_security_group_rule.cluster_ingress_from_nodes).
+# Resource Purpose: Defines an ingress or egress rule on a security group
+# (aws_security_group_rule.cluster_ingress_from_nodes).
 resource "aws_security_group_rule" "cluster_ingress_from_nodes" {
   type                     = "ingress"
   description              = "Allow worker nodes to communicate with EKS API"
@@ -60,10 +68,13 @@ resource "aws_security_group_rule" "cluster_ingress_from_nodes" {
   security_group_id        = aws_security_group.cluster.id
 }
 
-# Resource Purpose: Defines an ingress or egress rule on a security group (aws_security_group_rule.node_ingress_from_cluster).
+# Resource Purpose: Defines an ingress or egress rule on a security group
+# (aws_security_group_rule.node_ingress_from_cluster).
 resource "aws_security_group_rule" "node_ingress_from_cluster" {
   type                     = "ingress"
-  description              = "Allow control plane to communicate with worker nodes"
+  description              = <<-EOT
+    Allow control plane to communicate with worker nodes
+  EOT
   from_port                = 1025
   to_port                  = 65535
   protocol                 = "tcp"
@@ -71,7 +82,8 @@ resource "aws_security_group_rule" "node_ingress_from_cluster" {
   security_group_id        = aws_security_group.nodes.id
 }
 
-# Resource Purpose: Defines an ingress or egress rule on a security group (aws_security_group_rule.node_to_node).
+# Resource Purpose: Defines an ingress or egress rule on a security group
+# (aws_security_group_rule.node_to_node).
 resource "aws_security_group_rule" "node_to_node" {
   type              = "ingress"
   description       = "Allow worker nodes to communicate with each other"
@@ -82,7 +94,8 @@ resource "aws_security_group_rule" "node_to_node" {
   security_group_id = aws_security_group.nodes.id
 }
 
-# Resource Purpose: Creates the Elastic Kubernetes Service (EKS) control plane cluster (aws_eks_cluster.this).
+# Resource Purpose: Creates the Elastic Kubernetes Service (EKS) control plane
+# cluster (aws_eks_cluster.this).
 resource "aws_eks_cluster" "this" {
   name     = var.cluster_name
   role_arn = var.cluster_role_arn
@@ -97,9 +110,11 @@ resource "aws_eks_cluster" "this" {
     bootstrap_cluster_creator_admin_permissions = true
   }
 
-  # Dynamic Purpose: Adds cluster secrets encryption configuration only when Elastic Kubernetes Service (EKS) secrets encryption is enabled.
+  # Dynamic Purpose: Adds cluster secrets encryption configuration only when
+  # Elastic Kubernetes Service (EKS) secrets encryption is enabled.
   dynamic "encryption_config" {
-    # Ternary Purpose: Selects the "for_each" value by evaluating a condition and choosing true/false branches explicitly.
+    # Ternary Purpose: Selects the "for_each" value by evaluating a condition
+    # and choosing true/false branches explicitly.
     for_each = var.cluster_secrets_encryption_enabled ? [1] : []
     content {
       provider {
@@ -123,17 +138,36 @@ resource "aws_eks_cluster" "this" {
 }
 
 locals {
-  # Local Purpose: Defines derived value "cluster_kms_key_arn" once for reuse and consistent logic across this file.
-  # Ternary Purpose: Selects the "cluster_kms_key_arn" value by evaluating a condition and choosing true/false branches explicitly.
-  cluster_kms_key_arn = var.cluster_secrets_encryption_enabled ? (var.cluster_kms_key_arn != null ? var.cluster_kms_key_arn : aws_kms_key.eks_secrets[0].arn) : null
+  # Local Purpose: Defines derived value "cluster_kms_key_arn" once for reuse
+  # and consistent logic across this file.
+  # Ternary Purpose: Selects the "cluster_kms_key_arn" value by evaluating a
+  # condition and choosing true/false branches explicitly.
+  cluster_kms_key_arn = (
+    var.cluster_secrets_encryption_enabled
+    ? (
+      var.cluster_kms_key_arn != null
+      ? var.cluster_kms_key_arn
+      : aws_kms_key.eks_secrets[0].arn
+    )
+    : null
+  )
 }
 
-# Resource Purpose: Creates a customer-managed Key Management Service (KMS) key for encryption operations (aws_kms_key.eks_secrets).
+# Resource Purpose: Creates a customer-managed Key Management Service (KMS) key
+# for encryption operations (aws_kms_key.eks_secrets).
 resource "aws_kms_key" "eks_secrets" {
-  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
-  count = var.cluster_secrets_encryption_enabled && var.cluster_kms_key_arn == null ? 1 : 0
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and
+  # choosing true/false branches explicitly.
+  count = (
+    var.cluster_secrets_encryption_enabled &&
+    var.cluster_kms_key_arn == null
+    ? 1
+    : 0
+  )
 
-  description             = "KMS key for EKS secrets encryption for ${var.cluster_name}"
+  description             = <<-EOT
+    KMS key for EKS secrets encryption for ${var.cluster_name}
+  EOT
   deletion_window_in_days = var.cluster_kms_key_deletion_window_in_days
   enable_key_rotation     = var.cluster_kms_key_enable_rotation
 
@@ -144,7 +178,9 @@ resource "aws_kms_key" "eks_secrets" {
         Sid    = "AllowRootAccountAdmin"
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+          AWS = (
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+          )
         }
         Action   = "kms:*"
         Resource = "*"
@@ -173,16 +209,24 @@ resource "aws_kms_key" "eks_secrets" {
   })
 }
 
-# Resource Purpose: Creates a friendly alias that points to a Key Management Service (KMS) key (aws_kms_alias.eks_secrets).
+# Resource Purpose: Creates a friendly alias that points to a Key Management
+# Service (KMS) key (aws_kms_alias.eks_secrets).
 resource "aws_kms_alias" "eks_secrets" {
-  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
-  count = var.cluster_secrets_encryption_enabled && var.cluster_kms_key_arn == null ? 1 : 0
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and
+  # choosing true/false branches explicitly.
+  count = (
+    var.cluster_secrets_encryption_enabled &&
+    var.cluster_kms_key_arn == null
+    ? 1
+    : 0
+  )
 
   name          = "alias/${var.cluster_name}-eks-secrets"
   target_key_id = aws_kms_key.eks_secrets[0].key_id
 }
 
-# Resource Purpose: Creates a managed Elastic Kubernetes Service (EKS) node group that provides worker capacity (aws_eks_node_group.default).
+# Resource Purpose: Creates a managed Elastic Kubernetes Service (EKS) node
+# group that provides worker capacity (aws_eks_node_group.default).
 resource "aws_eks_node_group" "default" {
   cluster_name         = aws_eks_cluster.this.name
   node_group_name      = "${var.cluster_name}-ng"
@@ -209,7 +253,8 @@ resource "aws_eks_node_group" "default" {
   depends_on = [aws_eks_cluster.this]
 }
 
-# Resource Purpose: Manages an Elastic Kubernetes Service (EKS) add-on to provide cluster networking or core services (aws_eks_addon.coredns).
+# Resource Purpose: Manages an Elastic Kubernetes Service (EKS) add-on to
+# provide cluster networking or core services (aws_eks_addon.coredns).
 resource "aws_eks_addon" "coredns" {
   cluster_name                = aws_eks_cluster.this.name
   addon_name                  = "coredns"
@@ -220,7 +265,8 @@ resource "aws_eks_addon" "coredns" {
   depends_on = [aws_eks_node_group.default]
 }
 
-# Resource Purpose: Manages an Elastic Kubernetes Service (EKS) add-on to provide cluster networking or core services (aws_eks_addon.kube_proxy).
+# Resource Purpose: Manages an Elastic Kubernetes Service (EKS) add-on to
+# provide cluster networking or core services (aws_eks_addon.kube_proxy).
 resource "aws_eks_addon" "kube_proxy" {
   cluster_name                = aws_eks_cluster.this.name
   addon_name                  = "kube-proxy"
@@ -231,7 +277,8 @@ resource "aws_eks_addon" "kube_proxy" {
   depends_on = [aws_eks_node_group.default]
 }
 
-# Resource Purpose: Manages an Elastic Kubernetes Service (EKS) add-on to provide cluster networking or core services (aws_eks_addon.vpc_cni).
+# Resource Purpose: Manages an Elastic Kubernetes Service (EKS) add-on to
+# provide cluster networking or core services (aws_eks_addon.vpc_cni).
 resource "aws_eks_addon" "vpc_cni" {
   cluster_name                = aws_eks_cluster.this.name
   addon_name                  = "vpc-cni"

@@ -1,40 +1,49 @@
 # Terraform Documentation Best Practices
 
-This guide defines how to keep infrastructure code understandable, reviewable, and upgrade-safe over time.
+This guide defines how to keep infrastructure code understandable, reviewable,
+and upgrade-safe over time.
 
 ## Goals
 
 - Make module intent obvious without reading every resource block.
 - Keep inputs/outputs self-documenting and stable for consumers.
 - Explain security and cost implications near the code that implements them.
-- Reduce upgrade risk by documenting compatibility assumptions and version constraints.
+- Reduce upgrade risk by documenting compatibility assumptions and version
+  constraints.
 
 ## Repository Conventions
 
 - Keep module contracts explicit:
-  Every module must include `variables.tf` and `outputs.tf` with meaningful descriptions.
+  Every module must include `variables.tf` and `outputs.tf` with meaningful
+  descriptions.
 - Keep implementation separate from interface:
-  Place resources and data sources in `main.tf`, and avoid mixing output/variable declarations into resource files.
+  Place resources and data sources in `main.tf`, and avoid mixing
+  output/variable declarations into resource files.
 - Keep examples runnable:
-  Each example should include `main.tf`, `variables.tf`, `outputs.tf`, and `versions.tf`.
+  Each example should include `main.tf`, `variables.tf`, `outputs.tf`, and
+  `versions.tf`.
 - Keep comments informative:
-  Comments should explain intent, trade-offs, defaults, and security/cost rationale, not restate obvious syntax.
+  Comments should explain intent, trade-offs, defaults, and security/cost
+  rationale, not restate obvious syntax.
 
 ## Variable Documentation Rules
 
 - Describe business intent, not only resource mapping.
-  Prefer “CIDRs allowed to access notebook HTTPS endpoint” over “List of CIDR blocks.”
+  Prefer “CIDRs allowed to access notebook HTTPS endpoint” over “List of
+  CIDR blocks.”
 - Always document default behavior impact.
   If a default saves cost or improves security, mention it in the description.
 - Add validations for risky inputs.
-  Validate enum-like strings, non-empty names, positive sizes, and cross-field relationships.
+  Validate enum-like strings, non-empty names, positive sizes, and cross-field
+  relationships.
 - Mark sensitive values.
   Use `sensitive = true` for secrets and credentials.
 
 ## Output Documentation Rules
 
 - Treat outputs as a public API.
-  Output names and meanings should remain stable across compatible module versions.
+  Output names and meanings should remain stable across compatible module
+  versions.
 - Explain nullability.
   When an output can be null (feature flag disabled), document that explicitly.
 - Prefer actionable outputs.
@@ -64,15 +73,18 @@ This guide defines how to keep infrastructure code understandable, reviewable, a
 ## Cost Documentation Rules
 
 - Document baseline cost posture in each example:
-  smallest viable instance type, retention windows, query scan limits, and disabled optional features.
+  smallest viable instance type, retention windows, query scan limits, and
+  disabled optional features.
 - Explain “how to scale up safely”:
-  identify variables to increase for production (multi-AZ, larger instance classes, longer retention).
+  identify variables to increase for production (multi-AZ, larger instance
+  classes, longer retention).
 - Keep cleanup steps explicit:
   include `terraform destroy` reminders and temporary-environment guidance.
 
 ## Upgrade and Change Management Rules
 
-- Pin provider versions with compatible ranges (for example `~> 5.0`) and update intentionally.
+- Pin provider versions with compatible ranges (for example `~> 5.0`) and
+  update intentionally.
 - Keep backwards-compatible defaults when possible.
 - Document breaking changes in module inputs/outputs before releasing.
 - Add migration notes when renaming variables or outputs.

@@ -3,14 +3,19 @@
 # Purpose:
 #   Defines configurable inputs for example 'bedrock-basic'.
 # Why this file exists:
-#   Separates environment-specific values from example logic so users can copy and adapt safely.
+#   Separates environment-specific values from example logic so users can copy
+# and adapt safely.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
-# Variable Purpose: Amazon Web Services (AWS) region for Bedrock logging configuration.
+# Variable Purpose: Amazon Web Services (AWS) region for Bedrock logging
+# configuration.
 variable "region" {
   description = "AWS region for Bedrock logging configuration."
   type        = string
@@ -24,9 +29,12 @@ variable "name_prefix" {
   default     = "bedrock-demo"
 }
 
-# Variable Purpose: Globally unique Simple Storage Service (S3) bucket name for Bedrock invocation log delivery.
+# Variable Purpose: Globally unique Simple Storage Service (S3) bucket name for
+# Bedrock invocation log delivery.
 variable "bedrock_logs_bucket_name" {
-  description = "Globally unique S3 bucket name for Bedrock invocation log delivery."
+  description = <<-EOT
+    Globally unique S3 bucket name for Bedrock invocation log delivery.
+  EOT
   type        = string
 }
 

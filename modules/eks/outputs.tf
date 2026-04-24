@@ -3,11 +3,15 @@
 # Purpose:
 #   Publishes output contract for module 'eks'.
 # Why this file exists:
-#   Exposes only the values consumers need, reducing coupling to internal resource implementation details.
+#   Exposes only the values consumers need, reducing coupling to internal
+# resource implementation details.
 # Documentation and maintenance notes:
-#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
-#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
-#   - Update README and related examples whenever this file changes module interfaces.
+#   - Keep descriptions and validations aligned with real behavior whenever
+# inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented
+# reason to relax them.
+#   - Update README and related examples whenever this file changes module
+# interfaces.
 # -----------------------------------------------------------------------------
 
 output "cluster_name" {
@@ -36,7 +40,12 @@ output "cluster_security_group_id" {
 }
 
 output "cluster_kms_key_arn" {
-  description = "KMS key ARN used for EKS secrets encryption, null when disabled."
-  # Ternary Purpose: Selects the "value" value by evaluating a condition and choosing true/false branches explicitly.
-  value = var.cluster_secrets_encryption_enabled ? local.cluster_kms_key_arn : null
+  description = <<-EOT
+    KMS key ARN used for EKS secrets encryption, null when disabled.
+  EOT
+  # Ternary Purpose: Selects the "value" value by evaluating a condition and
+  # choosing true/false branches explicitly.
+  value = (
+    var.cluster_secrets_encryption_enabled ? local.cluster_kms_key_arn : null
+  )
 }
