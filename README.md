@@ -18,6 +18,7 @@ This Terraform project provisions modular AWS infrastructure for:
 - `modules/kms`: Customer-managed AWS KMS key with secure policy defaults
 - `modules/cloudwatch`: CloudWatch log groups and metric alarms
 - `modules/elb`: Classic ELB (Elastic Load Balancer) module
+- `modules/ecr`: Elastic Container Registry repository with encryption and lifecycle controls
 - `modules/athena`: Athena workgroup + optional database with query result controls
 - `modules/sagemaker`: SageMaker notebook instance with optional IAM role and lifecycle config
 - `modules/bedrock`: Bedrock model invocation logging configuration with CloudWatch/S3 delivery
@@ -97,6 +98,7 @@ terraform apply
 - KMS-focused example is available at `examples/kms-basic`.
 - CloudWatch-focused example is available at `examples/cloudwatch-basic`.
 - Classic ELB-focused example is available at `examples/elb-basic`.
+- Elastic Container Registry (ECR)-focused example is available at `examples/ecr-basic`.
 - Athena-focused example is available at `examples/athena-basic`.
 - SageMaker-focused example is available at `examples/sagemaker-basic`.
 - Bedrock-focused example is available at `examples/bedrock-basic`.
@@ -132,9 +134,14 @@ Recommended operational checks:
 - Set AWS Budgets and Cost Anomaly Detection at account/workload level for proactive alerts.
 - Run `terraform plan` before apply and remove unused example stacks with `terraform destroy` after validation/testing.
 
-## Usage Instructions (Athena, SageMaker, Bedrock)
+## Usage Instructions (ECR, Athena, SageMaker, Bedrock)
 
 Run each example independently:
+
+1. `cd examples/ecr-basic`
+2. `cp terraform.tfvars.example terraform.tfvars`
+3. Update `repository_name`; optionally set `repository_pull_principal_arns` for scoped cross-account pull access.
+4. `terraform init && terraform plan && terraform apply`
 
 1. `cd examples/athena-basic`
 2. `cp terraform.tfvars.example terraform.tfvars`

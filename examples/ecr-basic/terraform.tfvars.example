@@ -1,0 +1,20 @@
+region = "ap-south-1"
+
+repository_name      = "my-ecr-demo-app"
+image_tag_mutability = "IMMUTABLE"
+scan_on_push         = true
+encryption_type      = "AES256"
+kms_key_arn          = null
+force_delete         = false
+
+lifecycle_max_image_count = 20
+lifecycle_tag_status      = "any"
+lifecycle_tag_prefix_list = []
+
+# Example: allow pull access from specific principals.
+repository_pull_principal_arns = []
+
+tags = {
+  Environment = "dev"
+  Team        = "platform"
+}
