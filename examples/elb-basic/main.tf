@@ -14,7 +14,7 @@ provider "aws" {
   region = var.region
 }
 
-# Data Purpose: Reads aws_ssm_parameter data source "al2023" to reference existing AWS metadata/resources required by this configuration.
+# Data Purpose: Reads data source aws_ssm_parameter.al2023 to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_ssm_parameter" "al2023" {
   name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }
@@ -32,7 +32,7 @@ module "vpc" {
   tags                 = var.tags
 }
 
-# Resource Purpose: Manages aws_security_group resource "elb" for this module/example deployment intent.
+# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.elb).
 resource "aws_security_group" "elb" {
   name        = "${var.name_prefix}-elb-sg"
   description = "Security group for classic ELB"
@@ -57,7 +57,7 @@ resource "aws_security_group" "elb" {
   })
 }
 
-# Resource Purpose: Manages aws_security_group resource "instance_from_elb" for this module/example deployment intent.
+# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.instance_from_elb).
 resource "aws_security_group" "instance_from_elb" {
   name        = "${var.name_prefix}-instance-from-elb-sg"
   description = "Allow HTTP from ELB to EC2"

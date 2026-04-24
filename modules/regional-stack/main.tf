@@ -71,6 +71,7 @@ module "eks" {
 }
 
 module "cicd" {
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
   count  = var.create_pipeline ? 1 : 0
   source = "../cicd"
 
@@ -86,8 +87,9 @@ module "cicd" {
   tags                   = var.tags
 }
 
-# Resource Purpose: Manages aws_eks_access_entry resource "codebuild" for this module/example deployment intent.
+# Resource Purpose: Registers an Identity and Access Management (IAM) principal as an access entry for Elastic Kubernetes Service (EKS) authentication (aws_eks_access_entry.codebuild).
 resource "aws_eks_access_entry" "codebuild" {
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
   count = var.create_pipeline ? 1 : 0
 
   cluster_name  = module.eks.cluster_name
@@ -95,8 +97,9 @@ resource "aws_eks_access_entry" "codebuild" {
   type          = "STANDARD"
 }
 
-# Resource Purpose: Manages aws_eks_access_policy_association resource "codebuild_admin" for this module/example deployment intent.
+# Resource Purpose: Associates an Elastic Kubernetes Service (EKS) access policy with a registered access entry scope (aws_eks_access_policy_association.codebuild_admin).
 resource "aws_eks_access_policy_association" "codebuild_admin" {
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
   count = var.create_pipeline ? 1 : 0
 
   cluster_name  = module.eks.cluster_name

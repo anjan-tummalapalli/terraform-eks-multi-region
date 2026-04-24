@@ -11,11 +11,11 @@
 # -----------------------------------------------------------------------------
 
 locals {
-  # Local Purpose: Defines "elb_name" derived value used to keep expressions centralized and easier to maintain.
+  # Local Purpose: Defines derived value "elb_name" once for reuse and consistent logic across this file.
   elb_name = substr(lower(replace("${var.name}-elb", "_", "-")), 0, 32)
 }
 
-# Resource Purpose: Manages aws_elb resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates a Classic Load Balancer to distribute traffic to instances (aws_elb.this).
 resource "aws_elb" "this" {
   name                        = local.elb_name
   subnets                     = var.subnet_ids
@@ -27,6 +27,7 @@ resource "aws_elb" "this" {
   connection_draining         = var.connection_draining
   connection_draining_timeout = var.connection_draining_timeout
 
+  # Dynamic Purpose: Expands Elastic Load Balancer (ELB) listener blocks from var.listeners so each listener definition is rendered declaratively.
   dynamic "listener" {
     for_each = var.listeners
     content {

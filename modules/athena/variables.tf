@@ -3,27 +3,27 @@
 # Purpose:
 #   Declares input interface for module 'athena' (types, defaults, validation).
 # Why this file exists:
-#   Acts as the module API boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
 #   - Keep descriptions and validations aligned with real behavior whenever inputs change.
 #   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
-# Variable Purpose: Controls "name" input behavior for this Terraform configuration interface.
+# Variable Purpose: Athena workgroup name.
 variable "name" {
   description = "Athena workgroup name."
   type        = string
 }
 
-# Variable Purpose: Controls "description" input behavior for this Terraform configuration interface.
+# Variable Purpose: Athena workgroup description.
 variable "description" {
   description = "Athena workgroup description."
   type        = string
   default     = "Athena workgroup managed by Terraform"
 }
 
-# Variable Purpose: Controls "state" input behavior for this Terraform configuration interface.
+# Variable Purpose: State for Athena workgroup (ENABLED or DISABLED).
 variable "state" {
   description = "State for Athena workgroup (ENABLED or DISABLED)."
   type        = string
@@ -35,14 +35,14 @@ variable "state" {
   }
 }
 
-# Variable Purpose: Controls "force_destroy" input behavior for this Terraform configuration interface.
+# Variable Purpose: Allow workgroup deletion even if named queries are associated.
 variable "force_destroy" {
   description = "Allow workgroup deletion even if named queries are associated."
   type        = bool
   default     = false
 }
 
-# Variable Purpose: Controls "result_output_location" input behavior for this Terraform configuration interface.
+# Variable Purpose: Simple Storage Service (S3) location for Athena query results in the form s3://bucket/prefix/.
 variable "result_output_location" {
   description = "S3 location for Athena query results in the form s3://bucket/prefix/."
   type        = string
@@ -53,7 +53,7 @@ variable "result_output_location" {
   }
 }
 
-# Variable Purpose: Controls "result_encryption_option" input behavior for this Terraform configuration interface.
+# Variable Purpose: Encryption for query results: SSE_S3, SSE_KMS, or CSE_KMS.
 variable "result_encryption_option" {
   description = "Encryption for query results: SSE_S3, SSE_KMS, or CSE_KMS."
   type        = string
@@ -65,7 +65,7 @@ variable "result_encryption_option" {
   }
 }
 
-# Variable Purpose: Controls "result_kms_key_arn" input behavior for this Terraform configuration interface.
+# Variable Purpose: Key Management Service (KMS) key Amazon Resource Name (ARN) when result_encryption_option is SSE_KMS or CSE_KMS.
 variable "result_kms_key_arn" {
   description = "KMS key ARN when result_encryption_option is SSE_KMS or CSE_KMS."
   type        = string
@@ -81,35 +81,35 @@ variable "result_kms_key_arn" {
   }
 }
 
-# Variable Purpose: Controls "expected_bucket_owner" input behavior for this Terraform configuration interface.
+# Variable Purpose: Optional Amazon Web Services (AWS) account ID expected to own the Athena result bucket.
 variable "expected_bucket_owner" {
   description = "Optional AWS account ID expected to own the Athena result bucket."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Controls "enforce_workgroup_configuration" input behavior for this Terraform configuration interface.
+# Variable Purpose: Enforce workgroup configuration so client-side settings cannot override controls.
 variable "enforce_workgroup_configuration" {
   description = "Enforce workgroup configuration so client-side settings cannot override controls."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Controls "publish_cloudwatch_metrics_enabled" input behavior for this Terraform configuration interface.
+# Variable Purpose: Publish query metrics to CloudWatch.
 variable "publish_cloudwatch_metrics_enabled" {
   description = "Publish query metrics to CloudWatch."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Controls "requester_pays_enabled" input behavior for this Terraform configuration interface.
+# Variable Purpose: Enable requester pays for Athena queries.
 variable "requester_pays_enabled" {
   description = "Enable requester pays for Athena queries."
   type        = bool
   default     = false
 }
 
-# Variable Purpose: Controls "bytes_scanned_cutoff_per_query" input behavior for this Terraform configuration interface.
+# Variable Purpose: Per-query data scan cutoff in bytes to cap costs. Null disables cutoff.
 variable "bytes_scanned_cutoff_per_query" {
   description = "Per-query data scan cutoff in bytes to cap costs. Null disables cutoff."
   type        = number
@@ -121,21 +121,21 @@ variable "bytes_scanned_cutoff_per_query" {
   }
 }
 
-# Variable Purpose: Controls "engine_version" input behavior for this Terraform configuration interface.
+# Variable Purpose: Optional Athena engine version (for example Athena engine version 3).
 variable "engine_version" {
   description = "Optional Athena engine version (for example Athena engine version 3)."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Controls "create_database" input behavior for this Terraform configuration interface.
+# Variable Purpose: Whether to create an Athena database.
 variable "create_database" {
   description = "Whether to create an Athena database."
   type        = bool
   default     = false
 }
 
-# Variable Purpose: Controls "database_name" input behavior for this Terraform configuration interface.
+# Variable Purpose: Athena database name when create_database is true.
 variable "database_name" {
   description = "Athena database name when create_database is true."
   type        = string
@@ -149,28 +149,28 @@ variable "database_name" {
   }
 }
 
-# Variable Purpose: Controls "database_comment" input behavior for this Terraform configuration interface.
+# Variable Purpose: Optional Athena database comment.
 variable "database_comment" {
   description = "Optional Athena database comment."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Controls "database_bucket" input behavior for this Terraform configuration interface.
+# Variable Purpose: Optional Simple Storage Service (S3) bucket for Athena database metadata.
 variable "database_bucket" {
   description = "Optional S3 bucket for Athena database metadata."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Controls "database_force_destroy" input behavior for this Terraform configuration interface.
+# Variable Purpose: Allow deleting database even if it contains tables.
 variable "database_force_destroy" {
   description = "Allow deleting database even if it contains tables."
   type        = bool
   default     = false
 }
 
-# Variable Purpose: Controls "database_encryption_option" input behavior for this Terraform configuration interface.
+# Variable Purpose: Optional encryption for database metadata (SSE_S3 or SSE_KMS).
 variable "database_encryption_option" {
   description = "Optional encryption for database metadata (SSE_S3 or SSE_KMS)."
   type        = string
@@ -185,7 +185,7 @@ variable "database_encryption_option" {
   }
 }
 
-# Variable Purpose: Controls "database_kms_key_arn" input behavior for this Terraform configuration interface.
+# Variable Purpose: Optional Key Management Service (KMS) key Amazon Resource Name (ARN) for database encryption when database_encryption_option is SSE_KMS.
 variable "database_kms_key_arn" {
   description = "Optional KMS key ARN for database encryption when database_encryption_option is SSE_KMS."
   type        = string
@@ -203,7 +203,7 @@ variable "database_kms_key_arn" {
   }
 }
 
-# Variable Purpose: Controls "tags" input behavior for this Terraform configuration interface.
+# Variable Purpose: Common tags.
 variable "tags" {
   description = "Common tags."
   type        = map(string)

@@ -37,15 +37,18 @@ output "cluster_kms_key_arn" {
 
 output "ecr_repository_url" {
   description = "ECR URL for app image."
-  value       = var.create_pipeline ? module.cicd[0].ecr_repository_url : null
+  # Ternary Purpose: Selects the "value" value by evaluating a condition and choosing true/false branches explicitly.
+  value = var.create_pipeline ? module.cicd[0].ecr_repository_url : null
 }
 
 output "codepipeline_name" {
   description = "Pipeline name."
-  value       = var.create_pipeline ? module.cicd[0].pipeline_name : null
+  # Ternary Purpose: Selects the "value" value by evaluating a condition and choosing true/false branches explicitly.
+  value = var.create_pipeline ? module.cicd[0].pipeline_name : null
 }
 
 output "codecommit_repo_arn" {
   description = "CodeCommit repository ARN when repository is created in this module."
-  value       = var.create_pipeline ? module.cicd[0].codecommit_repo_arn : null
+  # Ternary Purpose: Selects the "value" value by evaluating a condition and choosing true/false branches explicitly.
+  value = var.create_pipeline ? module.cicd[0].codecommit_repo_arn : null
 }

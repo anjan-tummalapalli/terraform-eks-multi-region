@@ -10,7 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
-# Resource Purpose: Manages aws_security_group resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.this).
 resource "aws_security_group" "this" {
   name        = "${var.name}-ec2-sg"
   description = "Security group for EC2 instance ${var.name}"
@@ -21,14 +21,14 @@ resource "aws_security_group" "this" {
   })
 }
 
-# Resource Purpose: Manages aws_vpc_security_group_egress_rule resource "all" for this module/example deployment intent.
+# Resource Purpose: Defines egress permissions for a Virtual Private Cloud (VPC) security group (aws_vpc_security_group_egress_rule.all).
 resource "aws_vpc_security_group_egress_rule" "all" {
   security_group_id = aws_security_group.this.id
   ip_protocol       = "-1"
   cidr_ipv4         = "0.0.0.0/0"
 }
 
-# Resource Purpose: Manages aws_vpc_security_group_ingress_rule resource "this" for this module/example deployment intent.
+# Resource Purpose: Defines ingress permissions for a Virtual Private Cloud (VPC) security group (aws_vpc_security_group_ingress_rule.this).
 resource "aws_vpc_security_group_ingress_rule" "this" {
   for_each = {
     for idx, rule in var.ingress_rules : idx => rule
@@ -42,7 +42,7 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   description       = try(each.value.description, null)
 }
 
-# Resource Purpose: Manages aws_vpc_security_group_ingress_rule resource "additional_cidrs" for this module/example deployment intent.
+# Resource Purpose: Defines ingress permissions for a Virtual Private Cloud (VPC) security group (aws_vpc_security_group_ingress_rule.additional_cidrs).
 resource "aws_vpc_security_group_ingress_rule" "additional_cidrs" {
   for_each = {
     for combo in flatten([
@@ -67,7 +67,7 @@ resource "aws_vpc_security_group_ingress_rule" "additional_cidrs" {
   description       = each.value.description
 }
 
-# Resource Purpose: Manages aws_instance resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates an Elastic Compute Cloud (EC2) instance for compute workloads (aws_instance.this).
 resource "aws_instance" "this" {
   ami                         = var.ami_id
   instance_type               = var.instance_type

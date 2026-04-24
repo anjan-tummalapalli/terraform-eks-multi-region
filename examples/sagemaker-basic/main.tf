@@ -27,7 +27,7 @@ module "vpc" {
   tags                 = var.tags
 }
 
-# Resource Purpose: Manages aws_security_group resource "notebook" for this module/example deployment intent.
+# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.notebook).
 resource "aws_security_group" "notebook" {
   name        = "${var.name_prefix}-sagemaker-sg"
   description = "Restrictive security group for SageMaker notebook"

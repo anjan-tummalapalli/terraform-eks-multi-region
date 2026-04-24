@@ -10,39 +10,39 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
-# Variable Purpose: Controls "region" input behavior for this Terraform configuration interface.
+# Variable Purpose: Provides configurable input "region" for this Terraform configuration.
 variable "region" {
   type    = string
   default = "ap-south-1"
 }
 
-# Variable Purpose: Controls "vpc_id" input behavior for this Terraform configuration interface.
+# Variable Purpose: Provides configurable input "vpc_id" for this Terraform configuration.
 variable "vpc_id" {
   type = string
 }
 
-# Variable Purpose: Controls "private_subnet_ids" input behavior for this Terraform configuration interface.
+# Variable Purpose: Provides configurable input "private_subnet_ids" for this Terraform configuration.
 variable "private_subnet_ids" {
   type = list(string)
 }
 
-# Variable Purpose: Controls "public_subnet_ids" input behavior for this Terraform configuration interface.
+# Variable Purpose: Provides configurable input "public_subnet_ids" for this Terraform configuration.
 variable "public_subnet_ids" {
   type = list(string)
 }
 
-# Variable Purpose: Controls "db_username" input behavior for this Terraform configuration interface.
+# Variable Purpose: Provides configurable input "db_username" for this Terraform configuration.
 variable "db_username" {
   type = string
 }
 
-# Variable Purpose: Controls "db_password" input behavior for this Terraform configuration interface.
+# Variable Purpose: Provides configurable input "db_password" for this Terraform configuration.
 variable "db_password" {
   type      = string
   sensitive = true
 }
 
-# Variable Purpose: Controls "app_bucket_name" input behavior for this Terraform configuration interface.
+# Variable Purpose: Provides configurable input "app_bucket_name" for this Terraform configuration.
 variable "app_bucket_name" {
   type = string
 }

@@ -10,19 +10,20 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
-# Data Purpose: Reads aws_availability_zones data source "available" to reference existing AWS metadata/resources required by this configuration.
+# Data Purpose: Reads data source aws_availability_zones.available to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 locals {
-  # Local Purpose: Defines "azs" derived value used to keep expressions centralized and easier to maintain.
+  # Local Purpose: Defines derived value "azs" once for reuse and consistent logic across this file.
   azs = slice(data.aws_availability_zones.available.names, 0, min(var.az_count, length(data.aws_availability_zones.available.names)))
-  # Local Purpose: Defines "nat_gateway_count" derived value used to keep expressions centralized and easier to maintain.
+  # Local Purpose: Defines derived value "nat_gateway_count" once for reuse and consistent logic across this file.
+  # Ternary Purpose: Selects the "nat_gateway_count" value by evaluating a condition and choosing true/false branches explicitly.
   nat_gateway_count = var.enable_nat_gateway ? (var.nat_gateway_per_az ? length(var.public_subnet_cidrs) : 1) : 0
 }
 
-# Resource Purpose: Manages aws_vpc resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates a Virtual Private Cloud (VPC) as the primary network boundary (aws_vpc.this).
 resource "aws_vpc" "this" {
   cidr_block           = var.cidr
   enable_dns_hostnames = true
@@ -33,7 +34,7 @@ resource "aws_vpc" "this" {
   })
 }
 
-# Resource Purpose: Manages aws_internet_gateway resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates and attaches an Internet Gateway to enable Virtual Private Cloud (VPC) internet routing (aws_internet_gateway.this).
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
 
@@ -42,7 +43,7 @@ resource "aws_internet_gateway" "this" {
   })
 }
 
-# Resource Purpose: Manages aws_subnet resource "public" for this module/example deployment intent.
+# Resource Purpose: Creates a subnet within the Virtual Private Cloud (VPC) address space (aws_subnet.public).
 resource "aws_subnet" "public" {
   count = length(var.public_subnet_cidrs)
 
@@ -57,7 +58,7 @@ resource "aws_subnet" "public" {
   })
 }
 
-# Resource Purpose: Manages aws_subnet resource "private" for this module/example deployment intent.
+# Resource Purpose: Creates a subnet within the Virtual Private Cloud (VPC) address space (aws_subnet.private).
 resource "aws_subnet" "private" {
   count = length(var.private_subnet_cidrs)
 
@@ -71,7 +72,7 @@ resource "aws_subnet" "private" {
   })
 }
 
-# Resource Purpose: Manages aws_route_table resource "public" for this module/example deployment intent.
+# Resource Purpose: Creates a route table that defines network routing rules (aws_route_table.public).
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
 
@@ -85,7 +86,7 @@ resource "aws_route_table" "public" {
   })
 }
 
-# Resource Purpose: Manages aws_route_table_association resource "public" for this module/example deployment intent.
+# Resource Purpose: Associates a subnet with a route table (aws_route_table_association.public).
 resource "aws_route_table_association" "public" {
   count = length(aws_subnet.public)
 
@@ -93,7 +94,7 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-# Resource Purpose: Manages aws_eip resource "nat" for this module/example deployment intent.
+# Resource Purpose: Allocates an Elastic IP address for stable public addressing (aws_eip.nat).
 resource "aws_eip" "nat" {
   count = local.nat_gateway_count
 
@@ -104,12 +105,13 @@ resource "aws_eip" "nat" {
   })
 }
 
-# Resource Purpose: Manages aws_nat_gateway resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates a Network Address Translation (NAT) Gateway to provide outbound internet access for private subnets (aws_nat_gateway.this).
 resource "aws_nat_gateway" "this" {
   count = local.nat_gateway_count
 
   allocation_id = aws_eip.nat[count.index].id
-  subnet_id     = var.nat_gateway_per_az ? aws_subnet.public[count.index].id : aws_subnet.public[0].id
+  # Ternary Purpose: Selects the "subnet_id" value by evaluating a condition and choosing true/false branches explicitly.
+  subnet_id = var.nat_gateway_per_az ? aws_subnet.public[count.index].id : aws_subnet.public[0].id
 
   tags = merge(var.tags, {
     Name = "${var.name}-nat-${count.index + 1}"
@@ -118,7 +120,7 @@ resource "aws_nat_gateway" "this" {
   depends_on = [aws_internet_gateway.this]
 }
 
-# Resource Purpose: Manages aws_route_table resource "private" for this module/example deployment intent.
+# Resource Purpose: Creates a route table that defines network routing rules (aws_route_table.private).
 resource "aws_route_table" "private" {
   count = length(aws_subnet.private)
 
@@ -129,16 +131,18 @@ resource "aws_route_table" "private" {
   })
 }
 
-# Resource Purpose: Manages aws_route resource "private_default" for this module/example deployment intent.
+# Resource Purpose: Creates a route entry inside a route table (aws_route.private_default).
 resource "aws_route" "private_default" {
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
   count = var.enable_nat_gateway ? length(aws_route_table.private) : 0
 
   route_table_id         = aws_route_table.private[count.index].id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.this[var.nat_gateway_per_az ? count.index % length(aws_nat_gateway.this) : 0].id
+  # Ternary Purpose: Selects the "nat_gateway_id" value by evaluating a condition and choosing true/false branches explicitly.
+  nat_gateway_id = aws_nat_gateway.this[var.nat_gateway_per_az ? count.index % length(aws_nat_gateway.this) : 0].id
 }
 
-# Resource Purpose: Manages aws_route_table_association resource "private" for this module/example deployment intent.
+# Resource Purpose: Associates a subnet with a route table (aws_route_table_association.private).
 resource "aws_route_table_association" "private" {
   count = length(aws_subnet.private)
 

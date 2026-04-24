@@ -10,7 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
-# Resource Purpose: Manages aws_elasticache_subnet_group resource "this" for this module/example deployment intent.
+# Resource Purpose: Defines subnets where ElastiCache nodes are allowed to run (aws_elasticache_subnet_group.this).
 resource "aws_elasticache_subnet_group" "this" {
   name       = "${var.name}-redis-subnet-group"
   subnet_ids = var.subnet_ids
@@ -20,7 +20,7 @@ resource "aws_elasticache_subnet_group" "this" {
   })
 }
 
-# Resource Purpose: Manages aws_security_group resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates a security group that controls network traffic boundaries (aws_security_group.this).
 resource "aws_security_group" "this" {
   name        = "${var.name}-redis-sg"
   description = "Security group for Redis cluster"
@@ -38,8 +38,9 @@ resource "aws_security_group" "this" {
   })
 }
 
-# Resource Purpose: Manages aws_security_group_rule resource "redis_ingress" for this module/example deployment intent.
+# Resource Purpose: Defines an ingress or egress rule on a security group (aws_security_group_rule.redis_ingress).
 resource "aws_security_group_rule" "redis_ingress" {
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
   count = length(var.allowed_cidr_blocks) > 0 ? 1 : 0
 
   type              = "ingress"
@@ -50,7 +51,7 @@ resource "aws_security_group_rule" "redis_ingress" {
   security_group_id = aws_security_group.this.id
 }
 
-# Resource Purpose: Manages aws_elasticache_cluster resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates an ElastiCache cluster for in-memory caching (aws_elasticache_cluster.this).
 resource "aws_elasticache_cluster" "this" {
   cluster_id                 = lower(replace("${var.name}-redis", "_", "-"))
   engine                     = "redis"

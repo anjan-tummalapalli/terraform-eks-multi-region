@@ -10,23 +10,25 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
-# Data Purpose: Reads aws_caller_identity data source "current" to reference existing AWS metadata/resources required by this configuration.
+# Data Purpose: Reads data source aws_caller_identity.current to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_caller_identity" "current" {}
 
-# Data Purpose: Reads aws_partition data source "current" to reference existing AWS metadata/resources required by this configuration.
+# Data Purpose: Reads data source aws_partition.current to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_partition" "current" {}
 
-# Data Purpose: Reads aws_region data source "current" to reference existing AWS metadata/resources required by this configuration.
+# Data Purpose: Reads data source aws_region.current to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_region" "current" {}
 
 locals {
-  # Local Purpose: Defines "effective_role_arn" derived value used to keep expressions centralized and easier to maintain.
+  # Local Purpose: Defines derived value "effective_role_arn" once for reuse and consistent logic across this file.
+  # Ternary Purpose: Selects the "effective_role_arn" value by evaluating a condition and choosing true/false branches explicitly.
   effective_role_arn = var.create_execution_role ? aws_iam_role.execution[0].arn : var.execution_role_arn
 
-  # Local Purpose: Defines "lifecycle_config_name" derived value used to keep expressions centralized and easier to maintain.
+  # Local Purpose: Defines derived value "lifecycle_config_name" once for reuse and consistent logic across this file.
+  # Ternary Purpose: Selects the "lifecycle_config_name" value by evaluating a condition and choosing true/false branches explicitly.
   lifecycle_config_name = var.create_lifecycle_configuration ? aws_sagemaker_notebook_instance_lifecycle_configuration.this[0].name : var.existing_lifecycle_config_name
 
-  # Local Purpose: Defines "s3_resource_arns" derived value used to keep expressions centralized and easier to maintain.
+  # Local Purpose: Defines derived value "s3_resource_arns" once for reuse and consistent logic across this file.
   s3_resource_arns = distinct(flatten([
     for bucket_arn in var.allowed_s3_bucket_arns : [
       bucket_arn,
@@ -35,7 +37,7 @@ locals {
   ]))
 }
 
-# Data Purpose: Reads aws_iam_policy_document data source "assume_role" to reference existing AWS metadata/resources required by this configuration.
+# Data Purpose: Reads data source aws_iam_policy_document.assume_role to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_iam_policy_document" "assume_role" {
   statement {
     sid    = "AllowSageMakerServiceAssumeRole"
@@ -50,7 +52,7 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
-# Data Purpose: Reads aws_iam_policy_document data source "execution" to reference existing AWS metadata/resources required by this configuration.
+# Data Purpose: Reads data source aws_iam_policy_document.execution to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_iam_policy_document" "execution" {
   statement {
     sid    = "AllowCloudWatchLogsCreateGroup"
@@ -79,7 +81,9 @@ data "aws_iam_policy_document" "execution" {
     ]
   }
 
+  # Dynamic Purpose: Adds an Identity and Access Management (IAM) statement granting notebook Simple Storage Service (S3) access only when bucket Amazon Resource Names (ARNs) are provided.
   dynamic "statement" {
+    # Ternary Purpose: Selects the "for_each" value by evaluating a condition and choosing true/false branches explicitly.
     for_each = length(local.s3_resource_arns) > 0 ? [1] : []
     content {
       sid    = "AllowS3DataAccess"
@@ -96,7 +100,9 @@ data "aws_iam_policy_document" "execution" {
     }
   }
 
+  # Dynamic Purpose: Adds an Identity and Access Management (IAM) statement granting Key Management Service (KMS) usage only when a notebook Key Management Service (KMS) key is configured.
   dynamic "statement" {
+    # Ternary Purpose: Selects the "for_each" value by evaluating a condition and choosing true/false branches explicitly.
     for_each = var.kms_key_arn != null ? [1] : []
     content {
       sid    = "AllowKMSForNotebookVolume"
@@ -114,8 +120,9 @@ data "aws_iam_policy_document" "execution" {
   }
 }
 
-# Resource Purpose: Manages aws_iam_role resource "execution" for this module/example deployment intent.
+# Resource Purpose: Creates an Identity and Access Management (IAM) role assumed by Amazon Web Services (AWS) services or workloads (aws_iam_role.execution).
 resource "aws_iam_role" "execution" {
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
   count = var.create_execution_role ? 1 : 0
 
   name                 = coalesce(var.execution_role_name, "${var.name}-execution-role")
@@ -127,8 +134,9 @@ resource "aws_iam_role" "execution" {
   })
 }
 
-# Resource Purpose: Manages aws_iam_role_policy resource "execution" for this module/example deployment intent.
+# Resource Purpose: Attaches an inline Identity and Access Management (IAM) policy document directly to a role (aws_iam_role_policy.execution).
 resource "aws_iam_role_policy" "execution" {
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
   count = var.create_execution_role ? 1 : 0
 
   name   = "${var.name}-execution-inline"
@@ -136,25 +144,29 @@ resource "aws_iam_role_policy" "execution" {
   policy = data.aws_iam_policy_document.execution.json
 }
 
-# Resource Purpose: Manages aws_iam_role_policy_attachment resource "managed" for this module/example deployment intent.
+# Resource Purpose: Attaches a managed Identity and Access Management (IAM) policy to a role (aws_iam_role_policy_attachment.managed).
 resource "aws_iam_role_policy_attachment" "managed" {
+  # Ternary Purpose: Selects the "for_each" value by evaluating a condition and choosing true/false branches explicitly.
   for_each = var.create_execution_role ? toset(var.managed_policy_arns) : toset([])
 
   role       = aws_iam_role.execution[0].name
   policy_arn = each.value
 }
 
-# Resource Purpose: Manages aws_sagemaker_notebook_instance_lifecycle_configuration resource "this" for this module/example deployment intent.
+# Resource Purpose: Defines lifecycle scripts executed during notebook create/start events (aws_sagemaker_notebook_instance_lifecycle_configuration.this).
 resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "this" {
+  # Ternary Purpose: Selects the "count" value by evaluating a condition and choosing true/false branches explicitly.
   count = var.create_lifecycle_configuration ? 1 : 0
 
   name = coalesce(var.lifecycle_configuration_name, "${var.name}-lifecycle")
 
+  # Ternary Purpose: Selects the "on_create" value by evaluating a condition and choosing true/false branches explicitly.
   on_create = var.lifecycle_on_create == null ? null : base64encode(var.lifecycle_on_create)
-  on_start  = var.lifecycle_on_start == null ? null : base64encode(var.lifecycle_on_start)
+  # Ternary Purpose: Selects the "on_start" value by evaluating a condition and choosing true/false branches explicitly.
+  on_start = var.lifecycle_on_start == null ? null : base64encode(var.lifecycle_on_start)
 }
 
-# Resource Purpose: Manages aws_sagemaker_notebook_instance resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates a SageMaker notebook instance for interactive ML development (aws_sagemaker_notebook_instance.this).
 resource "aws_sagemaker_notebook_instance" "this" {
   name          = var.name
   instance_type = var.instance_type

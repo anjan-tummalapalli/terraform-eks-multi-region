@@ -32,5 +32,6 @@ output "ecr_repository_url" {
 
 output "codecommit_repo_arn" {
   description = "CodeCommit repository ARN, null when using existing repository."
-  value       = var.create_codecommit_repo ? aws_codecommit_repository.this[0].arn : null
+  # Ternary Purpose: Selects the "value" value by evaluating a condition and choosing true/false branches explicitly.
+  value = var.create_codecommit_repo ? aws_codecommit_repository.this[0].arn : null
 }

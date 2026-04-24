@@ -22,5 +22,6 @@ output "workgroup_arn" {
 
 output "database_name" {
   description = "Athena database name, or null when not created."
-  value       = var.create_database ? aws_athena_database.this[0].name : null
+  # Ternary Purpose: Selects the "value" value by evaluating a condition and choosing true/false branches explicitly.
+  value = var.create_database ? aws_athena_database.this[0].name : null
 }

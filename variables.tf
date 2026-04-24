@@ -10,84 +10,84 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
-# Variable Purpose: Controls "project_name" input behavior for this Terraform configuration interface.
+# Variable Purpose: Project identifier used in resource naming.
 variable "project_name" {
   description = "Project identifier used in resource naming."
   type        = string
   default     = "platform"
 }
 
-# Variable Purpose: Controls "environment" input behavior for this Terraform configuration interface.
+# Variable Purpose: Environment name (e.g., dev, stage, prod).
 variable "environment" {
   description = "Environment name (e.g., dev, stage, prod)."
   type        = string
   default     = "prod"
 }
 
-# Variable Purpose: Controls "aws_profile" input behavior for this Terraform configuration interface.
+# Variable Purpose: Optional Amazon Web Services (AWS) profile name. Leave empty to use default credentials chain.
 variable "aws_profile" {
   description = "Optional AWS profile name. Leave empty to use default credentials chain."
   type        = string
   default     = ""
 }
 
-# Variable Purpose: Controls "primary_region" input behavior for this Terraform configuration interface.
+# Variable Purpose: Primary Amazon Web Services (AWS) region for active workloads.
 variable "primary_region" {
   description = "Primary AWS region for active workloads."
   type        = string
   default     = "ap-south-1"
 }
 
-# Variable Purpose: Controls "dr_region" input behavior for this Terraform configuration interface.
+# Variable Purpose: Disaster recovery Amazon Web Services (AWS) region.
 variable "dr_region" {
   description = "Disaster recovery AWS region."
   type        = string
   default     = "ap-southeast-1"
 }
 
-# Variable Purpose: Controls "primary_vpc_cidr" input behavior for this Terraform configuration interface.
+# Variable Purpose: Classless Inter-Domain Routing (CIDR) block for the primary region Virtual Private Cloud (VPC).
 variable "primary_vpc_cidr" {
   description = "CIDR block for the primary region VPC."
   type        = string
   default     = "10.10.0.0/16"
 }
 
-# Variable Purpose: Controls "primary_public_subnet_cidrs" input behavior for this Terraform configuration interface.
+# Variable Purpose: Public subnet Classless Inter-Domain Routing blocks (CIDRs) in primary region.
 variable "primary_public_subnet_cidrs" {
   description = "Public subnet CIDRs in primary region."
   type        = list(string)
   default     = ["10.10.0.0/24", "10.10.1.0/24"]
 }
 
-# Variable Purpose: Controls "primary_private_subnet_cidrs" input behavior for this Terraform configuration interface.
+# Variable Purpose: Private subnet Classless Inter-Domain Routing blocks (CIDRs) in primary region.
 variable "primary_private_subnet_cidrs" {
   description = "Private subnet CIDRs in primary region."
   type        = list(string)
   default     = ["10.10.10.0/24", "10.10.11.0/24"]
 }
 
-# Variable Purpose: Controls "dr_vpc_cidr" input behavior for this Terraform configuration interface.
+# Variable Purpose: Classless Inter-Domain Routing (CIDR) block for the Disaster Recovery (DR) region Virtual Private Cloud (VPC).
 variable "dr_vpc_cidr" {
   description = "CIDR block for the DR region VPC."
   type        = string
   default     = "10.20.0.0/16"
 }
 
-# Variable Purpose: Controls "dr_public_subnet_cidrs" input behavior for this Terraform configuration interface.
+# Variable Purpose: Public subnet Classless Inter-Domain Routing blocks (CIDRs) in Disaster Recovery (DR) region.
 variable "dr_public_subnet_cidrs" {
   description = "Public subnet CIDRs in DR region."
   type        = list(string)
   default     = ["10.20.0.0/24", "10.20.1.0/24"]
 }
 
-# Variable Purpose: Controls "dr_private_subnet_cidrs" input behavior for this Terraform configuration interface.
+# Variable Purpose: Private subnet Classless Inter-Domain Routing blocks (CIDRs) in Disaster Recovery (DR) region.
 variable "dr_private_subnet_cidrs" {
   description = "Private subnet CIDRs in DR region."
   type        = list(string)
   default     = ["10.20.10.0/24", "10.20.11.0/24"]
 }
 
-# Variable Purpose: Controls "az_count" input behavior for this Terraform configuration interface.
+# Variable Purpose: Number of Availability Zones used per region.
 variable "az_count" {
   description = "Number of Availability Zones used per region."
   type        = number
@@ -99,28 +99,28 @@ variable "az_count" {
   }
 }
 
-# Variable Purpose: Controls "enable_nat_gateway" input behavior for this Terraform configuration interface.
+# Variable Purpose: Whether to create Network Address Translation (NAT) Gateway resources for private subnet egress.
 variable "enable_nat_gateway" {
   description = "Whether to create NAT Gateway resources for private subnet egress."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Controls "nat_gateway_per_az" input behavior for this Terraform configuration interface.
+# Variable Purpose: Whether to create one Network Address Translation (NAT) Gateway per Availability Zone (AZ) for higher availability (higher cost).
 variable "nat_gateway_per_az" {
   description = "Whether to create one NAT Gateway per AZ for higher availability (higher cost)."
   type        = bool
   default     = false
 }
 
-# Variable Purpose: Controls "kubernetes_version" input behavior for this Terraform configuration interface.
+# Variable Purpose: Elastic Kubernetes Service (EKS) Kubernetes version.
 variable "kubernetes_version" {
   description = "EKS Kubernetes version."
   type        = string
   default     = "1.29"
 }
 
-# Variable Purpose: Controls "cluster_upgrade_support_type" input behavior for this Terraform configuration interface.
+# Variable Purpose: Elastic Kubernetes Service (EKS) cluster support type for control plane upgrades.
 variable "cluster_upgrade_support_type" {
   description = "EKS cluster support type for control plane upgrades."
   type        = string
@@ -132,49 +132,49 @@ variable "cluster_upgrade_support_type" {
   }
 }
 
-# Variable Purpose: Controls "cluster_endpoint_private_access" input behavior for this Terraform configuration interface.
+# Variable Purpose: Enable private access to Elastic Kubernetes Service (EKS) Application Programming Interface (API) endpoint.
 variable "cluster_endpoint_private_access" {
   description = "Enable private access to EKS API endpoint."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Controls "cluster_endpoint_public_access" input behavior for this Terraform configuration interface.
+# Variable Purpose: Enable public access to Elastic Kubernetes Service (EKS) Application Programming Interface (API) endpoint.
 variable "cluster_endpoint_public_access" {
   description = "Enable public access to EKS API endpoint."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Controls "cluster_endpoint_public_access_cidrs" input behavior for this Terraform configuration interface.
+# Variable Purpose: Classless Inter-Domain Routing (CIDR) blocks allowed to access the public Elastic Kubernetes Service (EKS) Application Programming Interface (API) endpoint.
 variable "cluster_endpoint_public_access_cidrs" {
   description = "CIDR blocks allowed to access the public EKS API endpoint."
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
-# Variable Purpose: Controls "cluster_secrets_encryption_enabled" input behavior for this Terraform configuration interface.
+# Variable Purpose: Enable envelope encryption for Kubernetes secrets using Key Management Service (KMS).
 variable "cluster_secrets_encryption_enabled" {
   description = "Enable envelope encryption for Kubernetes secrets using KMS."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Controls "cluster_kms_key_arn" input behavior for this Terraform configuration interface.
+# Variable Purpose: Optional existing Key Management Service (KMS) key Amazon Resource Name (ARN) for Elastic Kubernetes Service (EKS) secrets encryption.
 variable "cluster_kms_key_arn" {
   description = "Optional existing KMS key ARN for EKS secrets encryption."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Controls "cluster_kms_key_enable_rotation" input behavior for this Terraform configuration interface.
+# Variable Purpose: Enable automatic key rotation for module-managed Elastic Kubernetes Service (EKS) Key Management Service (KMS) key.
 variable "cluster_kms_key_enable_rotation" {
   description = "Enable automatic key rotation for module-managed EKS KMS key."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Controls "cluster_kms_key_deletion_window_in_days" input behavior for this Terraform configuration interface.
+# Variable Purpose: Deletion window in days for module-managed Elastic Kubernetes Service (EKS) Key Management Service (KMS) key.
 variable "cluster_kms_key_deletion_window_in_days" {
   description = "Deletion window in days for module-managed EKS KMS key."
   type        = number
@@ -186,14 +186,14 @@ variable "cluster_kms_key_deletion_window_in_days" {
   }
 }
 
-# Variable Purpose: Controls "node_instance_types" input behavior for this Terraform configuration interface.
+# Variable Purpose: Elastic Kubernetes Service (EKS) managed node group instance types (cost-optimized baseline).
 variable "node_instance_types" {
   description = "EKS managed node group instance types (cost-optimized baseline)."
   type        = list(string)
   default     = ["t3.small"]
 }
 
-# Variable Purpose: Controls "node_capacity_type" input behavior for this Terraform configuration interface.
+# Variable Purpose: Node group capacity type: SPOT (cost optimized) or ON_DEMAND.
 variable "node_capacity_type" {
   description = "Node group capacity type: SPOT (cost optimized) or ON_DEMAND."
   type        = string
@@ -205,14 +205,14 @@ variable "node_capacity_type" {
   }
 }
 
-# Variable Purpose: Controls "node_force_update_version" input behavior for this Terraform configuration interface.
+# Variable Purpose: Force Elastic Kubernetes Service (EKS) managed node group version updates when drain operations fail.
 variable "node_force_update_version" {
   description = "Force EKS managed node group version updates when drain operations fail."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Controls "node_max_unavailable_percentage" input behavior for this Terraform configuration interface.
+# Variable Purpose: Maximum percentage of nodes unavailable during upgrades.
 variable "node_max_unavailable_percentage" {
   description = "Maximum percentage of nodes unavailable during upgrades."
   type        = number
@@ -224,7 +224,7 @@ variable "node_max_unavailable_percentage" {
   }
 }
 
-# Variable Purpose: Controls "addon_resolve_conflicts_on_create" input behavior for this Terraform configuration interface.
+# Variable Purpose: Conflict handling for Elastic Kubernetes Service (EKS) addon creation.
 variable "addon_resolve_conflicts_on_create" {
   description = "Conflict handling for EKS addon creation."
   type        = string
@@ -236,7 +236,7 @@ variable "addon_resolve_conflicts_on_create" {
   }
 }
 
-# Variable Purpose: Controls "addon_resolve_conflicts_on_update" input behavior for this Terraform configuration interface.
+# Variable Purpose: Conflict handling for Elastic Kubernetes Service (EKS) addon upgrades.
 variable "addon_resolve_conflicts_on_update" {
   description = "Conflict handling for EKS addon upgrades."
   type        = string
@@ -248,119 +248,119 @@ variable "addon_resolve_conflicts_on_update" {
   }
 }
 
-# Variable Purpose: Controls "coredns_addon_version" input behavior for this Terraform configuration interface.
+# Variable Purpose: Optional pinned coredns addon version.
 variable "coredns_addon_version" {
   description = "Optional pinned coredns addon version."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Controls "kube_proxy_addon_version" input behavior for this Terraform configuration interface.
+# Variable Purpose: Optional pinned kube-proxy addon version.
 variable "kube_proxy_addon_version" {
   description = "Optional pinned kube-proxy addon version."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Controls "vpc_cni_addon_version" input behavior for this Terraform configuration interface.
+# Variable Purpose: Optional pinned vpc-cni addon version.
 variable "vpc_cni_addon_version" {
   description = "Optional pinned vpc-cni addon version."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Controls "primary_node_desired_size" input behavior for this Terraform configuration interface.
+# Variable Purpose: Desired number of worker nodes in primary region.
 variable "primary_node_desired_size" {
   description = "Desired number of worker nodes in primary region."
   type        = number
   default     = 2
 }
 
-# Variable Purpose: Controls "primary_node_min_size" input behavior for this Terraform configuration interface.
+# Variable Purpose: Minimum number of worker nodes in primary region.
 variable "primary_node_min_size" {
   description = "Minimum number of worker nodes in primary region."
   type        = number
   default     = 1
 }
 
-# Variable Purpose: Controls "primary_node_max_size" input behavior for this Terraform configuration interface.
+# Variable Purpose: Maximum number of worker nodes in primary region.
 variable "primary_node_max_size" {
   description = "Maximum number of worker nodes in primary region."
   type        = number
   default     = 3
 }
 
-# Variable Purpose: Controls "dr_node_desired_size" input behavior for this Terraform configuration interface.
+# Variable Purpose: Desired number of worker nodes in Disaster Recovery (DR) region.
 variable "dr_node_desired_size" {
   description = "Desired number of worker nodes in DR region."
   type        = number
   default     = 1
 }
 
-# Variable Purpose: Controls "dr_node_min_size" input behavior for this Terraform configuration interface.
+# Variable Purpose: Minimum number of worker nodes in Disaster Recovery (DR) region.
 variable "dr_node_min_size" {
   description = "Minimum number of worker nodes in DR region."
   type        = number
   default     = 1
 }
 
-# Variable Purpose: Controls "dr_node_max_size" input behavior for this Terraform configuration interface.
+# Variable Purpose: Maximum number of worker nodes in Disaster Recovery (DR) region.
 variable "dr_node_max_size" {
   description = "Maximum number of worker nodes in DR region."
   type        = number
   default     = 2
 }
 
-# Variable Purpose: Controls "repository_branch" input behavior for this Terraform configuration interface.
+# Variable Purpose: Source branch used by CodePipeline.
 variable "repository_branch" {
   description = "Source branch used by CodePipeline."
   type        = string
   default     = "main"
 }
 
-# Variable Purpose: Controls "codebuild_image" input behavior for this Terraform configuration interface.
+# Variable Purpose: CodeBuild Docker image used by pipelines.
 variable "codebuild_image" {
   description = "CodeBuild Docker image used by pipelines."
   type        = string
   default     = "aws/codebuild/standard:7.0"
 }
 
-# Variable Purpose: Controls "codebuild_compute_type" input behavior for this Terraform configuration interface.
+# Variable Purpose: CodeBuild compute size used by pipelines.
 variable "codebuild_compute_type" {
   description = "CodeBuild compute size used by pipelines."
   type        = string
   default     = "BUILD_GENERAL1_SMALL"
 }
 
-# Variable Purpose: Controls "create_codecommit_repo" input behavior for this Terraform configuration interface.
+# Variable Purpose: Whether to create a CodeCommit repository in each region.
 variable "create_codecommit_repo" {
   description = "Whether to create a CodeCommit repository in each region."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Controls "primary_codecommit_repo_name" input behavior for this Terraform configuration interface.
+# Variable Purpose: CodeCommit repository name for primary region pipeline.
 variable "primary_codecommit_repo_name" {
   description = "CodeCommit repository name for primary region pipeline."
   type        = string
   default     = "eks-app-primary"
 }
 
-# Variable Purpose: Controls "dr_codecommit_repo_name" input behavior for this Terraform configuration interface.
+# Variable Purpose: CodeCommit repository name for Disaster Recovery (DR) region pipeline.
 variable "dr_codecommit_repo_name" {
   description = "CodeCommit repository name for DR region pipeline."
   type        = string
   default     = "eks-app-dr"
 }
 
-# Variable Purpose: Controls "enable_dr_pipeline" input behavior for this Terraform configuration interface.
+# Variable Purpose: Whether to create Continuous Integration and Continuous Delivery (CI/CD) resources in Disaster Recovery (DR) region too (set false to save cost).
 variable "enable_dr_pipeline" {
   description = "Whether to create CI/CD resources in DR region too (set false to save cost)."
   type        = bool
   default     = false
 }
 
-# Variable Purpose: Controls "tags" input behavior for this Terraform configuration interface.
+# Variable Purpose: Additional tags added to all resources.
 variable "tags" {
   description = "Additional tags added to all resources."
   type        = map(string)

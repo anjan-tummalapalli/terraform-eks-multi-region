@@ -11,27 +11,32 @@
 # -----------------------------------------------------------------------------
 
 locals {
-  # Local Purpose: Defines "attributes" derived value used to keep expressions centralized and easier to maintain.
+  # Local Purpose: Defines derived value "attributes" once for reuse and consistent logic across this file.
   attributes = concat(
     [{ name = var.hash_key, type = var.hash_key_type }],
+    # Ternary Purpose: Evaluates a condition inline to choose between two expression branches.
     var.range_key != null ? [{ name = var.range_key, type = var.range_key_type }] : []
   )
 }
 
-# Resource Purpose: Manages aws_dynamodb_table resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates a DynamoDB table with key schema, billing mode, and recovery settings (aws_dynamodb_table.this).
 resource "aws_dynamodb_table" "this" {
   name         = var.table_name
   billing_mode = var.billing_mode
   hash_key     = var.hash_key
   range_key    = var.range_key
 
-  read_capacity  = var.billing_mode == "PROVISIONED" ? var.read_capacity : null
+  # Ternary Purpose: Selects the "read_capacity" value by evaluating a condition and choosing true/false branches explicitly.
+  read_capacity = var.billing_mode == "PROVISIONED" ? var.read_capacity : null
+  # Ternary Purpose: Selects the "write_capacity" value by evaluating a condition and choosing true/false branches explicitly.
   write_capacity = var.billing_mode == "PROVISIONED" ? var.write_capacity : null
 
+  # Dynamic Purpose: Expands table attribute schema blocks from local.attributes for hash and optional range-key definitions.
   dynamic "attribute" {
     for_each = local.attributes
     content {
       name = attribute.value.name
+      # DynamoDB attribute type codes: S = String, N = Number, B = Binary.
       type = attribute.value.type
     }
   }

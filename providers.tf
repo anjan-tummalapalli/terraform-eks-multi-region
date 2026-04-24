@@ -11,13 +11,15 @@
 # -----------------------------------------------------------------------------
 
 provider "aws" {
-  alias   = "primary"
-  region  = var.primary_region
+  alias  = "primary"
+  region = var.primary_region
+  # Ternary Purpose: Selects the "profile" value by evaluating a condition and choosing true/false branches explicitly.
   profile = var.aws_profile != "" ? var.aws_profile : null
 }
 
 provider "aws" {
-  alias   = "dr"
-  region  = var.dr_region
+  alias  = "dr"
+  region = var.dr_region
+  # Ternary Purpose: Selects the "profile" value by evaluating a condition and choosing true/false branches explicitly.
   profile = var.aws_profile != "" ? var.aws_profile : null
 }

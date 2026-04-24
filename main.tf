@@ -11,7 +11,7 @@
 # -----------------------------------------------------------------------------
 
 locals {
-  # Local Purpose: Defines "base_tags" derived value used to keep expressions centralized and easier to maintain.
+  # Local Purpose: Defines derived value "base_tags" once for reuse and consistent logic across this file.
   base_tags = merge(
     {
       Project     = var.project_name

@@ -10,27 +10,27 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
-# Variable Purpose: Controls "region" input behavior for this Terraform configuration interface.
+# Variable Purpose: Amazon Web Services (AWS) region for Bedrock logging configuration.
 variable "region" {
   description = "AWS region for Bedrock logging configuration."
   type        = string
   default     = "ap-south-1"
 }
 
-# Variable Purpose: Controls "name_prefix" input behavior for this Terraform configuration interface.
+# Variable Purpose: Prefix used for Bedrock logging resources.
 variable "name_prefix" {
   description = "Prefix used for Bedrock logging resources."
   type        = string
   default     = "bedrock-demo"
 }
 
-# Variable Purpose: Controls "bedrock_logs_bucket_name" input behavior for this Terraform configuration interface.
+# Variable Purpose: Globally unique Simple Storage Service (S3) bucket name for Bedrock invocation log delivery.
 variable "bedrock_logs_bucket_name" {
   description = "Globally unique S3 bucket name for Bedrock invocation log delivery."
   type        = string
 }
 
-# Variable Purpose: Controls "tags" input behavior for this Terraform configuration interface.
+# Variable Purpose: Common tags.
 variable "tags" {
   description = "Common tags."
   type        = map(string)

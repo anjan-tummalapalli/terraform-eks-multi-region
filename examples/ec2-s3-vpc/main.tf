@@ -14,7 +14,7 @@ provider "aws" {
   region = var.region
 }
 
-# Data Purpose: Reads aws_ssm_parameter data source "al2023" to reference existing AWS metadata/resources required by this configuration.
+# Data Purpose: Reads data source aws_ssm_parameter.al2023 to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_ssm_parameter" "al2023" {
   name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }

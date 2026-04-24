@@ -3,14 +3,14 @@
 # Purpose:
 #   Declares input interface for module 'cloudwatch' (types, defaults, validation).
 # Why this file exists:
-#   Acts as the module API boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
 #   - Keep descriptions and validations aligned with real behavior whenever inputs change.
 #   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
-# Variable Purpose: Controls "log_groups" input behavior for this Terraform configuration interface.
+# Variable Purpose: CloudWatch log groups to create.
 variable "log_groups" {
   description = "CloudWatch log groups to create."
   type = list(object({
@@ -21,7 +21,7 @@ variable "log_groups" {
   default = []
 }
 
-# Variable Purpose: Controls "metric_alarms" input behavior for this Terraform configuration interface.
+# Variable Purpose: Metric alarms to create.
 variable "metric_alarms" {
   description = "Metric alarms to create."
   type = list(object({
@@ -46,7 +46,7 @@ variable "metric_alarms" {
   default = []
 }
 
-# Variable Purpose: Controls "tags" input behavior for this Terraform configuration interface.
+# Variable Purpose: Common tags.
 variable "tags" {
   description = "Common tags."
   type        = map(string)

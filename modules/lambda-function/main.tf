@@ -10,7 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
-# Data Purpose: Reads aws_iam_policy_document data source "assume" to reference existing AWS metadata/resources required by this configuration.
+# Data Purpose: Reads data source aws_iam_policy_document.assume to fetch existing Amazon Web Services (AWS) context required by dependent expressions.
 data "aws_iam_policy_document" "assume" {
   statement {
     effect = "Allow"
@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "assume" {
   }
 }
 
-# Resource Purpose: Manages aws_iam_role resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates an Identity and Access Management (IAM) role assumed by Amazon Web Services (AWS) services or workloads (aws_iam_role.this).
 resource "aws_iam_role" "this" {
   name               = "${var.function_name}-role"
   assume_role_policy = data.aws_iam_policy_document.assume.json
@@ -32,13 +32,13 @@ resource "aws_iam_role" "this" {
   tags = var.tags
 }
 
-# Resource Purpose: Manages aws_iam_role_policy_attachment resource "basic_execution" for this module/example deployment intent.
+# Resource Purpose: Attaches a managed Identity and Access Management (IAM) policy to a role (aws_iam_role_policy_attachment.basic_execution).
 resource "aws_iam_role_policy_attachment" "basic_execution" {
   role       = aws_iam_role.this.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# Resource Purpose: Manages aws_cloudwatch_log_group resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates a CloudWatch Logs group with retention and optional encryption settings (aws_cloudwatch_log_group.this).
 resource "aws_cloudwatch_log_group" "this" {
   name              = "/aws/lambda/${var.function_name}"
   retention_in_days = var.log_retention_days
@@ -46,7 +46,7 @@ resource "aws_cloudwatch_log_group" "this" {
   tags = var.tags
 }
 
-# Resource Purpose: Manages aws_lambda_function resource "this" for this module/example deployment intent.
+# Resource Purpose: Deploys a Lambda function package and runtime configuration (aws_lambda_function.this).
 resource "aws_lambda_function" "this" {
   function_name = var.function_name
   filename      = var.filename

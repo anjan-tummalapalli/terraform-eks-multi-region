@@ -37,5 +37,6 @@ output "cluster_security_group_id" {
 
 output "cluster_kms_key_arn" {
   description = "KMS key ARN used for EKS secrets encryption, null when disabled."
-  value       = var.cluster_secrets_encryption_enabled ? local.cluster_kms_key_arn : null
+  # Ternary Purpose: Selects the "value" value by evaluating a condition and choosing true/false branches explicitly.
+  value = var.cluster_secrets_encryption_enabled ? local.cluster_kms_key_arn : null
 }

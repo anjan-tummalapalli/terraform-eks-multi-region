@@ -17,7 +17,8 @@ output "logging_configuration_id" {
 
 output "cloudwatch_log_group_name" {
   description = "CloudWatch log group used for Bedrock logging, or null when disabled."
-  value       = var.enable_cloudwatch_logging ? local.effective_log_group_name : null
+  # Ternary Purpose: Selects the "value" value by evaluating a condition and choosing true/false branches explicitly.
+  value = var.enable_cloudwatch_logging ? local.effective_log_group_name : null
 }
 
 output "logging_role_arn" {

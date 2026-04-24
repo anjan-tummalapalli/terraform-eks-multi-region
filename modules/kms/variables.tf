@@ -3,27 +3,27 @@
 # Purpose:
 #   Declares input interface for module 'kms' (types, defaults, validation).
 # Why this file exists:
-#   Acts as the module API boundary so callers can adopt upgrades safely with explicit input expectations.
+#   Acts as the module Application Programming Interface (API) boundary so callers can adopt upgrades safely with explicit input expectations.
 # Documentation and maintenance notes:
 #   - Keep descriptions and validations aligned with real behavior whenever inputs change.
 #   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
-# Variable Purpose: Controls "name" input behavior for this Terraform configuration interface.
+# Variable Purpose: Base name used for Key Management Service (KMS) key alias and tags.
 variable "name" {
   description = "Base name used for KMS key alias and tags."
   type        = string
 }
 
-# Variable Purpose: Controls "description" input behavior for this Terraform configuration interface.
+# Variable Purpose: Description for the Key Management Service (KMS) key.
 variable "description" {
   description = "Description for the KMS key."
   type        = string
   default     = "Customer managed KMS key"
 }
 
-# Variable Purpose: Controls "key_usage" input behavior for this Terraform configuration interface.
+# Variable Purpose: Cryptographic operations for which the key can be used.
 variable "key_usage" {
   description = "Cryptographic operations for which the key can be used."
   type        = string
@@ -35,7 +35,7 @@ variable "key_usage" {
   }
 }
 
-# Variable Purpose: Controls "key_spec" input behavior for this Terraform configuration interface.
+# Variable Purpose: Type of Key Management Service (KMS) key material to create.
 variable "key_spec" {
   description = "Type of KMS key material to create."
   type        = string
@@ -60,7 +60,7 @@ variable "key_spec" {
   }
 }
 
-# Variable Purpose: Controls "enable_key_rotation" input behavior for this Terraform configuration interface.
+# Variable Purpose: Enable annual key rotation for symmetric customer managed keys.
 variable "enable_key_rotation" {
   description = "Enable annual key rotation for symmetric customer managed keys."
   type        = bool
@@ -72,21 +72,21 @@ variable "enable_key_rotation" {
   }
 }
 
-# Variable Purpose: Controls "is_enabled" input behavior for this Terraform configuration interface.
+# Variable Purpose: Whether the Key Management Service (KMS) key is enabled.
 variable "is_enabled" {
   description = "Whether the KMS key is enabled."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Controls "multi_region" input behavior for this Terraform configuration interface.
+# Variable Purpose: Whether to create a multi-Region Key Management Service (KMS) key.
 variable "multi_region" {
   description = "Whether to create a multi-Region KMS key."
   type        = bool
   default     = false
 }
 
-# Variable Purpose: Controls "deletion_window_in_days" input behavior for this Terraform configuration interface.
+# Variable Purpose: Deletion window in days if key is scheduled for deletion.
 variable "deletion_window_in_days" {
   description = "Deletion window in days if key is scheduled for deletion."
   type        = number
@@ -98,49 +98,49 @@ variable "deletion_window_in_days" {
   }
 }
 
-# Variable Purpose: Controls "create_alias" input behavior for this Terraform configuration interface.
+# Variable Purpose: Whether to create a primary alias for this key.
 variable "create_alias" {
   description = "Whether to create a primary alias for this key."
   type        = bool
   default     = true
 }
 
-# Variable Purpose: Controls "alias_name" input behavior for this Terraform configuration interface.
+# Variable Purpose: Alias name without the alias/ prefix.
 variable "alias_name" {
   description = "Alias name without the alias/ prefix."
   type        = string
   default     = null
 }
 
-# Variable Purpose: Controls "additional_aliases" input behavior for this Terraform configuration interface.
+# Variable Purpose: Additional alias names (without alias/ prefix).
 variable "additional_aliases" {
   description = "Additional alias names (without alias/ prefix)."
   type        = list(string)
   default     = []
 }
 
-# Variable Purpose: Controls "admin_principal_arns" input behavior for this Terraform configuration interface.
+# Variable Purpose: Identity and Access Management (IAM) principal Amazon Resource Names (ARNs) allowed full administrative control of this key.
 variable "admin_principal_arns" {
   description = "IAM principal ARNs allowed full administrative control of this key."
   type        = list(string)
   default     = []
 }
 
-# Variable Purpose: Controls "usage_principal_arns" input behavior for this Terraform configuration interface.
+# Variable Purpose: Identity and Access Management (IAM) principal Amazon Resource Names (ARNs) allowed key usage operations.
 variable "usage_principal_arns" {
   description = "IAM principal ARNs allowed key usage operations."
   type        = list(string)
   default     = []
 }
 
-# Variable Purpose: Controls "service_principals" input behavior for this Terraform configuration interface.
+# Variable Purpose: Service principal names allowed key usage (for example s3.amazonaws.com).
 variable "service_principals" {
   description = "Service principal names allowed key usage (for example s3.amazonaws.com)."
   type        = list(string)
   default     = []
 }
 
-# Variable Purpose: Controls "tags" input behavior for this Terraform configuration interface.
+# Variable Purpose: Common tags.
 variable "tags" {
   description = "Common tags."
   type        = map(string)

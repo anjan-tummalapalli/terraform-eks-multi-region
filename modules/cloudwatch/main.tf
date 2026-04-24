@@ -11,20 +11,20 @@
 # -----------------------------------------------------------------------------
 
 locals {
-  # Local Purpose: Defines "log_groups_map" derived value used to keep expressions centralized and easier to maintain.
+  # Local Purpose: Defines derived value "log_groups_map" once for reuse and consistent logic across this file.
   log_groups_map = {
     for lg in var.log_groups :
     lg.name => lg
   }
 
-  # Local Purpose: Defines "metric_alarms_map" derived value used to keep expressions centralized and easier to maintain.
+  # Local Purpose: Defines derived value "metric_alarms_map" once for reuse and consistent logic across this file.
   metric_alarms_map = {
     for alarm in var.metric_alarms :
     alarm.alarm_name => alarm
   }
 }
 
-# Resource Purpose: Manages aws_cloudwatch_log_group resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates a CloudWatch Logs group with retention and optional encryption settings (aws_cloudwatch_log_group.this).
 resource "aws_cloudwatch_log_group" "this" {
   for_each = local.log_groups_map
 
@@ -35,7 +35,7 @@ resource "aws_cloudwatch_log_group" "this" {
   tags = var.tags
 }
 
-# Resource Purpose: Manages aws_cloudwatch_metric_alarm resource "this" for this module/example deployment intent.
+# Resource Purpose: Creates a CloudWatch metric alarm for threshold-based monitoring and alerting (aws_cloudwatch_metric_alarm.this).
 resource "aws_cloudwatch_metric_alarm" "this" {
   for_each = local.metric_alarms_map
 
