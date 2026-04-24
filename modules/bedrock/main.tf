@@ -10,24 +10,32 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Data Purpose: Reads aws_caller_identity data source "current" to reference existing AWS metadata/resources required by this configuration.
 data "aws_caller_identity" "current" {}
 
+# Data Purpose: Reads aws_partition data source "current" to reference existing AWS metadata/resources required by this configuration.
 data "aws_partition" "current" {}
 
+# Data Purpose: Reads aws_region data source "current" to reference existing AWS metadata/resources required by this configuration.
 data "aws_region" "current" {}
 
 locals {
+  # Local Purpose: Defines "enable_s3_logging" derived value used to keep expressions centralized and easier to maintain.
   enable_s3_logging = var.s3_bucket_name != null && trim(var.s3_bucket_name) != ""
 
+  # Local Purpose: Defines "effective_log_group_name" derived value used to keep expressions centralized and easier to maintain.
   effective_log_group_name = coalesce(var.cloudwatch_log_group_name, "/aws/bedrock/model-invocations/${var.name_prefix}")
 
+  # Local Purpose: Defines "effective_role_arn" derived value used to keep expressions centralized and easier to maintain.
   effective_role_arn = var.enable_cloudwatch_logging ? (
     var.create_logging_role ? aws_iam_role.bedrock_logging[0].arn : var.logging_role_arn
   ) : null
 
+  # Local Purpose: Defines "cloudwatch_log_group_arn" derived value used to keep expressions centralized and easier to maintain.
   cloudwatch_log_group_arn = "arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${local.effective_log_group_name}"
 }
 
+# Data Purpose: Reads aws_iam_policy_document data source "assume_role" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "assume_role" {
   statement {
     sid    = "AllowBedrockAssumeRole"
@@ -42,6 +50,7 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
+# Data Purpose: Reads aws_iam_policy_document data source "logging" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "logging" {
   statement {
     sid    = "AllowCloudWatchLogGroupCreation"

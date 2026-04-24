@@ -11,6 +11,7 @@
 # -----------------------------------------------------------------------------
 
 locals {
+  # Local Purpose: Defines "attributes" derived value used to keep expressions centralized and easier to maintain.
   attributes = concat(
     [{ name = var.hash_key, type = var.hash_key_type }],
     var.range_key != null ? [{ name = var.range_key, type = var.range_key_type }] : []

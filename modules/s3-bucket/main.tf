@@ -77,6 +77,7 @@ resource "aws_s3_bucket_public_access_block" "this" {
   restrict_public_buckets = true
 }
 
+# Data Purpose: Reads aws_iam_policy_document data source "deny_insecure_transport" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "deny_insecure_transport" {
   count = var.enforce_ssl_requests ? 1 : 0
 

@@ -11,9 +11,11 @@
 # -----------------------------------------------------------------------------
 
 locals {
+  # Local Purpose: Defines "name_prefix" derived value used to keep expressions centralized and easier to maintain.
   name_prefix = "${var.project_name}-${var.environment}-${replace(var.region, "-", "")}"
 }
 
+# Data Purpose: Reads aws_caller_identity data source "current" to reference existing AWS metadata/resources required by this configuration.
 data "aws_caller_identity" "current" {}
 
 # Resource Purpose: Manages random_string resource "suffix" for this module/example deployment intent.
@@ -73,6 +75,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "artifacts" {
   }
 }
 
+# Data Purpose: Reads aws_iam_policy_document data source "artifacts_tls_only" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "artifacts_tls_only" {
   statement {
     sid    = "DenyInsecureTransport"
@@ -112,9 +115,11 @@ resource "aws_codecommit_repository" "this" {
 }
 
 locals {
+  # Local Purpose: Defines "source_repo_name" derived value used to keep expressions centralized and easier to maintain.
   source_repo_name = var.create_codecommit_repo ? aws_codecommit_repository.this[0].repository_name : var.codecommit_repo_name
 }
 
+# Data Purpose: Reads aws_iam_policy_document data source "codebuild_assume" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "codebuild_assume" {
   statement {
     effect = "Allow"
@@ -199,6 +204,7 @@ resource "aws_iam_role_policy" "codebuild" {
   })
 }
 
+# Data Purpose: Reads aws_iam_policy_document data source "codepipeline_assume" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "codepipeline_assume" {
   statement {
     effect = "Allow"

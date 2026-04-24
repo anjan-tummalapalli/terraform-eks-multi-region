@@ -10,6 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Variable Purpose: Controls "log_groups" input behavior for this Terraform configuration interface.
 variable "log_groups" {
   description = "CloudWatch log groups to create."
   type = list(object({
@@ -20,6 +21,7 @@ variable "log_groups" {
   default = []
 }
 
+# Variable Purpose: Controls "metric_alarms" input behavior for this Terraform configuration interface.
 variable "metric_alarms" {
   description = "Metric alarms to create."
   type = list(object({
@@ -44,6 +46,7 @@ variable "metric_alarms" {
   default = []
 }
 
+# Variable Purpose: Controls "tags" input behavior for this Terraform configuration interface.
 variable "tags" {
   description = "Common tags."
   type        = map(string)

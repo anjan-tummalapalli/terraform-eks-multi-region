@@ -10,16 +10,19 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Variable Purpose: Controls "table_name" input behavior for this Terraform configuration interface.
 variable "table_name" {
   description = "Name of the DynamoDB table."
   type        = string
 }
 
+# Variable Purpose: Controls "hash_key" input behavior for this Terraform configuration interface.
 variable "hash_key" {
   description = "Hash (partition) key name."
   type        = string
 }
 
+# Variable Purpose: Controls "hash_key_type" input behavior for this Terraform configuration interface.
 variable "hash_key_type" {
   description = "Hash key type: S, N, or B."
   type        = string
@@ -31,12 +34,14 @@ variable "hash_key_type" {
   }
 }
 
+# Variable Purpose: Controls "range_key" input behavior for this Terraform configuration interface.
 variable "range_key" {
   description = "Optional range (sort) key name."
   type        = string
   default     = null
 }
 
+# Variable Purpose: Controls "range_key_type" input behavior for this Terraform configuration interface.
 variable "range_key_type" {
   description = "Range key type: S, N, or B."
   type        = string
@@ -48,6 +53,7 @@ variable "range_key_type" {
   }
 }
 
+# Variable Purpose: Controls "billing_mode" input behavior for this Terraform configuration interface.
 variable "billing_mode" {
   description = "DynamoDB billing mode: PAY_PER_REQUEST or PROVISIONED."
   type        = string
@@ -59,36 +65,42 @@ variable "billing_mode" {
   }
 }
 
+# Variable Purpose: Controls "read_capacity" input behavior for this Terraform configuration interface.
 variable "read_capacity" {
   description = "Read capacity units for PROVISIONED mode."
   type        = number
   default     = 5
 }
 
+# Variable Purpose: Controls "write_capacity" input behavior for this Terraform configuration interface.
 variable "write_capacity" {
   description = "Write capacity units for PROVISIONED mode."
   type        = number
   default     = 5
 }
 
+# Variable Purpose: Controls "ttl_enabled" input behavior for this Terraform configuration interface.
 variable "ttl_enabled" {
   description = "Enable TTL on the table."
   type        = bool
   default     = false
 }
 
+# Variable Purpose: Controls "ttl_attribute_name" input behavior for this Terraform configuration interface.
 variable "ttl_attribute_name" {
   description = "TTL attribute name used when ttl_enabled is true."
   type        = string
   default     = "expires_at"
 }
 
+# Variable Purpose: Controls "point_in_time_recovery_enabled" input behavior for this Terraform configuration interface.
 variable "point_in_time_recovery_enabled" {
   description = "Enable point-in-time recovery."
   type        = bool
   default     = true
 }
 
+# Variable Purpose: Controls "tags" input behavior for this Terraform configuration interface.
 variable "tags" {
   description = "Common tags."
   type        = map(string)

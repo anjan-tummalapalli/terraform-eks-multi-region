@@ -10,11 +10,13 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Variable Purpose: Controls "name_prefix" input behavior for this Terraform configuration interface.
 variable "name_prefix" {
   description = "Prefix used for IAM role names."
   type        = string
 }
 
+# Variable Purpose: Controls "tags" input behavior for this Terraform configuration interface.
 variable "tags" {
   description = "Common tags."
   type        = map(string)

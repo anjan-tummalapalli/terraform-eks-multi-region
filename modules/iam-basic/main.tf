@@ -10,6 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Data Purpose: Reads aws_iam_policy_document data source "eks_assume_role" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "eks_assume_role" {
   statement {
     effect = "Allow"
@@ -43,6 +44,7 @@ resource "aws_iam_role_policy_attachment" "eks_vpc_controller_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
 }
 
+# Data Purpose: Reads aws_iam_policy_document data source "node_assume_role" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "node_assume_role" {
   statement {
     effect = "Allow"

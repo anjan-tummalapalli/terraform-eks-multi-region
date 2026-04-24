@@ -10,13 +10,17 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Data Purpose: Reads aws_caller_identity data source "current" to reference existing AWS metadata/resources required by this configuration.
 data "aws_caller_identity" "current" {}
 
+# Data Purpose: Reads aws_partition data source "current" to reference existing AWS metadata/resources required by this configuration.
 data "aws_partition" "current" {}
 
 locals {
+  # Local Purpose: Defines "effective_alias_name" derived value used to keep expressions centralized and easier to maintain.
   effective_alias_name = coalesce(var.alias_name, var.name)
 
+  # Local Purpose: Defines "key_usage_actions" derived value used to keep expressions centralized and easier to maintain.
   key_usage_actions = [
     "kms:Encrypt",
     "kms:Decrypt",
@@ -26,6 +30,7 @@ locals {
   ]
 }
 
+# Data Purpose: Reads aws_iam_policy_document data source "key_policy" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "key_policy" {
   statement {
     sid    = "EnableRootPermissions"

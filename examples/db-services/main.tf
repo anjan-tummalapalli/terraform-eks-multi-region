@@ -15,6 +15,7 @@ provider "aws" {
 }
 
 locals {
+  # Local Purpose: Defines "subscriptions" derived value used to keep expressions centralized and easier to maintain.
   subscriptions = var.alert_email != "" ? [
     {
       protocol = "email"

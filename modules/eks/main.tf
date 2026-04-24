@@ -10,6 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Data Purpose: Reads aws_caller_identity data source "current" to reference existing AWS metadata/resources required by this configuration.
 data "aws_caller_identity" "current" {}
 
 # Resource Purpose: Manages aws_security_group resource "cluster" for this module/example deployment intent.
@@ -120,6 +121,7 @@ resource "aws_eks_cluster" "this" {
 }
 
 locals {
+  # Local Purpose: Defines "cluster_kms_key_arn" derived value used to keep expressions centralized and easier to maintain.
   cluster_kms_key_arn = var.cluster_secrets_encryption_enabled ? (var.cluster_kms_key_arn != null ? var.cluster_kms_key_arn : aws_kms_key.eks_secrets[0].arn) : null
 }
 

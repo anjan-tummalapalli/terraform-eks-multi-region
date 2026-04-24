@@ -11,6 +11,7 @@
 # -----------------------------------------------------------------------------
 
 locals {
+  # Local Purpose: Defines "topic_name" derived value used to keep expressions centralized and easier to maintain.
   topic_name = var.fifo_topic ? "${var.name}.fifo" : var.name
 }
 

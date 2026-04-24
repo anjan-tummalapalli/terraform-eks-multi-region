@@ -10,12 +10,15 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Data Purpose: Reads aws_availability_zones data source "available" to reference existing AWS metadata/resources required by this configuration.
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 locals {
-  azs               = slice(data.aws_availability_zones.available.names, 0, min(var.az_count, length(data.aws_availability_zones.available.names)))
+  # Local Purpose: Defines "azs" derived value used to keep expressions centralized and easier to maintain.
+  azs = slice(data.aws_availability_zones.available.names, 0, min(var.az_count, length(data.aws_availability_zones.available.names)))
+  # Local Purpose: Defines "nat_gateway_count" derived value used to keep expressions centralized and easier to maintain.
   nat_gateway_count = var.enable_nat_gateway ? (var.nat_gateway_per_az ? length(var.public_subnet_cidrs) : 1) : 0
 }
 

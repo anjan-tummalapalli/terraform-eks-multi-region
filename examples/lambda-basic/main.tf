@@ -14,6 +14,7 @@ provider "aws" {
   region = var.region
 }
 
+# Data Purpose: Reads archive_file data source "lambda_zip" to reference existing AWS metadata/resources required by this configuration.
 data "archive_file" "lambda_zip" {
   type        = "zip"
   source_file = "${path.module}/src/handler.py"

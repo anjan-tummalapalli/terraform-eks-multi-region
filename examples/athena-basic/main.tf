@@ -14,6 +14,7 @@ provider "aws" {
   region = var.region
 }
 
+# Data Purpose: Reads aws_caller_identity data source "current" to reference existing AWS metadata/resources required by this configuration.
 data "aws_caller_identity" "current" {}
 
 module "results_bucket" {

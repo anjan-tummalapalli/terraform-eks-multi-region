@@ -11,11 +11,13 @@
 # -----------------------------------------------------------------------------
 
 locals {
+  # Local Purpose: Defines "log_groups_map" derived value used to keep expressions centralized and easier to maintain.
   log_groups_map = {
     for lg in var.log_groups :
     lg.name => lg
   }
 
+  # Local Purpose: Defines "metric_alarms_map" derived value used to keep expressions centralized and easier to maintain.
   metric_alarms_map = {
     for alarm in var.metric_alarms :
     alarm.alarm_name => alarm

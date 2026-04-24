@@ -15,6 +15,7 @@ provider "aws" {
 }
 
 locals {
+  # Local Purpose: Defines "tags" derived value used to keep expressions centralized and easier to maintain.
   tags = {
     Environment = "prod"
     ManagedBy   = "terraform"

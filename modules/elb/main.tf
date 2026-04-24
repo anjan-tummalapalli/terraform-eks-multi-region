@@ -11,6 +11,7 @@
 # -----------------------------------------------------------------------------
 
 locals {
+  # Local Purpose: Defines "elb_name" derived value used to keep expressions centralized and easier to maintain.
   elb_name = substr(lower(replace("${var.name}-elb", "_", "-")), 0, 32)
 }
 

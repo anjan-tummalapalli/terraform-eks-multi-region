@@ -10,57 +10,67 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Variable Purpose: Controls "name" input behavior for this Terraform configuration interface.
 variable "name" {
   description = "Name prefix for ELB resources."
   type        = string
 }
 
+# Variable Purpose: Controls "subnet_ids" input behavior for this Terraform configuration interface.
 variable "subnet_ids" {
   description = "Subnet IDs where ELB is deployed."
   type        = list(string)
 }
 
+# Variable Purpose: Controls "security_group_ids" input behavior for this Terraform configuration interface.
 variable "security_group_ids" {
   description = "Security group IDs attached to ELB."
   type        = list(string)
 }
 
+# Variable Purpose: Controls "internal" input behavior for this Terraform configuration interface.
 variable "internal" {
   description = "Whether the ELB is internal."
   type        = bool
   default     = false
 }
 
+# Variable Purpose: Controls "cross_zone_load_balancing" input behavior for this Terraform configuration interface.
 variable "cross_zone_load_balancing" {
   description = "Enable cross-zone load balancing (set true for HA, false for lower cross-AZ data cost)."
   type        = bool
   default     = false
 }
 
+# Variable Purpose: Controls "idle_timeout" input behavior for this Terraform configuration interface.
 variable "idle_timeout" {
   description = "Connection idle timeout in seconds."
   type        = number
   default     = 60
 }
 
+# Variable Purpose: Controls "connection_draining" input behavior for this Terraform configuration interface.
 variable "connection_draining" {
   description = "Enable connection draining."
   type        = bool
   default     = true
 }
 
+# Variable Purpose: Controls "connection_draining_timeout" input behavior for this Terraform configuration interface.
 variable "connection_draining_timeout" {
   description = "Connection draining timeout in seconds."
   type        = number
   default     = 120
 }
 
+# Variable Purpose: Controls "instances" input behavior for this Terraform configuration interface.
 variable "instances" {
   description = "Instance IDs registered behind ELB."
   type        = list(string)
   default     = []
 }
 
+# Variable Purpose: Controls "listeners" input behavior for this Terraform configuration interface.
 variable "listeners" {
   description = "Listener definitions for ELB."
   type = list(object({
@@ -80,6 +90,7 @@ variable "listeners" {
   ]
 }
 
+# Variable Purpose: Controls "health_check" input behavior for this Terraform configuration interface.
 variable "health_check" {
   description = "Health check configuration."
   type = object({
@@ -98,6 +109,7 @@ variable "health_check" {
   }
 }
 
+# Variable Purpose: Controls "tags" input behavior for this Terraform configuration interface.
 variable "tags" {
   description = "Common tags."
   type        = map(string)

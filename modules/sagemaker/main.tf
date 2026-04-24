@@ -10,17 +10,23 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Data Purpose: Reads aws_caller_identity data source "current" to reference existing AWS metadata/resources required by this configuration.
 data "aws_caller_identity" "current" {}
 
+# Data Purpose: Reads aws_partition data source "current" to reference existing AWS metadata/resources required by this configuration.
 data "aws_partition" "current" {}
 
+# Data Purpose: Reads aws_region data source "current" to reference existing AWS metadata/resources required by this configuration.
 data "aws_region" "current" {}
 
 locals {
+  # Local Purpose: Defines "effective_role_arn" derived value used to keep expressions centralized and easier to maintain.
   effective_role_arn = var.create_execution_role ? aws_iam_role.execution[0].arn : var.execution_role_arn
 
+  # Local Purpose: Defines "lifecycle_config_name" derived value used to keep expressions centralized and easier to maintain.
   lifecycle_config_name = var.create_lifecycle_configuration ? aws_sagemaker_notebook_instance_lifecycle_configuration.this[0].name : var.existing_lifecycle_config_name
 
+  # Local Purpose: Defines "s3_resource_arns" derived value used to keep expressions centralized and easier to maintain.
   s3_resource_arns = distinct(flatten([
     for bucket_arn in var.allowed_s3_bucket_arns : [
       bucket_arn,
@@ -29,6 +35,7 @@ locals {
   ]))
 }
 
+# Data Purpose: Reads aws_iam_policy_document data source "assume_role" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "assume_role" {
   statement {
     sid    = "AllowSageMakerServiceAssumeRole"
@@ -43,6 +50,7 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
+# Data Purpose: Reads aws_iam_policy_document data source "execution" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "execution" {
   statement {
     sid    = "AllowCloudWatchLogsCreateGroup"

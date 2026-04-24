@@ -10,6 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Data Purpose: Reads aws_iam_policy_document data source "assume" to reference existing AWS metadata/resources required by this configuration.
 data "aws_iam_policy_document" "assume" {
   statement {
     effect = "Allow"
