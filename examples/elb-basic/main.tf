@@ -31,6 +31,7 @@ module "vpc" {
   tags                 = var.tags
 }
 
+# Resource Purpose: Manages aws_security_group resource "elb" for this module/example deployment intent.
 resource "aws_security_group" "elb" {
   name        = "${var.name_prefix}-elb-sg"
   description = "Security group for classic ELB"
@@ -55,6 +56,7 @@ resource "aws_security_group" "elb" {
   })
 }
 
+# Resource Purpose: Manages aws_security_group resource "instance_from_elb" for this module/example deployment intent.
 resource "aws_security_group" "instance_from_elb" {
   name        = "${var.name_prefix}-instance-from-elb-sg"
   description = "Allow HTTP from ELB to EC2"

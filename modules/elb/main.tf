@@ -14,6 +14,7 @@ locals {
   elb_name = substr(lower(replace("${var.name}-elb", "_", "-")), 0, 32)
 }
 
+# Resource Purpose: Manages aws_elb resource "this" for this module/example deployment intent.
 resource "aws_elb" "this" {
   name                        = local.elb_name
   subnets                     = var.subnet_ids

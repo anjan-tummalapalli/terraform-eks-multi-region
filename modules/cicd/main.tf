@@ -16,6 +16,7 @@ locals {
 
 data "aws_caller_identity" "current" {}
 
+# Resource Purpose: Manages random_string resource "suffix" for this module/example deployment intent.
 resource "random_string" "suffix" {
   length  = 6
   upper   = false
@@ -23,6 +24,7 @@ resource "random_string" "suffix" {
   numeric = true
 }
 
+# Resource Purpose: Manages aws_ecr_repository resource "app" for this module/example deployment intent.
 resource "aws_ecr_repository" "app" {
   name                 = "${var.project_name}-${var.environment}-${replace(var.region, "-", "")}-app"
   image_tag_mutability = "MUTABLE"
@@ -34,12 +36,14 @@ resource "aws_ecr_repository" "app" {
   tags = var.tags
 }
 
+# Resource Purpose: Manages aws_s3_bucket resource "artifacts" for this module/example deployment intent.
 resource "aws_s3_bucket" "artifacts" {
   bucket = lower(substr("${local.name_prefix}-artifacts-${random_string.suffix.result}", 0, 63))
 
   tags = var.tags
 }
 
+# Resource Purpose: Manages aws_s3_bucket_versioning resource "artifacts" for this module/example deployment intent.
 resource "aws_s3_bucket_versioning" "artifacts" {
   bucket = aws_s3_bucket.artifacts.id
 
@@ -48,6 +52,7 @@ resource "aws_s3_bucket_versioning" "artifacts" {
   }
 }
 
+# Resource Purpose: Manages aws_s3_bucket_public_access_block resource "artifacts" for this module/example deployment intent.
 resource "aws_s3_bucket_public_access_block" "artifacts" {
   bucket = aws_s3_bucket.artifacts.id
 
@@ -57,6 +62,7 @@ resource "aws_s3_bucket_public_access_block" "artifacts" {
   restrict_public_buckets = true
 }
 
+# Resource Purpose: Manages aws_s3_bucket_server_side_encryption_configuration resource "artifacts" for this module/example deployment intent.
 resource "aws_s3_bucket_server_side_encryption_configuration" "artifacts" {
   bucket = aws_s3_bucket.artifacts.id
 
@@ -91,11 +97,13 @@ data "aws_iam_policy_document" "artifacts_tls_only" {
   }
 }
 
+# Resource Purpose: Manages aws_s3_bucket_policy resource "artifacts_tls_only" for this module/example deployment intent.
 resource "aws_s3_bucket_policy" "artifacts_tls_only" {
   bucket = aws_s3_bucket.artifacts.id
   policy = data.aws_iam_policy_document.artifacts_tls_only.json
 }
 
+# Resource Purpose: Manages aws_codecommit_repository resource "this" for this module/example deployment intent.
 resource "aws_codecommit_repository" "this" {
   count           = var.create_codecommit_repo ? 1 : 0
   repository_name = var.codecommit_repo_name
@@ -120,6 +128,7 @@ data "aws_iam_policy_document" "codebuild_assume" {
   }
 }
 
+# Resource Purpose: Manages aws_iam_role resource "codebuild" for this module/example deployment intent.
 resource "aws_iam_role" "codebuild" {
   name               = "${local.name_prefix}-codebuild-role"
   assume_role_policy = data.aws_iam_policy_document.codebuild_assume.json
@@ -127,6 +136,7 @@ resource "aws_iam_role" "codebuild" {
   tags = var.tags
 }
 
+# Resource Purpose: Manages aws_iam_role_policy resource "codebuild" for this module/example deployment intent.
 resource "aws_iam_role_policy" "codebuild" {
   name = "${local.name_prefix}-codebuild-policy"
   role = aws_iam_role.codebuild.id
@@ -202,6 +212,7 @@ data "aws_iam_policy_document" "codepipeline_assume" {
   }
 }
 
+# Resource Purpose: Manages aws_iam_role resource "codepipeline" for this module/example deployment intent.
 resource "aws_iam_role" "codepipeline" {
   name               = "${local.name_prefix}-codepipeline-role"
   assume_role_policy = data.aws_iam_policy_document.codepipeline_assume.json
@@ -209,6 +220,7 @@ resource "aws_iam_role" "codepipeline" {
   tags = var.tags
 }
 
+# Resource Purpose: Manages aws_iam_role_policy resource "codepipeline" for this module/example deployment intent.
 resource "aws_iam_role_policy" "codepipeline" {
   name = "${local.name_prefix}-codepipeline-policy"
   role = aws_iam_role.codepipeline.id
@@ -252,6 +264,7 @@ resource "aws_iam_role_policy" "codepipeline" {
   })
 }
 
+# Resource Purpose: Manages aws_codebuild_project resource "this" for this module/example deployment intent.
 resource "aws_codebuild_project" "this" {
   name         = "${local.name_prefix}-build"
   description  = "Build and deploy container workload to EKS"
@@ -294,6 +307,7 @@ resource "aws_codebuild_project" "this" {
   tags = var.tags
 }
 
+# Resource Purpose: Manages aws_codepipeline resource "this" for this module/example deployment intent.
 resource "aws_codepipeline" "this" {
   name     = "${local.name_prefix}-pipeline"
   role_arn = aws_iam_role.codepipeline.arn

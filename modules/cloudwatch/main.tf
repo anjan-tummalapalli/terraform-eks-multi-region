@@ -22,6 +22,7 @@ locals {
   }
 }
 
+# Resource Purpose: Manages aws_cloudwatch_log_group resource "this" for this module/example deployment intent.
 resource "aws_cloudwatch_log_group" "this" {
   for_each = local.log_groups_map
 
@@ -32,6 +33,7 @@ resource "aws_cloudwatch_log_group" "this" {
   tags = var.tags
 }
 
+# Resource Purpose: Manages aws_cloudwatch_metric_alarm resource "this" for this module/example deployment intent.
 resource "aws_cloudwatch_metric_alarm" "this" {
   for_each = local.metric_alarms_map
 

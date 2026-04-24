@@ -10,6 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Resource Purpose: Manages aws_db_subnet_group resource "this" for this module/example deployment intent.
 resource "aws_db_subnet_group" "this" {
   name       = "${var.name}-mysql-subnet-group"
   subnet_ids = var.subnet_ids
@@ -19,6 +20,7 @@ resource "aws_db_subnet_group" "this" {
   })
 }
 
+# Resource Purpose: Manages aws_security_group resource "this" for this module/example deployment intent.
 resource "aws_security_group" "this" {
   name        = "${var.name}-mysql-sg"
   description = "Security group for MySQL instance"
@@ -36,6 +38,7 @@ resource "aws_security_group" "this" {
   })
 }
 
+# Resource Purpose: Manages aws_security_group_rule resource "ingress_mysql" for this module/example deployment intent.
 resource "aws_security_group_rule" "ingress_mysql" {
   count = length(var.allowed_cidr_blocks) > 0 ? 1 : 0
 
@@ -47,6 +50,7 @@ resource "aws_security_group_rule" "ingress_mysql" {
   security_group_id = aws_security_group.this.id
 }
 
+# Resource Purpose: Manages aws_db_instance resource "this" for this module/example deployment intent.
 resource "aws_db_instance" "this" {
   identifier                   = "${var.name}-mysql"
   engine                       = "mysql"

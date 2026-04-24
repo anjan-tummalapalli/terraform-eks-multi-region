@@ -19,6 +19,7 @@ locals {
   nat_gateway_count = var.enable_nat_gateway ? (var.nat_gateway_per_az ? length(var.public_subnet_cidrs) : 1) : 0
 }
 
+# Resource Purpose: Manages aws_vpc resource "this" for this module/example deployment intent.
 resource "aws_vpc" "this" {
   cidr_block           = var.cidr
   enable_dns_hostnames = true
@@ -29,6 +30,7 @@ resource "aws_vpc" "this" {
   })
 }
 
+# Resource Purpose: Manages aws_internet_gateway resource "this" for this module/example deployment intent.
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
 
@@ -37,6 +39,7 @@ resource "aws_internet_gateway" "this" {
   })
 }
 
+# Resource Purpose: Manages aws_subnet resource "public" for this module/example deployment intent.
 resource "aws_subnet" "public" {
   count = length(var.public_subnet_cidrs)
 
@@ -51,6 +54,7 @@ resource "aws_subnet" "public" {
   })
 }
 
+# Resource Purpose: Manages aws_subnet resource "private" for this module/example deployment intent.
 resource "aws_subnet" "private" {
   count = length(var.private_subnet_cidrs)
 
@@ -64,6 +68,7 @@ resource "aws_subnet" "private" {
   })
 }
 
+# Resource Purpose: Manages aws_route_table resource "public" for this module/example deployment intent.
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
 
@@ -77,6 +82,7 @@ resource "aws_route_table" "public" {
   })
 }
 
+# Resource Purpose: Manages aws_route_table_association resource "public" for this module/example deployment intent.
 resource "aws_route_table_association" "public" {
   count = length(aws_subnet.public)
 
@@ -84,6 +90,7 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
+# Resource Purpose: Manages aws_eip resource "nat" for this module/example deployment intent.
 resource "aws_eip" "nat" {
   count = local.nat_gateway_count
 
@@ -94,6 +101,7 @@ resource "aws_eip" "nat" {
   })
 }
 
+# Resource Purpose: Manages aws_nat_gateway resource "this" for this module/example deployment intent.
 resource "aws_nat_gateway" "this" {
   count = local.nat_gateway_count
 
@@ -107,6 +115,7 @@ resource "aws_nat_gateway" "this" {
   depends_on = [aws_internet_gateway.this]
 }
 
+# Resource Purpose: Manages aws_route_table resource "private" for this module/example deployment intent.
 resource "aws_route_table" "private" {
   count = length(aws_subnet.private)
 
@@ -117,6 +126,7 @@ resource "aws_route_table" "private" {
   })
 }
 
+# Resource Purpose: Manages aws_route resource "private_default" for this module/example deployment intent.
 resource "aws_route" "private_default" {
   count = var.enable_nat_gateway ? length(aws_route_table.private) : 0
 
@@ -125,6 +135,7 @@ resource "aws_route" "private_default" {
   nat_gateway_id         = aws_nat_gateway.this[var.nat_gateway_per_az ? count.index % length(aws_nat_gateway.this) : 0].id
 }
 
+# Resource Purpose: Manages aws_route_table_association resource "private" for this module/example deployment intent.
 resource "aws_route_table_association" "private" {
   count = length(aws_subnet.private)
 

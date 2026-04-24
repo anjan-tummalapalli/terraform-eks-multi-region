@@ -10,6 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Resource Purpose: Manages aws_athena_workgroup resource "this" for this module/example deployment intent.
 resource "aws_athena_workgroup" "this" {
   name          = var.name
   description   = var.description
@@ -45,6 +46,7 @@ resource "aws_athena_workgroup" "this" {
   })
 }
 
+# Resource Purpose: Manages aws_athena_database resource "this" for this module/example deployment intent.
 resource "aws_athena_database" "this" {
   count = var.create_database ? 1 : 0
 

@@ -88,6 +88,7 @@ data "aws_iam_policy_document" "logging" {
   }
 }
 
+# Resource Purpose: Manages aws_cloudwatch_log_group resource "this" for this module/example deployment intent.
 resource "aws_cloudwatch_log_group" "this" {
   count = var.enable_cloudwatch_logging && var.create_cloudwatch_log_group ? 1 : 0
 
@@ -100,6 +101,7 @@ resource "aws_cloudwatch_log_group" "this" {
   })
 }
 
+# Resource Purpose: Manages aws_iam_role resource "bedrock_logging" for this module/example deployment intent.
 resource "aws_iam_role" "bedrock_logging" {
   count = var.enable_cloudwatch_logging && var.create_logging_role ? 1 : 0
 
@@ -111,6 +113,7 @@ resource "aws_iam_role" "bedrock_logging" {
   })
 }
 
+# Resource Purpose: Manages aws_iam_role_policy resource "bedrock_logging" for this module/example deployment intent.
 resource "aws_iam_role_policy" "bedrock_logging" {
   count = var.enable_cloudwatch_logging && var.create_logging_role ? 1 : 0
 
@@ -119,6 +122,7 @@ resource "aws_iam_role_policy" "bedrock_logging" {
   policy = data.aws_iam_policy_document.logging.json
 }
 
+# Resource Purpose: Manages aws_bedrock_model_invocation_logging_configuration resource "this" for this module/example deployment intent.
 resource "aws_bedrock_model_invocation_logging_configuration" "this" {
   logging_config {
     text_data_delivery_enabled      = var.text_data_delivery_enabled

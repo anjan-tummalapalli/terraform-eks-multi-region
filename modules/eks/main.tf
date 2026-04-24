@@ -12,6 +12,7 @@
 
 data "aws_caller_identity" "current" {}
 
+# Resource Purpose: Manages aws_security_group resource "cluster" for this module/example deployment intent.
 resource "aws_security_group" "cluster" {
   name        = "${var.cluster_name}-cluster-sg"
   description = "Security group for EKS control plane"
@@ -29,6 +30,7 @@ resource "aws_security_group" "cluster" {
   })
 }
 
+# Resource Purpose: Manages aws_security_group resource "nodes" for this module/example deployment intent.
 resource "aws_security_group" "nodes" {
   name        = "${var.cluster_name}-node-sg"
   description = "Security group for EKS worker nodes"
@@ -46,6 +48,7 @@ resource "aws_security_group" "nodes" {
   })
 }
 
+# Resource Purpose: Manages aws_security_group_rule resource "cluster_ingress_from_nodes" for this module/example deployment intent.
 resource "aws_security_group_rule" "cluster_ingress_from_nodes" {
   type                     = "ingress"
   description              = "Allow worker nodes to communicate with EKS API"
@@ -56,6 +59,7 @@ resource "aws_security_group_rule" "cluster_ingress_from_nodes" {
   security_group_id        = aws_security_group.cluster.id
 }
 
+# Resource Purpose: Manages aws_security_group_rule resource "node_ingress_from_cluster" for this module/example deployment intent.
 resource "aws_security_group_rule" "node_ingress_from_cluster" {
   type                     = "ingress"
   description              = "Allow control plane to communicate with worker nodes"
@@ -66,6 +70,7 @@ resource "aws_security_group_rule" "node_ingress_from_cluster" {
   security_group_id        = aws_security_group.nodes.id
 }
 
+# Resource Purpose: Manages aws_security_group_rule resource "node_to_node" for this module/example deployment intent.
 resource "aws_security_group_rule" "node_to_node" {
   type              = "ingress"
   description       = "Allow worker nodes to communicate with each other"
@@ -76,6 +81,7 @@ resource "aws_security_group_rule" "node_to_node" {
   security_group_id = aws_security_group.nodes.id
 }
 
+# Resource Purpose: Manages aws_eks_cluster resource "this" for this module/example deployment intent.
 resource "aws_eks_cluster" "this" {
   name     = var.cluster_name
   role_arn = var.cluster_role_arn
@@ -117,6 +123,7 @@ locals {
   cluster_kms_key_arn = var.cluster_secrets_encryption_enabled ? (var.cluster_kms_key_arn != null ? var.cluster_kms_key_arn : aws_kms_key.eks_secrets[0].arn) : null
 }
 
+# Resource Purpose: Manages aws_kms_key resource "eks_secrets" for this module/example deployment intent.
 resource "aws_kms_key" "eks_secrets" {
   count = var.cluster_secrets_encryption_enabled && var.cluster_kms_key_arn == null ? 1 : 0
 
@@ -160,6 +167,7 @@ resource "aws_kms_key" "eks_secrets" {
   })
 }
 
+# Resource Purpose: Manages aws_kms_alias resource "eks_secrets" for this module/example deployment intent.
 resource "aws_kms_alias" "eks_secrets" {
   count = var.cluster_secrets_encryption_enabled && var.cluster_kms_key_arn == null ? 1 : 0
 
@@ -167,6 +175,7 @@ resource "aws_kms_alias" "eks_secrets" {
   target_key_id = aws_kms_key.eks_secrets[0].key_id
 }
 
+# Resource Purpose: Manages aws_eks_node_group resource "default" for this module/example deployment intent.
 resource "aws_eks_node_group" "default" {
   cluster_name         = aws_eks_cluster.this.name
   node_group_name      = "${var.cluster_name}-ng"
@@ -193,6 +202,7 @@ resource "aws_eks_node_group" "default" {
   depends_on = [aws_eks_cluster.this]
 }
 
+# Resource Purpose: Manages aws_eks_addon resource "coredns" for this module/example deployment intent.
 resource "aws_eks_addon" "coredns" {
   cluster_name                = aws_eks_cluster.this.name
   addon_name                  = "coredns"
@@ -203,6 +213,7 @@ resource "aws_eks_addon" "coredns" {
   depends_on = [aws_eks_node_group.default]
 }
 
+# Resource Purpose: Manages aws_eks_addon resource "kube_proxy" for this module/example deployment intent.
 resource "aws_eks_addon" "kube_proxy" {
   cluster_name                = aws_eks_cluster.this.name
   addon_name                  = "kube-proxy"
@@ -213,6 +224,7 @@ resource "aws_eks_addon" "kube_proxy" {
   depends_on = [aws_eks_node_group.default]
 }
 
+# Resource Purpose: Manages aws_eks_addon resource "vpc_cni" for this module/example deployment intent.
 resource "aws_eks_addon" "vpc_cni" {
   cluster_name                = aws_eks_cluster.this.name
   addon_name                  = "vpc-cni"

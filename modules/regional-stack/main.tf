@@ -86,6 +86,7 @@ module "cicd" {
   tags                   = var.tags
 }
 
+# Resource Purpose: Manages aws_eks_access_entry resource "codebuild" for this module/example deployment intent.
 resource "aws_eks_access_entry" "codebuild" {
   count = var.create_pipeline ? 1 : 0
 
@@ -94,6 +95,7 @@ resource "aws_eks_access_entry" "codebuild" {
   type          = "STANDARD"
 }
 
+# Resource Purpose: Manages aws_eks_access_policy_association resource "codebuild_admin" for this module/example deployment intent.
 resource "aws_eks_access_policy_association" "codebuild_admin" {
   count = var.create_pipeline ? 1 : 0
 

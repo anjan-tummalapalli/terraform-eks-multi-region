@@ -10,6 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Resource Purpose: Manages aws_sqs_queue resource "this" for this module/example deployment intent.
 resource "aws_sqs_queue" "this" {
   name                        = var.name
   fifo_queue                  = var.fifo_queue

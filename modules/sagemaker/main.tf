@@ -106,6 +106,7 @@ data "aws_iam_policy_document" "execution" {
   }
 }
 
+# Resource Purpose: Manages aws_iam_role resource "execution" for this module/example deployment intent.
 resource "aws_iam_role" "execution" {
   count = var.create_execution_role ? 1 : 0
 
@@ -118,6 +119,7 @@ resource "aws_iam_role" "execution" {
   })
 }
 
+# Resource Purpose: Manages aws_iam_role_policy resource "execution" for this module/example deployment intent.
 resource "aws_iam_role_policy" "execution" {
   count = var.create_execution_role ? 1 : 0
 
@@ -126,6 +128,7 @@ resource "aws_iam_role_policy" "execution" {
   policy = data.aws_iam_policy_document.execution.json
 }
 
+# Resource Purpose: Manages aws_iam_role_policy_attachment resource "managed" for this module/example deployment intent.
 resource "aws_iam_role_policy_attachment" "managed" {
   for_each = var.create_execution_role ? toset(var.managed_policy_arns) : toset([])
 
@@ -133,6 +136,7 @@ resource "aws_iam_role_policy_attachment" "managed" {
   policy_arn = each.value
 }
 
+# Resource Purpose: Manages aws_sagemaker_notebook_instance_lifecycle_configuration resource "this" for this module/example deployment intent.
 resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "this" {
   count = var.create_lifecycle_configuration ? 1 : 0
 
@@ -142,6 +146,7 @@ resource "aws_sagemaker_notebook_instance_lifecycle_configuration" "this" {
   on_start  = var.lifecycle_on_start == null ? null : base64encode(var.lifecycle_on_start)
 }
 
+# Resource Purpose: Manages aws_sagemaker_notebook_instance resource "this" for this module/example deployment intent.
 resource "aws_sagemaker_notebook_instance" "this" {
   name          = var.name
   instance_type = var.instance_type

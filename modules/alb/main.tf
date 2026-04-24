@@ -10,6 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Resource Purpose: Manages aws_security_group resource "alb" for this module/example deployment intent.
 resource "aws_security_group" "alb" {
   name        = "${var.name}-alb-sg"
   description = "Security group for ALB"
@@ -34,6 +35,7 @@ resource "aws_security_group" "alb" {
   })
 }
 
+# Resource Purpose: Manages aws_lb resource "this" for this module/example deployment intent.
 resource "aws_lb" "this" {
   name               = "${var.name}-alb"
   internal           = var.internal
@@ -44,6 +46,7 @@ resource "aws_lb" "this" {
   tags = var.tags
 }
 
+# Resource Purpose: Manages aws_lb_target_group resource "this" for this module/example deployment intent.
 resource "aws_lb_target_group" "this" {
   name        = "${var.name}-tg"
   port        = var.target_port
@@ -64,6 +67,7 @@ resource "aws_lb_target_group" "this" {
   tags = var.tags
 }
 
+# Resource Purpose: Manages aws_lb_listener resource "http" for this module/example deployment intent.
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.this.arn
   port              = var.listener_port

@@ -110,6 +110,7 @@ data "aws_iam_policy_document" "key_policy" {
   }
 }
 
+# Resource Purpose: Manages aws_kms_key resource "this" for this module/example deployment intent.
 resource "aws_kms_key" "this" {
   description              = var.description
   key_usage                = var.key_usage
@@ -125,6 +126,7 @@ resource "aws_kms_key" "this" {
   })
 }
 
+# Resource Purpose: Manages aws_kms_alias resource "primary" for this module/example deployment intent.
 resource "aws_kms_alias" "primary" {
   count = var.create_alias ? 1 : 0
 
@@ -132,6 +134,7 @@ resource "aws_kms_alias" "primary" {
   target_key_id = aws_kms_key.this.key_id
 }
 
+# Resource Purpose: Manages aws_kms_alias resource "additional" for this module/example deployment intent.
 resource "aws_kms_alias" "additional" {
   for_each = toset(var.additional_aliases)
 

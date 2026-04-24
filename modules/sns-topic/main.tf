@@ -14,6 +14,7 @@ locals {
   topic_name = var.fifo_topic ? "${var.name}.fifo" : var.name
 }
 
+# Resource Purpose: Manages aws_sns_topic resource "this" for this module/example deployment intent.
 resource "aws_sns_topic" "this" {
   name                        = local.topic_name
   fifo_topic                  = var.fifo_topic
@@ -23,6 +24,7 @@ resource "aws_sns_topic" "this" {
   tags = var.tags
 }
 
+# Resource Purpose: Manages aws_sns_topic_subscription resource "this" for this module/example deployment intent.
 resource "aws_sns_topic_subscription" "this" {
   for_each = {
     for idx, sub in var.subscriptions : idx => sub

@@ -17,6 +17,7 @@ locals {
   )
 }
 
+# Resource Purpose: Manages aws_dynamodb_table resource "this" for this module/example deployment intent.
 resource "aws_dynamodb_table" "this" {
   name         = var.table_name
   billing_mode = var.billing_mode

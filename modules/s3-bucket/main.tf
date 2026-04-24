@@ -10,6 +10,7 @@
 #   - Update README and related examples whenever this file changes module interfaces.
 # -----------------------------------------------------------------------------
 
+# Resource Purpose: Manages aws_s3_bucket resource "this" for this module/example deployment intent.
 resource "aws_s3_bucket" "this" {
   bucket        = var.bucket_name
   force_destroy = var.force_destroy
@@ -17,6 +18,7 @@ resource "aws_s3_bucket" "this" {
   tags = var.tags
 }
 
+# Resource Purpose: Manages aws_s3_bucket_versioning resource "this" for this module/example deployment intent.
 resource "aws_s3_bucket_versioning" "this" {
   bucket = aws_s3_bucket.this.id
 
@@ -25,6 +27,7 @@ resource "aws_s3_bucket_versioning" "this" {
   }
 }
 
+# Resource Purpose: Manages aws_s3_bucket_server_side_encryption_configuration resource "this" for this module/example deployment intent.
 resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   bucket = aws_s3_bucket.this.id
 
@@ -36,6 +39,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   }
 }
 
+# Resource Purpose: Manages aws_s3_bucket_ownership_controls resource "this" for this module/example deployment intent.
 resource "aws_s3_bucket_ownership_controls" "this" {
   bucket = aws_s3_bucket.this.id
 
@@ -44,6 +48,7 @@ resource "aws_s3_bucket_ownership_controls" "this" {
   }
 }
 
+# Resource Purpose: Manages aws_s3_bucket_lifecycle_configuration resource "this" for this module/example deployment intent.
 resource "aws_s3_bucket_lifecycle_configuration" "this" {
   count  = var.enable_lifecycle_rule ? 1 : 0
   bucket = aws_s3_bucket.this.id
@@ -62,6 +67,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
   }
 }
 
+# Resource Purpose: Manages aws_s3_bucket_public_access_block resource "this" for this module/example deployment intent.
 resource "aws_s3_bucket_public_access_block" "this" {
   bucket = aws_s3_bucket.this.id
 
@@ -98,6 +104,7 @@ data "aws_iam_policy_document" "deny_insecure_transport" {
   }
 }
 
+# Resource Purpose: Manages aws_s3_bucket_policy resource "deny_insecure_transport" for this module/example deployment intent.
 resource "aws_s3_bucket_policy" "deny_insecure_transport" {
   count = var.enforce_ssl_requests ? 1 : 0
 
