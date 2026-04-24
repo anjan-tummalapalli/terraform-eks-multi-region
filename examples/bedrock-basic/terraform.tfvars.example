@@ -1,0 +1,11 @@
+region = "ap-south-1"
+
+name_prefix = "my-bedrock-stack"
+
+# Must be globally unique.
+bedrock_logs_bucket_name = "my-bedrock-logs-123456"
+
+tags = {
+  Environment = "dev"
+  Team        = "ai-platform"
+}

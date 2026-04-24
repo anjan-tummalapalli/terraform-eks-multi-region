@@ -1,0 +1,17 @@
+region = "ap-south-1"
+
+name_prefix = "my-sagemaker-stack"
+
+# Must be globally unique.
+notebook_data_bucket_name = "my-sagemaker-data-123456"
+
+instance_type = "ml.t3.medium"
+
+notebook_ingress_cidrs = [
+  "10.60.0.0/16"
+]
+
+tags = {
+  Environment = "dev"
+  Team        = "ml-platform"
+}

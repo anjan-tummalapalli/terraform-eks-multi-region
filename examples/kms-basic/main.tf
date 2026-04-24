@@ -1,3 +1,15 @@
+# -----------------------------------------------------------------------------
+# File: examples/kms-basic/main.tf
+# Purpose:
+#   Demonstrates end-to-end usage for example 'kms-basic'.
+# Why this file exists:
+#   Provides a runnable reference for adoption, testing, and onboarding without changing module internals.
+# Documentation and maintenance notes:
+#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
+#   - Update README and related examples whenever this file changes module interfaces.
+# -----------------------------------------------------------------------------
+
 provider "aws" {
   region = var.region
 }

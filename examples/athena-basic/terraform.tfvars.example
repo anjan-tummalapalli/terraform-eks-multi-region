@@ -1,0 +1,16 @@
+region = "ap-south-1"
+
+name_prefix = "my-athena-stack"
+
+# Must be globally unique.
+athena_results_bucket_name = "my-athena-results-123456"
+
+database_name = "analytics_db"
+
+# 1 GiB
+bytes_scanned_cutoff_per_query = 1073741824
+
+tags = {
+  Environment = "dev"
+  Team        = "data-platform"
+}

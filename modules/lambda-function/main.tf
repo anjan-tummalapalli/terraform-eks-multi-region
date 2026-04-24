@@ -1,3 +1,15 @@
+# -----------------------------------------------------------------------------
+# File: modules/lambda-function/main.tf
+# Purpose:
+#   Implements resource orchestration for module 'lambda-function'.
+# Why this file exists:
+#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+# Documentation and maintenance notes:
+#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
+#   - Update README and related examples whenever this file changes module interfaces.
+# -----------------------------------------------------------------------------
+
 data "aws_iam_policy_document" "assume" {
   statement {
     effect = "Allow"

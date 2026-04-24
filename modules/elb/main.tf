@@ -1,3 +1,15 @@
+# -----------------------------------------------------------------------------
+# File: modules/elb/main.tf
+# Purpose:
+#   Implements resource orchestration for module 'elb'.
+# Why this file exists:
+#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+# Documentation and maintenance notes:
+#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
+#   - Update README and related examples whenever this file changes module interfaces.
+# -----------------------------------------------------------------------------
+
 locals {
   elb_name = substr(lower(replace("${var.name}-elb", "_", "-")), 0, 32)
 }

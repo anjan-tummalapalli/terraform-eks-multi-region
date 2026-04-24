@@ -1,3 +1,15 @@
+# -----------------------------------------------------------------------------
+# File: modules/rds-mysql/main.tf
+# Purpose:
+#   Implements resource orchestration for module 'rds-mysql'.
+# Why this file exists:
+#   Keeps all service wiring in one place so the module contract in variables/outputs remains stable and predictable.
+# Documentation and maintenance notes:
+#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
+#   - Update README and related examples whenever this file changes module interfaces.
+# -----------------------------------------------------------------------------
+
 resource "aws_db_subnet_group" "this" {
   name       = "${var.name}-mysql-subnet-group"
   subnet_ids = var.subnet_ids

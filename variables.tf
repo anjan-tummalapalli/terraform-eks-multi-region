@@ -1,3 +1,15 @@
+# -----------------------------------------------------------------------------
+# File: variables.tf
+# Purpose:
+#   Defines root-module input interface and defaults.
+# Why this file exists:
+#   Keeps deployment customization explicit, reviewable, and validation-friendly.
+# Documentation and maintenance notes:
+#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
+#   - Update README and related examples whenever this file changes module interfaces.
+# -----------------------------------------------------------------------------
+
 variable "project_name" {
   description = "Project identifier used in resource naming."
   type        = string

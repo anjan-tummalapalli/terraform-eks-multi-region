@@ -1,3 +1,15 @@
+# -----------------------------------------------------------------------------
+# File: main.tf
+# Purpose:
+#   Composes top-level multi-region infrastructure stack.
+# Why this file exists:
+#   Central entrypoint for region orchestration and shared module wiring.
+# Documentation and maintenance notes:
+#   - Keep descriptions and validations aligned with real behavior whenever inputs change.
+#   - Preserve secure and cost-aware defaults unless there is a documented reason to relax them.
+#   - Update README and related examples whenever this file changes module interfaces.
+# -----------------------------------------------------------------------------
+
 locals {
   base_tags = merge(
     {
